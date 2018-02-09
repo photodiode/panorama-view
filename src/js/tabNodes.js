@@ -109,17 +109,11 @@ function deleteTabNode(tabId) {
 }
 
 async function updateThumbnail(tabId) {
-
 	var node = tabNodes[tabId];
 
-	if(node) {
-		browser.sessions.getTabValue(tabId, 'thumbnail').then(function(thumbnail) {
-			if(thumbnail) {
-				node.inner.style.backgroundImage = 'url(' + thumbnail + ')';
-			}else{
-				node.inner.style.backgroundImage = '';
-			}
-		});
+	if ( node ) {
+		const thumbnail = await browser.tabs.captureTab( tabId, { format: 'jpeg', quality: 25 } );
+		node.inner.style.backgroundImage = 'url(' + thumbnail + ')';
 	}
 }
 
