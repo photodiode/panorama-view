@@ -56,12 +56,6 @@ async function initView() {
         if ( event.button != 1 ) return; // middle mouse
 		createGroup();
     }, false);
-	browser.runtime.onMessage.addListener(function(message) {
-		message = JSON.parse(message);
-		if(message.name == 'updateThumbnail') {
-			updateThumbnail(message.value);
-		}
-	});
 
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onRemoved.addListener(tabRemoved);
@@ -152,5 +146,11 @@ function tabDetached(tabId, detachInfo) {
 }
 
 async function tabActivated(activeInfo) {
+	if ( activeInfo.tabId === view.tabId ) {
+		await view.tabs.forEach( async function( tab ) {
+			updateThumbnail( tab.id );
+		} );
+	}
+
 	setActiveTabNode();
 }
