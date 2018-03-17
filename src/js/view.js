@@ -23,7 +23,7 @@ function new_element(name, attributes, children) {
 	return e;
 }
 
-var background = browser.extension.getBackgroundPage();
+browser.runtime.sendMessage("init");
 
 var view = {
 	windowId: -1,
@@ -123,7 +123,7 @@ async function createGroup() {
 	makeGroupNode(group);
 	var groupElement = groupNodes[group.id].group
 	view.groupsNode.appendChild(groupElement);
-	updateGroupFit(group);
+	await updateGroupFit(group);
 	groupElement.scrollIntoView({behavior: "smooth"});
 }
 
@@ -141,7 +141,7 @@ async function tabCreated(tab) {
 
 		var group = groups.get(groupId);
 		await insertTab(tab);
-		updateGroupFit(group);
+		await updateGroupFit(group);
 	}
 }
 
@@ -149,7 +149,7 @@ function tabRemoved(tabId, removeInfo) {
 	if(view.windowId == removeInfo.windowId && view.tabId != tabId){
 		deleteTabNode(tabId);
 		groups.forEach(function(group) {
-			updateGroupFit(group);
+			updateGroupFit(group).then();
 		});
 	}
 }
@@ -165,8 +165,8 @@ async function tabMoved(tabId, moveInfo) {
 	if(view.windowId == moveInfo.windowId){
 		browser.tabs.get(tabId).then(async function(tab) {
 			await insertTab(tab);
-			groups.forEach(async function(group) {
-				updateGroupFit(group);
+			groups.forEach(function(group) {
+				updateGroupFit(group).then();
 			});
 		});
 	}
@@ -186,7 +186,7 @@ function tabDetached(tabId, detachInfo) {
 	if(view.windowId == detachInfo.oldWindowId){
 		deleteTabNode(tabId);
 		groups.forEach(function(group) {
-			updateGroupFit(group);
+			updateGroupFit(group).then();
 		});
 	}
 }

@@ -211,7 +211,7 @@ async function fillGroupNodes() {
 
 	groups.forEach(function(group) {
 		groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
-		updateGroupFit(group);
+		updateGroupFit(group).then();
 	});
 }
 
@@ -246,7 +246,7 @@ async function insertTab(tab) {
 	}
 }
 
-function updateGroupFit(group) {
+async function updateGroupFit(group) {
 
 	var node = groupNodes[group.id];
 	var childNodes = node.content.childNodes;
@@ -256,16 +256,16 @@ function updateGroupFit(group) {
 
 	// fit
 	var rect = node.content.getBoundingClientRect();
-
-	var ratio = background.config.tab.ratio;
+	var config = await browser.runtime.sendMessage("config");
+	var ratio = config.tab.ratio;
 	var small = false;
 
 	var fit = getBestFit({
 		width: rect.width,
 		height: rect.height,
 
-		minWidth: background.config.tab.minWidth,
-		maxWidth: background.config.tab.maxWidth,
+		minWidth: config.tab.minWidth,
+		maxWidth: config.tab.maxWidth,
 
 		ratio: ratio,
 
