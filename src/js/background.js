@@ -202,4 +202,13 @@ async function init() {
 	browser.tabs.onActivated.addListener(tabActivated);
 }
 
+function handleMessage(request, sender, sendResponse) {
+	if (request === "init") {
+		init();
+		sendResponse(config);
+	}
+}
+
+browser.runtime.onMessage.addListener(handleMessage);
+
 init();
