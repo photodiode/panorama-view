@@ -23,14 +23,12 @@ function new_element(name, attributes, children) {
 	return e;
 }
 
-browser.runtime.sendMessage("init");
-
 var view = {
 	windowId: -1,
 	tabId: -1,
 	groupsNode: null,
 	dragIndicator: null,
-
+	config: null,
 	tabs: {},
 };
 
@@ -59,6 +57,13 @@ async function captureThumbnail(tabId) {
 	img.src = data;
 }
 
+async function captureTabs() {
+	const tabs = await browser.tabs.query({currentWindow: true, discarded: false});
+	for(const tab of tabs) {
+		await captureThumbnail(tab.id);
+	}
+}
+
 /**
  * Initialize the Panorama View tab
  *
@@ -66,7 +71,7 @@ async function captureThumbnail(tabId) {
  * to respond to user actions and react to changes
  */
 async function initView() {
-
+	view.config = await browser.runtime.sendMessage("init");
 	view.windowId = (await browser.windows.getCurrent()).id;
 	view.tabId = (await browser.tabs.getCurrent()).id;
 	view.groupsNode = document.getElementById('groups');
@@ -123,7 +128,7 @@ async function createGroup() {
 	makeGroupNode(group);
 	var groupElement = groupNodes[group.id].group
 	view.groupsNode.appendChild(groupElement);
-	await updateGroupFit(group);
+	updateGroupFit(group);
 	groupElement.scrollIntoView({behavior: "smooth"});
 }
 
@@ -141,16 +146,14 @@ async function tabCreated(tab) {
 
 		var group = groups.get(groupId);
 		await insertTab(tab);
-		await updateGroupFit(group);
+		updateGroupFit(group);
 	}
 }
 
-function tabRemoved(tabId, removeInfo) {
+async function tabRemoved(tabId, removeInfo) {
 	if(view.windowId == removeInfo.windowId && view.tabId != tabId){
 		deleteTabNode(tabId);
-		groups.forEach(function(group) {
-			updateGroupFit(group).then();
-		});
+		groups.forEach(updateGroupFit);
 	}
 }
 
@@ -163,31 +166,26 @@ async function tabUpdated(tabId, changeInfo, tab) {
 
 async function tabMoved(tabId, moveInfo) {
 	if(view.windowId == moveInfo.windowId){
-		browser.tabs.get(tabId).then(async function(tab) {
-			await insertTab(tab);
-			groups.forEach(function(group) {
-				updateGroupFit(group).then();
-			});
-		});
+		var tab = await browser.tabs.get(tabId);
+		await insertTab(tab);
+		groups.forEach(updateGroupFit);
 	}
 }
 
-function tabAttached(tabId, attachInfo) {
+async function tabAttached(tabId, attachInfo) {
 	console.log('tab attached', attachInfo.newWindowId);
 	if(view.windowId == attachInfo.newWindowId){
-		browser.tabs.get(tabId).then(tab => {
-			tabCreated(tab);
-		});
+		var tab = await browser.tabs.get(tabId);
+		await tabCreated(tab);
+		groups.forEach(updateGroupFit);
 	}
 }
 
-function tabDetached(tabId, detachInfo) {
+async function tabDetached(tabId, detachInfo) {
 	console.log('tab detached', detachInfo.oldWindowId);
 	if(view.windowId == detachInfo.oldWindowId){
 		deleteTabNode(tabId);
-		groups.forEach(function(group) {
-			updateGroupFit(group).then();
-		});
+		groups.forEach(updateGroupFit);
 	}
 }
 

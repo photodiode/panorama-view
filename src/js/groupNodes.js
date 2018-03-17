@@ -211,7 +211,7 @@ async function fillGroupNodes() {
 
 	groups.forEach(function(group) {
 		groupNodes[group.id].content.insertBefore(fragment[group.id], groupNodes[group.id].newtab);
-		updateGroupFit(group).then();
+		updateGroupFit(group);
 	});
 }
 
@@ -246,8 +246,7 @@ async function insertTab(tab) {
 	}
 }
 
-async function updateGroupFit(group) {
-
+function updateGroupFit(group) {
 	var node = groupNodes[group.id];
 	var childNodes = node.content.childNodes;
 
@@ -256,16 +255,15 @@ async function updateGroupFit(group) {
 
 	// fit
 	var rect = node.content.getBoundingClientRect();
-	var config = await browser.runtime.sendMessage("config");
-	var ratio = config.tab.ratio;
+	var ratio = view.config.tab.ratio;
 	var small = false;
 
 	var fit = getBestFit({
 		width: rect.width,
 		height: rect.height,
 
-		minWidth: config.tab.minWidth,
-		maxWidth: config.tab.maxWidth,
+		minWidth: view.config.tab.minWidth,
+		maxWidth: view.config.tab.maxWidth,
 
 		ratio: ratio,
 
@@ -297,8 +295,6 @@ async function updateGroupFit(group) {
 		}
 	}
 
-	var index = 0;
-
 	var w = rect.width  / fit.x;
 	var h = w * ratio;
 
@@ -311,10 +307,8 @@ async function updateGroupFit(group) {
 
 		childNodes[i].style.width = w + 'px';
 		childNodes[i].style.height = h + 'px';
-		childNodes[i].style.left = (w * (index % fit.x)) + 'px';
-		childNodes[i].style.top = (h * Math.floor(index / fit.x)) + 'px';
-
-		index++;
+		childNodes[i].style.left = (w * (i % fit.x)) + 'px';
+		childNodes[i].style.top = (h * Math.floor(i / fit.x)) + 'px';
 	}
 
 }
