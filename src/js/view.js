@@ -134,6 +134,7 @@ async function initView() {
 	browser.tabs.onAttached.addListener(tabAttached);
 	browser.tabs.onDetached.addListener(tabDetached);
 	browser.tabs.onActivated.addListener(tabActivated);
+    document.getElementById('saveBackupFromView').addEventListener('click', saveBackup);
 }
 
 
