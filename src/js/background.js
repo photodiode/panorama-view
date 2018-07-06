@@ -252,6 +252,7 @@ async function init() {
 	await migrate(); //keep until everyone are on 0.8.0
 
 	browser.commands.onCommand.addListener(triggerCommand);
+	browser.runtime.onMessage.addListener(triggerCommand);
 	browser.browserAction.onClicked.addListener(toggleView);
 	browser.windows.onCreated.addListener(createGroupInWindow);
 	browser.tabs.onCreated.addListener(tabCreated);
