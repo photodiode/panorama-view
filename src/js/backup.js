@@ -74,6 +74,7 @@ async function openBackup(data) {
 				url: data.windows[wi].tabs[ti].url,
 				active: false,
 				windowId: window.id,
+				pinned: data.windows[wi].tabs[ti].pinned || false,
 			}).catch((err) => { console.log(err); });
 
 			if(tab) {
@@ -177,14 +178,19 @@ async function saveBackup() {
 			var groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
 			if(groupId != -1) {
-				data.windows[wi].tabs.push({
+				var entry = {
 					url: tab.url,
 					title: tab.title,
 					groupId: groupId,
 					index: tab.index,
 					lastAccessed: tab.lastAccessed,
-					pinned: tab.pinned,
-				});
+				}
+
+				if (tab.pinned === true) {
+					entry.pinned = tab.pinned
+				}
+
+				data.windows[wi].tabs.push(entry);
 			}
 		}
 	}
