@@ -70,11 +70,19 @@ async function openBackup(data) {
 
 		for(var ti in data.windows[wi].tabs) {
 
+			var isTabFailed = false
 			var tab = await browser.tabs.create({
 				url: data.windows[wi].tabs[ti].url,
 				active: false,
 				windowId: window.id,
-			}).catch((err) => { console.log(err); });
+			}).catch((err) => {
+				console.log(err);
+				isTabFailed = true;
+			});
+
+			if (isTabFailed === true) {
+				continue;
+			}
 
 			if(tab) {
 				await browser.sessions.setTabValue(tab.id, 'groupId', data.windows[wi].tabs[ti].groupId);
