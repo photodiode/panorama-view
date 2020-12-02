@@ -1,22 +1,85 @@
 
+body {
+	line-height: 20px;
+	text-shadow: 0 1px 1px #fefffe;
+}
+
 h2 {
+	min-height: 30px;
+
 	border-bottom: solid 1px #d7d7db;
-	line-height: 2em;
+
+	font-size: 1em;
 }
 
-section label {
-	width: 220px;
+h3 {
+	font-size: 1em;
+}
+
+label {
+	width: 50%;
+	height: 24px;
+
+	margin: 4px 0;
+
 	display: inline-block;
-	line-height: 2em;
 }
 
-section input[type=radio] {
-	height: 2em;
+input[type=button] {
+	-moz-appearance: none;
+
+	width: 60px;
+	height: 26px;
+
+	margin: 4px;
+
+	display: inline-block;
+
+	border: 1px solid #d7d7db;
+	border-radius: 2px;
+
+	background-color: #f9f9fa;
+
+	color: #0c0c0d;
+}
+
+input[type=button]:hover {
+	background-color: #ebebeb;
+}
+
+input[type=button]:hover:active, input[type=button].pressed {
+	background-color: #dadada;
+}
+
+input[type=textfield] {
+	-moz-appearance: none;
+
+	width: calc(50% - 16px - 60px);
+	height: 26px;
+
+	margin: 4px;
+
+	display: inline-block;
+
+	border: 1px solid #d7d7db;
+	border-radius: 2px;
+
+	background-color: #f9f9fa;
+
+	color: #0c0c0d;
+	text-indent: 6px;
+}
+
+
+input[type=textfield]:focus {
+	border: 1px solid #0a84ff;
+}
+
+input[type=textfield].error {
+	color: #ff0039;
+}
+
+input[type=checkbox] {
 	display: inline-block;
 	vertical-align: bottom;
-}
-
-#keyboardShortcuts button {
-	width: 120px;
-	text-align: center;
 }

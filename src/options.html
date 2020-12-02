@@ -3,26 +3,35 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="css/options.css">
+		<script src="js/backup.js"></script>
+		<script src="js/options.js"></script>
 	</head>
 	<body>
 		<section>
 			<h2>Keyboard Shortcuts</h2>
 			<div id="keyboardShortcuts"></div>
 		</section>
-		<!--section>
-			<h2>Themes</h2>
+		<section>
+			<h2>Theme</h2>
 
 			<form id="theme">
 				<div>
-					<input type="radio" id="lightThemeRadio" name="contact" value="light">
-					<label for="lightThemeRadio">Light</label>
-				</div>
-				<div>
-					<input type="radio" id="darkThemeRadio" name="contact" value="dark">
-					<label for="darkThemeRadio">Dark</label>
+					<label for="useDarkTheme">Use Dark Theme</label>
+					<input type="checkbox" id="useDarkTheme">
 				</div>
 			</form>
-		</section-->
+		</section>
+		<section>
+			<h2>Statistics</h2>
+			<div>
+				<label for="numberOfTabs">Number of Tabs</label>
+				<span id="numberOfTabs">Calculating..</span>
+			</div>
+			<div>
+				<label for="thumbnailCacheSize">Thumbnail Cache</label>
+				<span id="thumbnailCacheSize">Calculating..</span>
+			</div>
+		</section>
 		<section>
 			<h2>Backups</h2>
 			<h3>Import</h3>
@@ -33,18 +42,5 @@
 			<p>This section might be made obsolete once proper session management is possible in Firefox.</p>
 			<p><button id="saveBackupButton">Save backup</button></p>
 		</section>
-		<section>
-			<h2>Statistics</h2>
-			<div>
-				<label for="numberOfTabs">Number of Tabs</label>
-				<strong><span id="numberOfTabs"></span></strong>
-			</div>
-			<div>
-				<label for="thumbnailCacheSize">Thumbnail Cache Size</label>
-				<strong><span id="thumbnailCacheSize"></span></strong>
-			</div>
-		</section>
-		<script src="js/backup.js"></script>
-		<script src="js/options.js"></script>
 	</body>
 </html>
