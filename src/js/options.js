@@ -104,6 +104,26 @@ async function changeTheme() {
 		browser.tabs.reload(tab.id);
 	}
 }
+
+async function getBackdropFilters() {
+
+	let storage = await browser.storage.local.get('useBackdropFilters');
+
+	if (storage.useBackdropFilters === true) {
+		document.getElementById('useBackdropFilters').checked = true;
+	}
+}
+
+async function changeBackdropFilters() {
+
+	browser.storage.local.set({useBackdropFilters: document.getElementById('useBackdropFilters').checked});
+
+	const tabs = browser.tabs.query({url: browser.extension.getURL('view.html')});
+
+	for(const tab of await tabs) {
+		browser.tabs.reload(tab.id);
+	}
+}
 // ----
 
 
@@ -147,12 +167,14 @@ async function init() {
 
 	getCommands();
 	getTheme();
+	getBackdropFilters();
 	getStatistics();
 
 	document.getElementById('backupFileInput').addEventListener('change', loadBackup);
 	document.getElementById('saveBackupButton').addEventListener('click', saveBackup);
 
 	document.getElementById('useDarkTheme').addEventListener('change', changeTheme);
+	document.getElementById('useBackdropFilters').addEventListener('change', changeBackdropFilters);
 	browser.tabs.onUpdated.addListener(getStatistics);
 }
 

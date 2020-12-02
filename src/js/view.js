@@ -76,9 +76,13 @@ async function initView() {
 
 	// set theme
 	let storage = await browser.storage.local.get('useDarkTheme');
-
 	if (storage.useDarkTheme === true) {
 		document.body.classList.add('dark');
+	}
+
+	storage = await browser.storage.local.get('useBackdropFilters');
+	if (storage.useBackdropFilters === true) {
+		document.body.classList.add('backdrop');
 	}
 	// ----
 

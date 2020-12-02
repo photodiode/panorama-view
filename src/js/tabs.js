@@ -1,4 +1,6 @@
 
+'use strict';
+
 view.tabs.setGroupId = async function(tabId, groupId) {
 	await browser.sessions.setTabValue(tabId, 'groupId', groupId);
 };

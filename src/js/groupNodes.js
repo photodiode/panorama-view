@@ -8,6 +8,9 @@ async function initGroupNodes() {
 	groups.forEach(function(group) {
 		makeGroupNode(group);
 		view.groupsNode.appendChild(groupNodes[group.id].group);
+		setTimeout(function() {
+			groupNodes[group.id].input.style.width = groupNodes[group.id].name.getBoundingClientRect().width + 'px';
+		}, 100);
 	});
 	fillGroupNodes();
 }
@@ -174,15 +177,16 @@ function makeGroupNode(group) {
 	var header = new_element('div', {class: 'header'}, [name, input, tabCount, close]);
 
 	// newtab
-	var newtab = new_element('div', {class: 'newtab'}, [new_element('div', {class: 'inner'})]);
+	var newtab = new_element('div', {class: 'newtab'}, [new_element('div', {class: 'border'})]);
 
 	// group
 	var content = new_element('div', {class: 'content transition', groupId: group.id}, [newtab]);
 	content.addEventListener('dragover', groupDragOver, false);
 	content.addEventListener('drop', groupDrop, false);
 
-	var inner = new_element('div', {class: 'inner'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left, header, content]);
-	var node = new_element('div', {class: 'group'}, [inner]);
+	var resize = new_element('div', {class: 'resize'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left]);
+	var inner = new_element('div', {class: 'inner'}, [header, content]);
+	var node = new_element('div', {class: 'group'}, [resize, inner]);
 
 	close.addEventListener('click', function(event) {
 		event.stopPropagation();
@@ -241,10 +245,15 @@ function makeGroupNode(group) {
 
 			header.removeEventListener('mousedown', moveFunc, false);
 
-			header.classList.add('edit');
+			//header.classList.add('edit');
 			input.setSelectionRange(0, input.value.length);
 			input.focus();
 		}
+	}, false);
+
+	input.addEventListener('input', function(event) {
+		name.innerHTML = this.value;
+		input.style.width = name.getBoundingClientRect().width + 'px';
 	}, false);
 
 	input.addEventListener('keydown', function(event) {
@@ -254,11 +263,11 @@ function makeGroupNode(group) {
 	}, false);
 
 	input.addEventListener('blur', function(event) {
-		header.classList.remove('edit');
+		//header.classList.remove('edit');
 		input.setSelectionRange(0, 0);
 
-		name.innerHTML = '';
-		name.appendChild(document.createTextNode(this.value));
+		//name.innerHTML = '';
+		//name.appendChild(document.createTextNode(this.value));
 		groups.rename(group.id, this.value);
 
 		header.addEventListener('mousedown', moveFunc, false);
@@ -339,9 +348,11 @@ async function fillGroupNodes() {
 	});
 
 	await view.tabs.forEach(async function(tab) {
-		var groupId = await view.tabs.getGroupId(tab.id);
-		if(groupId != -1 && fragment[groupId]) {
-			fragment[groupId].appendChild(tabNodes[tab.id].tab);
+		if (!tab.pinned) {
+			const groupId = await view.tabs.getGroupId(tab.id);
+			if (groupId != -1 && fragment[groupId]) {
+				fragment[groupId].appendChild(tabNodes[tab.id].tab);
+			}
 		}
 	});
 
@@ -421,47 +432,51 @@ function resizeGroups(groupId, groupRect) {
 		node.style.bottom	= groupsRect.height - ((rect.y + rect.h) * groupsRect.height) + 'px';
 		node.style.left		= (rect.x * groupsRect.width)  + 'px';
 
-		node.style.zIndex	= group.lastMoved.toString().substr(-9);
+		if (group.lastMoved !== undefined) {
+			node.style.zIndex = Math.floor(group.lastMoved / 100).toString().substr(-9);
+		}
 
 		updateGroupFit(group);
 	});
 }
+
 function getFit(param) {
 
-	var a, b, ta, tb;
-	var pitch = 0, w = 0;
+	let pitch = 0;
+	let w = 0;
+	let h = 0;
+	let area = 0;
 
-	var area = 0;
+	param.width = Math.floor(param.width) - (param.marginX*2);
+	param.height = Math.floor(param.height) - (param.marginY*2);
 
-	for(var i = 1; i <= 40; i++) {
-		a = Math.min(param.width / i, param.maxWidth);
-		b = a * param.ratio;
+	for(let x = param.amount; x >= 1; x--) {
 
-		if(a < param.minWidth) { break; } // a bit janky
+		let y = Math.ceil(param.amount / x)
 
-		ta = Math.floor((param.width+1) / a);
-		tb = Math.floor(param.height / b);
+		let a = (param.width - ((x-1) * (param.marginX*2))) / x;
+		a = Math.min(a, param.max);
+		let b = (a * param.ratio);
 
-		if(ta*tb >= param.amount) {
-			pitch = ta;
+		if (b * y > param.height - ((y-1) * (param.marginY*2)) || b > param.max) {
+			b = (param.height - ((y-1) * (param.marginY*2))) / y
+			b = Math.min(b, param.max);
+			a = b / param.ratio;
+		}
+
+		let tmp_area = a * b;
+
+		if (tmp_area > area) {
+			area = tmp_area;
 			w = a;
-			area = a*b;
-			break;
+			h = b;
+			pitch = x;
 		}
 	}
 
-	// make groups with very few tabs prettier
-		b = Math.min(param.height / 1, param.maxWidth*param.ratio);
-		a = b / param.ratio;
-
-		ta = Math.floor(param.width / a);
-		tb = Math.floor(param.height / b);
-
-		if(ta*tb >= param.amount && (a*b > area)) {
-			pitch = ta;
-			w = a;
-		}
-	// ----
+	if (w < param.min || h < param.min) {
+		pitch = 0;
+	}
 
 	return {pitch: pitch, width: w, ratio: param.ratio};
 }
@@ -477,49 +492,54 @@ function updateGroupFit(group) {
 	// fit
 	var rect = node.content.getBoundingClientRect();
 
-	var ratio = 0.68;
-	var small = false;
-	var deck = false;
-
 	var fit = getFit({
 		width: rect.width,
 		height: rect.height,
 
-		minWidth: 90,
-		maxWidth: 250,
+		marginX: 3,
+		marginY: 3,
 
-		ratio: ratio,
+		min: 100,
+		max: 375,
+
+		ratio: window.innerHeight / window.innerWidth,
 
 		amount: childNodes.length,
 	});
 
+	// squished view
 	if(fit.pitch == 0){
 		fit = getFit({
 			width: rect.width,
 			height: rect.height,
 
-			minWidth: 35,
-			maxWidth: 89,
+			marginX: 3,
+			marginY: 3,
 
-			ratio: 1,
+			min: 55,
+			max: 160,
+
+			ratio: (1 + fit.ratio + fit.ratio) / 3,
 
 			amount: childNodes.length,
 		});
 	}
 
-	// this is for the card deck view
+	// square view
 	if(fit.pitch == 0){
-		deck = true;
 		fit = getFit({
 			width: rect.width,
 			height: rect.height,
 
-			minWidth: 45,
-			maxWidth: 250,
+			marginX: 3,
+			marginY: 3,
 
-			ratio: ratio,
+			min: 16,
+			max: 100,
 
-			amount: 1,
+			ratio: 1,
+
+			amount: childNodes.length,
 		});
 	}
 
@@ -528,14 +548,11 @@ function updateGroupFit(group) {
 	var w = fit.width;
 	var h = w * fit.ratio;
 
+	// icon view
+	var small = false;
+
 	if(w < 55) {
 		small = true;
-	}
-
-	if(!deck){
-		node.newtab.style.display = 'block';
-	}else{
-		node.newtab.style.display = 'none';
 	}
 
 	for(var i = 0; i < childNodes.length; i++) {
@@ -547,13 +564,10 @@ function updateGroupFit(group) {
 
 		childNodes[i].style.width = w + 'px';
 		childNodes[i].style.height = h + 'px';
-		childNodes[i].style.left = (w * (index % Math.floor(fit.pitch))) + 'px';
-		childNodes[i].style.top = (h * Math.floor(index / Math.floor(fit.pitch))) + 'px';
 
-		if(deck){
-			childNodes[i].style.left = 0 + 'px';
-			childNodes[i].style.top = 0 + 'px';
-		}
+		// only needed if the tabs use absolute positioning
+		childNodes[i].style.left = ((w+6) * (index % Math.floor(fit.pitch))) + 'px';
+		childNodes[i].style.top = ((h+6) * Math.floor(index / Math.floor(fit.pitch))) + 'px';
 
 		childNodes[i].style.zIndex = index;
 

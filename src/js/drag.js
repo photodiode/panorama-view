@@ -56,10 +56,10 @@ function tabDragOver(e) {
 		view.dragIndicator.style.top = (window.scrollY + rect.top) + 'px';
 
 		if(e.clientX < rect.left+(rect.width/2)) {
-			view.dragIndicator.style.left = (rect.left - 5) + 'px';
+			view.dragIndicator.style.left = (rect.left - 8) + 'px';
 			dragDropBefore = true;
 		}else{
-			view.dragIndicator.style.left = (rect.left + rect.width - 5) + 'px';
+			view.dragIndicator.style.left = (rect.left + rect.width - 2) + 'px';
 			dragDropBefore = false;
 		}
 	}

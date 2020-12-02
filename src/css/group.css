@@ -3,113 +3,94 @@
 	position: absolute;
 }
 
-.group > .inner {
+.group::before {
+	content: '';
 	position: absolute;
 	top: 4px;
 	left: 4px;
 	right: 4px;
 	bottom: 4px;
 
-	border: rgba(12, 12, 13, 0.2) 1px solid;
 	border-radius: 4px;
 
-	background-color: #ededf0;
+	box-shadow: 0 1px 8px rgba(12, 12, 13, 0.1), 0 0 0 1px rgba(12, 12, 13, 0.1), inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+
+	background-color: #f7f7f9;
 }
 
-.group > .inner:before {
-	content: '';
-
+.group > .inner {
 	position: absolute;
-	z-index: -1;
-
-	top: -2px;
-	left: -2px;
-	right: -2px;
-	bottom: -2px;
-
-	border: 1px solid #ffffff;
-	border-radius: 5px;
+	top: 8px;
+	left: 8px;
+	right: 8px;
+	bottom: 8px;
 }
 
 .group .header {
-	height: 23px;
+	height: 20px;
 
 	position: absolute;
-	top: 5px;
-	right: 10px;
-	left: 10px;
+	top: 2px;
+	right: 2px;
+	left: 2px;
 	z-index: 100;
 
 	cursor: move;
 }
 
-.group .header input {
-	width: calc(100% - 60px);
+.group .header input, .group .header .name {
+	-moz-appearance: none;
+
+	max-width: calc(100% - 60px);
 	height: 20px;
 
-	position: absolute;
-	top: -2px;
-	left: -1px;
+	margin: 0;
+	padding: 0;
 
-	display: none;
+	position: absolute;
+	top: 0px;
+	left: 6px;
 
 	border: none;
 
 	background: none;
 
-	color: #737373;
+	color: rgba(12, 12, 13, 0.5);
 	font-size: 13px;
-	line-height: 18px;
+	line-height: 19px;
 	font-family: inherit;
+	text-overflow: "...";
+}
+
+.group .header input:focus {
+	color: rgba(12, 12, 13, 0.8);
 }
 
 .group .header .name {
-	min-width: 50px;
-	max-width: calc(100% - 60px);
-
-	padding-right: 5px;
-
-	position: absolute;
-	top: 0;
-	left: 0;
-
-	color: #737373;
-	font-size: 13px;
-	line-height: 18px;
-	white-space: nowrap;
-	text-overflow: '..';
-
-	overflow: hidden;
-
-	cursor: text;
-}
-
-.group .header.edit input {
-	display: block;
-
-	color: #2a2a2e;
-}
-
-.group .header.edit .name {
-	display: none;
+	padding-right: 6px;
+	opacity: 0;
 }
 
 .group .header .tab_count {
-	padding: 3px 5px 3px 5px;
+	height: 20px;
+
+	padding: 5px 6px 2px 6px;
 
 	position: absolute;
 	top: -5px;
-	right: 20px;
+	right: 26px;
 
 	border-radius: 0 0 3px 3px;
 
-	background-color: rgba(12, 12, 13, 0.2);
+	background-color: rgba(255, 255, 255, 0.9);
 
-	color: #ffffff;
+	backdrop-filter: saturate(300%);
+
+	color: rgba(12, 12, 13, 0.4);
 	font-size: 12px;
 	font-family: inherit;
 	font-weight: bold;
-	line-height: 20px;
+	line-height: 19px;
 }
 
 .group .header .close {
@@ -118,108 +99,129 @@
 
 	position: absolute;
 	top: 0;
-	right: -5px;
+	right: 0px;
 
-	cursor: pointer;
+	cursor: default;
 
-	background-image: url(/icons/group_close.svg);
+	border-radius: 2px;
+
+	background-image: url(../icons/group_close.svg);
 	background-repeat: no-repeat;
 	background-size: 12px;
 	background-position: center;
+
+	opacity: 0.4;
+}
+
+.group .header .close:hover {
+	background-color: rgba(12, 12, 13, 0.2);
+
+	backdrop-filter: saturate(300%);
+
+	opacity: 0.5;
 }
 
 .group .content {
 	position: absolute;
-	top: 28px;
-	right: 4px;
-	left: 4px;
-	bottom: 4px;
+	top: 24px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
 }
 
-.group .top {
-	height: 7px;
+/* resize */
+.group .resize {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.group .resize .top {
+	height: 8px;
 
 	position: absolute;
-	top: -2px;
+	top: 0;
 	left: 20px;
 	right: 20px;
 
 	cursor: ns-resize;
 }
 
-.group .right {
-	width: 7px;
+.group .resize .right {
+	width: 8px;
 
 	position: absolute;
 	top: 20px;
 	bottom: 20px;
-	right: -2px;
+	right: 0;
 
 	cursor: ew-resize;
 }
 
-.group .bottom {
-	height: 7px;
+.group .resize .bottom {
+	height: 8px;
 
 	position: absolute;
-	bottom: -2px;
+	bottom: 0;
 	left: 20px;
 	right: 20px;
 
 	cursor: ns-resize;
 }
 
-.group .left {
-	width: 7px;
+.group .resize .left {
+	width: 8px;
 
 	position: absolute;
 	top: 20px;
 	bottom: 20px;
-	left: -2px;
+	left: 0;
 
 	cursor: ew-resize;
 }
 
-.group .top_right {
+.group .resize .top_right {
 	width: 22px;
 	height: 22px;
 
 	position: absolute;
-	top: -2px;
-	right: -2px;
+	top: 0;
+	right: 0;
 
 	cursor: nesw-resize;
 }
 
-.group .bottom_right {
+.group .resize .bottom_right {
 	width: 22px;
 	height: 22px;
 
 	position: absolute;
-	bottom: -2px;
-	right: -2px;
+	bottom: 0;
+	right: 0;
 
 	cursor: nwse-resize;
 }
 
-.group .bottom_left {
+.group .resize .bottom_left {
 	width: 22px;
 	height: 22px;
 
 	position: absolute;
-	bottom: -2px;
-	left: -2px;
+	bottom: 0;
+	left: 0;
 
 	cursor: nesw-resize;
 }
 
-.group .top_left {
+.group .resize .top_left {
 	width: 22px;
 	height: 22px;
 
 	position: absolute;
-	top: -2px;
-	left: -2px;
+	top: 0;
+	left: 0;
 
 	cursor: nwse-resize;
 }

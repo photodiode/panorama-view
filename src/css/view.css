@@ -1,9 +1,16 @@
 
+:root {
+	--background-color: #ededf0;
+}
+
 body {
+	-moz-appearance: none;
+
 	margin: 0;
 
-	background-color: #f9f9fa;
+	background-color: var(--background-color);
 
+	color: #0c0c0d;
 	font-family: sans-serif;
 	-moz-user-select: none;
 }
@@ -11,7 +18,7 @@ body {
 #groups {
 	position: absolute;
 	top: 4px;
-	right: 42px;
+	right: 4px;
 	bottom: 4px;
 	left: 4px;
 
@@ -20,18 +27,19 @@ body {
 
 #toolbar {
 	width: 28px;
-	padding: 0 5px;
+	padding: 5px;
 
 	position: fixed;
-	top: 8px;
+	top: 40px;
 	right: 0;
-	bottom: 8px;
 
-	z-index: 1000000000;
+	z-index: 9999999999;
 
-	border-left: rgba(12, 12, 13, 0.1) 1px solid;
+	border-radius: 4px 0 0 4px;
 
-	background-color: inherit;
+	box-shadow: 0 1px 16px rgba(12, 12, 13, 0.1), 0 0 0 1px rgba(12, 12, 13, 0.1), inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+
+	background-color: #f6f6f7;
 }
 
 #toolbar .button {
@@ -53,7 +61,7 @@ body {
 }
 
 #newGroup {
-	background-image: url(/icons/plus_dark.svg);
+	background-image: url(../icons/plus_dark.svg);
 }
 
 .drag_indicator {
