@@ -30,8 +30,8 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 	var groupsRect = view.groupsNode.getBoundingClientRect();
 	var nodeRect = node.getBoundingClientRect();
 
-	var minw = 150 / groupsRect.width;
-	var minh = 150 / groupsRect.height;
+	var minw = 120 / groupsRect.width;
+	var minh = 120 / groupsRect.height;
 
 	var snap_dstx = 5 / groupsRect.width;
 	var snap_dsty = 5 / groupsRect.height;
@@ -398,8 +398,8 @@ function resizeGroups(groupId, groupRect) {
 
 	var groupsRect = view.groupsNode.getBoundingClientRect();
 
-	var minw = 150 / groupsRect.width;
-	var minh = 150 / groupsRect.height;
+	var minw = 120 / groupsRect.width;
+	var minh = 120 / groupsRect.height;
 
 	var rect = {};
 
@@ -499,7 +499,7 @@ function updateGroupFit(group) {
 		marginX: 3,
 		marginY: 3,
 
-		min: 100,
+		min: 80,
 		max: 375,
 
 		ratio: window.innerHeight / window.innerWidth,

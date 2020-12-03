@@ -5,8 +5,6 @@
 	box-sizing: border-box;
 
 	position: absolute;
-	_position: relative;
-	_float: left;
 }
 
 .tab {

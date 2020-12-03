@@ -26,12 +26,12 @@ body {
 }
 
 #toolbar {
-	width: 28px;
+	width: 30px;
 	padding: 5px;
 
 	position: fixed;
 	top: 64px;
-	right: 0;
+	right: -2px;
 
 	z-index: 9999999999;
 

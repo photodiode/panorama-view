@@ -114,14 +114,14 @@ function deleteTabNode(tabId) {
 
 async function updateThumbnail(tabId, thumbnail) {
 
-	var node = tabNodes[tabId];
+	let node = tabNodes[tabId];
 
 	if(node) {
-		if(!thumbnail) {
+		if (!thumbnail) {
 			thumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
 		}
 
-		if(thumbnail) {
+		if (thumbnail) {
 			node.thumbnail.style.backgroundImage = 'url(' + thumbnail + ')';
 		}else{
 			node.thumbnail.style.backgroundImage = '';

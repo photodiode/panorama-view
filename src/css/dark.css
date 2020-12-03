@@ -66,6 +66,7 @@ body.dark {
 	border-color: #4a4a4f;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.5);
 	background-color: #38383d;
+	opacity: 0.9;
 }
 
 .dark .tab:hover, .dark .tab.inactive:hover {
