@@ -252,7 +252,8 @@ function makeGroupNode(group) {
 	}, false);
 
 	input.addEventListener('input', function(event) {
-		name.innerHTML = this.value;
+		name.innerHTML = '';
+		name.appendChild(document.createTextNode(this.value))
 		input.style.width = name.getBoundingClientRect().width + 'px';
 	}, false);
 
