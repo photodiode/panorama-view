@@ -137,6 +137,9 @@ async function createGroup() {
 	var groupElement = groupNodes[group.id].group
 
 	view.groupsNode.appendChild(groupElement);
+	setTimeout(function() {
+		groupNodes[group.id].input.style.width = groupNodes[group.id].name.getBoundingClientRect().width + 'px';
+	}, 100);
 
 	resizeGroups();
 
