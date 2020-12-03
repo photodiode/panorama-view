@@ -1,0 +1,19 @@
+
+.backdrop #toolbar {
+	background-color: rgba(249, 249, 250, 0.4);
+	backdrop-filter: blur(20px);
+}
+
+.backdrop .group::before {
+	background-color: rgba(255, 255, 255, 0.6);
+	backdrop-filter: brightness(0.95) saturate(250%) blur(32px);
+}
+
+
+.backdrop .tab .favicon {
+	backdrop-filter: saturate(250%) brightness(2) blur(3px);
+}
+
+.backdrop .tab .name span {
+	backdrop-filter: saturate(250%) brightness(2) blur(3px);
+}

@@ -16,19 +16,12 @@ async function initTabNodes() {
 
 function makeTabNode(tab) {
 
-	var thumbnail = new_element('div', {class: 'thumbnail'});
-	var favicon = new_element('div', {class: 'favicon'});
-	var close = new_element('div', {class: 'close', title: 'Close Tab'});
-	var name = new_element('div', {class: 'name'});
+	let favicon = new_element('div', {class: 'favicon'});
+	let close = new_element('div', {class: 'close', title: 'Close Tab'});
+	let name = new_element('span');
+	let nameContainer = new_element('div', {class: 'name'}, [name]);
 
-	var inner = new_element('div', {class: 'inner'}, [
-		thumbnail,
-		favicon,
-		close,
-		name
-	])
-
-	var node = new_element('div', {class: 'tab', draggable: 'true', tabId: tab.id}, [inner]);
+	let node = new_element('div', {class: 'tab', draggable: 'true', tabId: tab.id, title: ""}, [favicon, close, nameContainer]);
 
 	node.addEventListener('click', async function(event) {
 		event.preventDefault();
@@ -60,8 +53,7 @@ function makeTabNode(tab) {
 
 	tabNodes[tab.id] = {
 		tab: node,
-		inner: inner,
-		thumbnail: thumbnail,
+		thumbnail: node,
 		favicon: favicon,
 		close: close,
 		name: name
@@ -76,7 +68,7 @@ async function updateTabNode(tab) {
 		node.name.innerHTML = '';
 		node.name.appendChild(document.createTextNode(tab.title));
 
-		node.inner.title = tab.title + ((tab.url.substr(0, 5) !== 'data:') ? ' - ' + decodeURI(tab.url) : '');
+		node.tab.title = tab.title + ((tab.url.substr(0, 5) !== 'data:') ? ' - ' + decodeURI(tab.url) : '');
 
 		if(tab.discarded) {
 			node.tab.classList.add('inactive');
@@ -122,14 +114,14 @@ function deleteTabNode(tabId) {
 
 async function updateThumbnail(tabId, thumbnail) {
 
-	var node = tabNodes[tabId];
+	let node = tabNodes[tabId];
 
 	if(node) {
-		if(!thumbnail) {
+		if (!thumbnail) {
 			thumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
 		}
 
-		if(thumbnail) {
+		if (thumbnail) {
 			node.thumbnail.style.backgroundImage = 'url(' + thumbnail + ')';
 		}else{
 			node.thumbnail.style.backgroundImage = '';

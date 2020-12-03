@@ -12,9 +12,21 @@ function tabDragStart(e) {
 	e.dataTransfer.effectAllowed = 'move';
 	e.dataTransfer.setData('text/html', 'pvDragging');
 
-	var rect = this.getBoundingClientRect();
+	let rect = this.getBoundingClientRect();
 
-	e.dataTransfer.setDragImage(this, rect.width/2, rect.height/2);
+	if (this.classList.contains('inactive')) {
+		e.dataTransfer.setDragImage(
+			this,
+			(rect.width / 2) + 8,
+			(rect.height / 2) + 0
+		);
+	} else {
+		e.dataTransfer.setDragImage(
+			this,
+			(rect.width / 2) + 16,
+			(rect.height / 2) + 12
+		);
+	}
 
 	dragTab = this;
 }
@@ -56,10 +68,10 @@ function tabDragOver(e) {
 		view.dragIndicator.style.top = (window.scrollY + rect.top) + 'px';
 
 		if(e.clientX < rect.left+(rect.width/2)) {
-			view.dragIndicator.style.left = (rect.left - 5) + 'px';
+			view.dragIndicator.style.left = (rect.left - 8) + 'px';
 			dragDropBefore = true;
 		}else{
-			view.dragIndicator.style.left = (rect.left + rect.width - 5) + 'px';
+			view.dragIndicator.style.left = (rect.left + rect.width - 2) + 'px';
 			dragDropBefore = false;
 		}
 	}
