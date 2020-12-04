@@ -157,11 +157,12 @@ async function updateFavicon(tab) {
 					node.favicon.style.backgroundImage = 'url(' + tab.favIconUrl + ')';
 					node.favicon.classList.add('visible');
 				}, _ => {
-					node.favicon.style.backgroundImage = '';
+					node.favicon.removeAttribute("style");
 					node.favicon.classList.remove('visible');
 				}
 			);
 		}else{
+			node.favicon.removeAttribute("style");
 			node.favicon.classList.remove('visible');
 		}
 	}
