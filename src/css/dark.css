@@ -66,7 +66,6 @@ body.dark {
 	border-color: #4a4a4f;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.5);
 	background-color: #38383d;
-	opacity: 0.9;
 }
 
 .dark .tab:hover, .dark .tab.inactive:hover {
@@ -75,11 +74,15 @@ body.dark {
 }
 
 .dark .tab.selected {
-	border-color: #45a1ff;
+	border-color: #737373;
 }
 
 .dark .tab.inactive {
-	opacity: 0.6;
+	opacity: 0.8;
+}
+
+.dark .tab .thumbnail {
+	opacity: 0.9;
 }
 
 .dark .tab .name span {
@@ -93,8 +96,11 @@ body.dark {
 
 .dark .newtab .border {
 	border-color: rgba(249, 249, 250, 1);
-	background-image: url(/icons/plus_light.svg);
 	opacity: 0.25;
+}
+
+.dark .newtab .border::after {
+	background-image: url(/icons/plus_light.svg);
 }
 
 .dark .newtab .border:hover {

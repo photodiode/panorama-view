@@ -127,6 +127,9 @@
 	right: 0px;
 	left: 0px;
 	bottom: 0px;
+	
+	overflow-x: auto;
+	overflow-y: auto;
 }
 
 /* resize */

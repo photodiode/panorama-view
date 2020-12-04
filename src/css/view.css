@@ -22,7 +22,7 @@ body {
 	bottom: 4px;
 	left: 4px;
 
-	overflow: auto;
+	overflow: hidden;
 }
 
 #toolbar {

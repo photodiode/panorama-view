@@ -86,7 +86,6 @@ async function initView() {
 	resizeGroups();
 
 	captureThumbnails();
-	//view.intervalId = setInterval(captureThumbnails, 2000);
 
 	// set all listeners
 
@@ -107,11 +106,12 @@ async function initView() {
 	document.addEventListener('visibilitychange', function() {
 		if(document.hidden) {
 			browser.tabs.onUpdated.removeListener(captureThumbnail);
-			//clearInterval(view.intervalId);
 		}else{
-			browser.tabs.onUpdated.addListener(captureThumbnail);
-			//view.intervalId = setInterval(captureThumbnails, 2000);
 			captureThumbnails();
+			
+			setTimeout(function() {
+				browser.tabs.onUpdated.addListener(captureThumbnail);
+			}, 200);
 		}
 	}, false);
 

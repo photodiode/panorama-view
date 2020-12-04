@@ -448,19 +448,19 @@ function getFit(param) {
 	let h = 0;
 	let area = 0;
 
-	param.width = Math.floor(param.width) - (param.marginX*2);
-	param.height = Math.floor(param.height) - (param.marginY*2);
+	param.width  = param.width  - param.marginX;
+	param.height = param.height - param.marginY;
 
 	for(let x = param.amount; x >= 1; x--) {
 
 		let y = Math.ceil(param.amount / x)
 
-		let a = (param.width - ((x-1) * (param.marginX*2))) / x;
+		let a = (param.width - (x * (param.marginX*2))) / x;
 		a = Math.min(a, param.max);
 		let b = (a * param.ratio);
 
-		if (b * y > param.height - ((y-1) * (param.marginY*2)) || b > param.max) {
-			b = (param.height - ((y-1) * (param.marginY*2))) / y
+		if (b * y >  param.height - (y * (param.marginY*2)) || b > param.max) {
+			b = (param.height - (y * (param.marginY*2))) / y
 			b = Math.min(b, param.max);
 			a = b / param.ratio;
 		}
@@ -475,11 +475,16 @@ function getFit(param) {
 		}
 	}
 
-	if (w < param.min || h < param.min) {
+	/*if (w < param.min || h < param.min) {
 		pitch = 0;
+	}*/
+	
+	let fits = true;
+	if (w < param.min || h < param.min) {
+		fits = false;
 	}
 
-	return {pitch: pitch, width: w, ratio: param.ratio};
+	return {fits: fits, pitch: pitch, width: w, ratio: param.ratio};
 }
 
 function updateGroupFit(group) {
@@ -509,7 +514,7 @@ function updateGroupFit(group) {
 	});
 
 	// squished view
-	if(fit.pitch == 0){
+	if(!fit.fits){
 		fit = getFit({
 			width: rect.width,
 			height: rect.height,
@@ -517,7 +522,7 @@ function updateGroupFit(group) {
 			marginX: 3,
 			marginY: 3,
 
-			min: 55,
+			min: 60,
 			max: 160,
 
 			ratio: (1 + fit.ratio + fit.ratio) / 3,
@@ -527,7 +532,7 @@ function updateGroupFit(group) {
 	}
 
 	// square view
-	if(fit.pitch == 0){
+	if(!fit.fits){
 		fit = getFit({
 			width: rect.width,
 			height: rect.height,
@@ -535,7 +540,7 @@ function updateGroupFit(group) {
 			marginX: 3,
 			marginY: 3,
 
-			min: 16,
+			min: 20,
 			max: 100,
 
 			ratio: 1,
@@ -545,16 +550,19 @@ function updateGroupFit(group) {
 	}
 
 	var index = 0;
+	
 
 	var w = fit.width;
 	var h = w * fit.ratio;
+	if (w < 20) w = 20;
+	if (h < 20) h = 20;
 
 	// icon view
-	var small = false;
+	let small = false;
+	let tiny  = false;
 
-	if(w < 55) {
-		small = true;
-	}
+	if (w < 60) small = true;
+	if (w < 40) tiny  = true;
 
 	for(var i = 0; i < childNodes.length; i++) {
 		if(small) {
@@ -563,12 +571,18 @@ function updateGroupFit(group) {
 			childNodes[i].classList.remove('small');
 		}
 
-		childNodes[i].style.width = w + 'px';
+		if(tiny) {
+			childNodes[i].classList.add('tiny');
+		}else{
+			childNodes[i].classList.remove('tiny');
+		}
+
+		childNodes[i].style.width  = w + 'px';
 		childNodes[i].style.height = h + 'px';
 
 		// only needed if the tabs use absolute positioning
 		childNodes[i].style.left = ((w+6) * (index % Math.floor(fit.pitch))) + 'px';
-		childNodes[i].style.top = ((h+6) * Math.floor(index / Math.floor(fit.pitch))) + 'px';
+		childNodes[i].style.top  = ((h+6) * Math.floor(index / Math.floor(fit.pitch))) + 'px';
 
 		childNodes[i].style.zIndex = index;
 

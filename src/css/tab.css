@@ -13,10 +13,9 @@
 
 	box-shadow: 0 1px 4px rgba(12, 12, 13, 0.1), 0 0 0 1px rgba(12, 12, 13, 0.1);
 
-	background-size: cover;
-	background-position: top;
-	background-origin: border-box;
 	background-color: #ededf0;
+	
+	overflow: hidden;
 
 	transition: opacity 500ms cubic-bezier(.08,.82,.17,1), transform 500ms cubic-bezier(.08,.82,.17,1);
 }
@@ -30,6 +29,7 @@
 }
 
 .tab.inactive {
+	filter: saturate(0.8);
 	opacity: 0.65;
 }
 
@@ -40,6 +40,19 @@
 
 	opacity: 0.5;
 	transform: scale(0.9);
+}
+
+.tab .thumbnail {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	
+	background-size: cover;
+	background-position: top;
+	
+	z-index: 0;
 }
 
 .tab .favicon {
@@ -63,6 +76,8 @@
 	box-shadow: 0 0 0 1px rgba(12, 12, 13, 0.1);
 
 	display: none;
+	
+	z-index: 10;
 }
 
 .tab .favicon.visible {
@@ -84,6 +99,8 @@
 	background-repeat: no-repeat;
 	background-size: 10px;
 	background-position: center;
+
+	z-index: 10;
 }
 
 .tab .name {
@@ -95,6 +112,8 @@
 	font-size: 12px;
 	text-align: center;
 	white-space: nowrap;
+	
+	z-index: 10;
 }
 
 .tab .name span {
@@ -128,34 +147,54 @@
 	border: rgba(12, 12, 13, 0.8) 2px dashed;
 	border-radius: 5px;
 
+	opacity: 0.2;
+}
+
+.newtab .border::after {
+	content: '';
+	
+	width: 70%;
+	height: 70%;
+
+	max-width: 16px;
+	max-height: 16px;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	
+	transform: translate(-50%, -50%);
+
 	background-image: url(../icons/plus_dark.svg);
 	background-repeat: no-repeat;
-	background-size: 16px;
+	background-size: cover;
 	background-position: center;
-
-	opacity: 0.2;
 }
 
 .newtab .border:hover {
 	opacity: 0.4;
 }
 
-.tab.small {
-	
+.tab.small .favicon[style] + .thumbnail {
+	display: none;
 }
 
 .tab.small .favicon {
-	width: 100%;
-	height: 100%;
+	width: auto;
+	height: auto;
 
 	margin: 0;
-	padding: 0;
+	padding: 2px;
+	
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
 
 	background-size: cover;
 	background-color: #f7f7f9;
 	box-shadow: none;
-
-	display: none;
 }
 
 .tab.small .name span {
@@ -166,5 +205,9 @@
 }
 
 .tab.small .close {
+	display: none;
+}
+
+.tab.tiny .name {
 	display: none;
 }

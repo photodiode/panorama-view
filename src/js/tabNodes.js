@@ -16,12 +16,13 @@ async function initTabNodes() {
 
 function makeTabNode(tab) {
 
-	let favicon = new_element('div', {class: 'favicon'});
-	let close = new_element('div', {class: 'close', title: 'Close Tab'});
-	let name = new_element('span');
+	let thumbnail     = new_element('div', {class: 'thumbnail'});
+	let favicon       = new_element('div', {class: 'favicon'});
+	let close         = new_element('div', {class: 'close', title: 'Close Tab'});
+	let name          = new_element('span');
 	let nameContainer = new_element('div', {class: 'name'}, [name]);
 
-	let node = new_element('div', {class: 'tab', draggable: 'true', tabId: tab.id, title: ""}, [favicon, close, nameContainer]);
+	let node = new_element('div', {class: 'tab', draggable: 'true', tabId: tab.id, title: ""}, [favicon, thumbnail, close, nameContainer]);
 
 	node.addEventListener('click', async function(event) {
 		event.preventDefault();
@@ -53,7 +54,7 @@ function makeTabNode(tab) {
 
 	tabNodes[tab.id] = {
 		tab: node,
-		thumbnail: node,
+		thumbnail: thumbnail,
 		favicon: favicon,
 		close: close,
 		name: name
@@ -115,17 +116,14 @@ function deleteTabNode(tabId) {
 async function updateThumbnail(tabId, thumbnail) {
 
 	let node = tabNodes[tabId];
+	
+	let formatThumbnail = function(data) {
+		return (data) ? 'url(' + data + ')' : '';
+	}
 
 	if(node) {
-		if (!thumbnail) {
-			thumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
-		}
-
-		if (thumbnail) {
-			node.thumbnail.style.backgroundImage = 'url(' + thumbnail + ')';
-		}else{
-			node.thumbnail.style.backgroundImage = '';
-		}
+		if (!thumbnail) thumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
+		node.thumbnail.style.backgroundImage = formatThumbnail(thumbnail);
 	}
 }
 
