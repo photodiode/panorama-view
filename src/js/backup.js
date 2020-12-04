@@ -69,11 +69,14 @@ async function openBackup(data) {
 		await browser.sessions.setWindowValue(window.id, 'groupIndex', data.windows[wi].groupIndex);
 
 		for(var ti in data.windows[wi].tabs) {
+			
+			let pinned = data.windows[wi].tabs[ti].pinned;
 
 			var tab = await browser.tabs.create({
 				url: data.windows[wi].tabs[ti].url,
 				active: false,
-				discarded: true,
+				discarded: (pinned) ? false : true,
+				pinned: pinned,
 				windowId: window.id,
 			}).catch((err) => { console.log(err); });
 
@@ -85,6 +88,8 @@ async function openBackup(data) {
 
 		var pwTab = await browser.tabs.create({url: "/view.html", active: true, windowId: window.id});
 		await browser.sessions.setTabValue(pwTab.id, 'groupId', -1);
+		
+		browser.tabs.remove(window.tabs[0].id);
 	}
 	background.openingBackup = false;
 }
