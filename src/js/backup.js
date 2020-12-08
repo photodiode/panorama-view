@@ -72,13 +72,21 @@ async function openBackup(data) {
 			
 			let pinned = data.windows[wi].tabs[ti].pinned;
 
+			var isTabFailed = false
 			var tab = await browser.tabs.create({
 				url: data.windows[wi].tabs[ti].url,
 				active: false,
 				discarded: (pinned) ? false : true,
 				pinned: pinned,
 				windowId: window.id,
-			}).catch((err) => { console.log(err); });
+			}).catch((err) => {
+				console.log(err);
+				isTabFailed = true;
+			});
+
+			if (isTabFailed === true) {
+				continue;
+			}
 
 			if(tab) {
 				await browser.sessions.setTabValue(tab.id, 'groupId', data.windows[wi].tabs[ti].groupId);
