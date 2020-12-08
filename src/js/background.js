@@ -109,6 +109,14 @@ async function tabUpdated(tabId, changeInfo, tab) {
 		} else {
 			let activeGroup = (await browser.sessions.getWindowValue(tab.windowId, 'activeGroup'));
 			await browser.sessions.setTabValue(tab.id, 'groupId', activeGroup);
+
+			let activeTabs = await browser.tabs.query({currentWindow: true, active: true, url: browser.extension.getURL("view.html")});
+
+			if (activeTabs.length == 0) {
+				await toggleVisibleTabs(activeGroup);
+			} else {
+				await toggleVisibleTabs(-1);
+			}
 		}
 	}
 }
