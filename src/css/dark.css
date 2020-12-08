@@ -69,12 +69,12 @@ body.dark {
 }
 
 .dark .tab:hover, .dark .tab.inactive:hover {
-	border-color: #737373;
+	border-color: #b1b1b3;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 0 3px rgba(0, 0, 0, 0.8);
 }
 
 .dark .tab.selected {
-	border-color: #737373;
+	border-color: #45a1ff;
 }
 
 .dark .tab.inactive {

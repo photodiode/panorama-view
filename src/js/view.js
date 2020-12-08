@@ -62,6 +62,7 @@ async function initView() {
 	let storage = await browser.storage.local.get('useDarkTheme');
 	if (storage.useDarkTheme === true) {
 		document.body.classList.add('dark');
+		document.getElementById('favicon').href = "icons/icon_light.svg";
 	}
 
 	storage = await browser.storage.local.get('useBackdropFilters');
