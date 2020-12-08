@@ -419,19 +419,13 @@ function resizeGroups(groupId, groupRect) {
 			rect.h = group.rect.h;
 		}
 
-		// do magic
-
 		rect.w = Math.max(rect.w, minw);
 		rect.h = Math.max(rect.h, minh);
-
-		// automatic move out of the way stuff
-
-		// ----
-
-		node.style.top		= (rect.y * groupsRect.height) + 'px';
-		node.style.right	= groupsRect.width - ((rect.x + rect.w) * groupsRect.width)  + 'px';
-		node.style.bottom	= groupsRect.height - ((rect.y + rect.h) * groupsRect.height) + 'px';
-		node.style.left		= (rect.x * groupsRect.width)  + 'px';
+		
+		node.style.top    = (rect.y * 100) + '%';
+		node.style.left   = (rect.x * 100) + '%';
+		node.style.width  = (rect.w * 100) + '%';
+		node.style.height = (rect.h * 100) + '%';
 
 		if (group.lastMoved !== undefined) {
 			node.style.zIndex = Math.floor(group.lastMoved / 100).toString().substr(-9);
