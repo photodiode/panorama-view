@@ -65,6 +65,7 @@ const groups = (function(){
 			groups.splice(index, 1);
 
 			await func.save();
+			await browser.sessions.setWindowValue(windowId, 'activeGroup', groups[0].id);
 		},
 
 		rename: async function(id, newName) {

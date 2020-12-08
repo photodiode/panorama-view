@@ -103,7 +103,9 @@ async function setActiveTabNode() {
 		}
 	});
 
-	tabNodes[lastActive].tab.classList.add('selected');
+	if (tabNodes[lastActive]) {
+		tabNodes[lastActive].tab.classList.add('selected');
+	}
 }
 
 function deleteTabNode(tabId) {

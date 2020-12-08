@@ -179,6 +179,19 @@ async function tabUpdated(tabId, changeInfo, tab) {
 		updateTabNode(tab);
 		updateFavicon(tab);
 	}
+
+	if (changeInfo.pinned !== undefined) {
+		if (changeInfo.pinned) {
+			deleteTabNode(tabId); // something really weird is happening here...
+			groups.forEach(function(group) {
+				updateGroupFit(group);
+			});
+		} else {
+			while(await view.tabs.getGroupId(tab.id) == -1);
+			await tabCreated(tab);
+			setActiveTabNode();
+		}
+	}
 }
 
 async function tabMoved(tabId, moveInfo) {

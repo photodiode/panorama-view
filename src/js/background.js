@@ -102,6 +102,18 @@ function tabDetached(tabId, detachInfo) {
 }
 
 
+async function tabUpdated(tabId, changeInfo, tab) {
+	if (changeInfo.pinned !== undefined) {
+		if (changeInfo.pinned) {
+			browser.sessions.setTabValue(tab.id, 'groupId', -1);
+		} else {
+			let activeGroup = (await browser.sessions.getWindowValue(tab.windowId, 'activeGroup'));
+			await browser.sessions.setTabValue(tab.id, 'groupId', activeGroup);
+		}
+	}
+}
+
+
 /** Callback function which will be called whenever the user switches tabs */
 async function tabActivated(activeInfo) {
 
@@ -257,6 +269,7 @@ async function init() {
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onAttached.addListener(tabAttached);
 	browser.tabs.onDetached.addListener(tabDetached);
+	browser.tabs.onUpdated.addListener(tabUpdated);
 	browser.tabs.onActivated.addListener(tabActivated);
 }
 
