@@ -214,4 +214,38 @@ async function saveBackup() {
 		conflictAction: 'uniquify',
 		saveAs: true
 	});
+	
+	/*let fileId = await browser.downloads.download({
+		url: dataUrl,
+		filename: filename,
+		conflictAction: 'overwrite',
+		saveAs: false
+	});*/
+	
+	let onComplete = function(delta) {
+		if (delta.state && delta.state.current === "complete") {
+			window.URL.revokeObjectURL(dataUrl);
+			/*browser.downloads.erase({
+				id: fileId
+			});*/
+			browser.downloads.onChanged.removeListener(onComplete);
+		}
+	};
+	
+	browser.downloads.onChanged.addListener(onComplete);
 }
+
+/*function autoBackup() {
+
+	let fileId = await browser.downloads.download({
+		url: dataUrl,
+		filename: filename,
+		conflictAction: 'overwrite',
+		saveAs: false
+	});
+	
+	await browser.downloads.erase({
+		id: fileId
+	});
+
+}*/
