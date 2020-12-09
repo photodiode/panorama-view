@@ -468,10 +468,6 @@ function getFit(param) {
 			pitch = x;
 		}
 	}
-
-	/*if (w < param.min || h < param.min) {
-		pitch = 0;
-	}*/
 	
 	let fits = true;
 	if (w < param.min || h < param.min) {

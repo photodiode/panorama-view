@@ -56,10 +56,10 @@
 	background: none;
 
 	color: rgba(12, 12, 13, 0.5);
-	font-size: 13px;
+	font-size: 12px;
 	line-height: 19px;
 	font-family: inherit;
-	text-overflow: "...";
+	text-overflow: "..";
 }
 
 .group .header input:focus {

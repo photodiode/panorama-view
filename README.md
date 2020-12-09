@@ -1,27 +1,37 @@
-# Panorama View
-Tab Groups with Panorama View Add-on for Firefox
+# ![Panorama View Logo](https://github.com/photodiode/panorama-view/raw/master/src/icons/logo/logo-24.png) Panorama View
 
-https://addons.mozilla.org/firefox/addon/panorama-view/
+---
+
+![Version](https://img.shields.io/amo/v/panorama-view?label=version)
+![Daily users](https://img.shields.io/amo/users/panorama-view)
+![Rating](https://img.shields.io/amo/rating/panorama-view)
+
+Add-on for Firefox letting you organize tabs and tab groups visually in one place
+
+[![https://addons.mozilla.org/firefox/addon/panorama-view/](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_2.png)](https://addons.mozilla.org/firefox/addon/panorama-view/)
+
 
 ## Features
 - Create and remove groups
 - Drag and drop tabs between groups
-- Only show tabs of currently selected group
+- Only show tabs in currently selected group
 - Dark theme
+
 
 ### Planned
 - Different views of the groups
-  - Automatic with thumbnails
-  - Manually resizable/movable groups with thumbnails (set tab view type per group (thumbnails, list))
+  - Set tab view type per group
   - List view with vertical lists (scrollable)
 - Make new group and set active when you delete last group in a window
 - Drag and drop tabs and groups between windows (maybe)
 
+
 ### Waiting for API
-- Import/restore backup (basic implementation added, discarded option in tabs.create() or a proper sessionStore API is prefered)
+- Native tab group API
+- A proper sessionStore API
+
 
 ### Impossible (for now)
 - Open privileged URLs from backups
 
-## Known bugs
-- Detached tab not always removed from the Panorama View, a refresh solves it.
+
