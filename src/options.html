@@ -26,6 +26,31 @@
 			</form>
 		</section>
 		<section>
+			<h2>Backups</h2>
+
+			<p>
+				<label for="backupFileInput">Import a .json backup file</label>
+				<input id="backupFileInput" name="backupFile" type="file" accept=".json" title="Imported backups will open in new windows and not overwrite anything.<br>You can also import backups from the old 'Tab Groups' add-on.">
+			</p>
+			<p>
+				<label for="saveBackupButton">Export backup as a .json file</label>
+				<button id="saveBackupButton">Export</button>
+			</p>
+			<p>
+				<label for="useAutoBackup">Automatic backup</label>
+				<select id="useAutoBackup">
+					<option value="false">Never</option>
+					<option value="5">5 min</option>
+					<option value="10">10 min</option>
+					<option value="15">15 min</option>
+					<option value="30">30 min</option>
+					<option value="60">1 hour</option>
+					<option value="120">2 hour</option>
+				</select>
+				<input type="range" min="0" max="60" step="5" value="0">
+			</p>
+		</section>
+		<section>
 			<h2>Statistics</h2>
 			<div>
 				<label for="numberOfTabs">Number of Tabs</label>
@@ -35,15 +60,6 @@
 				<label for="thumbnailCacheSize">Thumbnail Cache</label>
 				<span id="thumbnailCacheSize">Calculating..</span>
 			</div>
-		</section>
-		<section>
-			<h2>Backups</h2>
-			<h3>Import</h3>
-			<p>Imported backups will open in new windows and not overwrite anything.<br>You can also import backups from the old "Tab Groups" add-on.</p>
-			<p><input id="backupFileInput" name="backupFile" type="file" accept=".json" title="This will come once Firefox supports opening a tabs as unloaded."></p>
-			<h3>Export</h3>
-			<p>This section might be made obsolete once proper session management is possible in Firefox.</p>
-			<p><button id="saveBackupButton">Save backup</button></p>
 		</section>
 	</body>
 </html>

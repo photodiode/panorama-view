@@ -62,12 +62,13 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 		rect.y = group.rect.y;
 		rect.w = Math.max(group.rect.w, minw);
 		rect.h = Math.max(group.rect.h, minh);
-		rect.i = rect.x + rect.w;
-		rect.j = rect.y + rect.h;
+
+		let rect_i = rect.x + rect.w;
+		let rect_j = rect.y + rect.h;
 
 		if(top)			{ rect.y +=  (y - ly); }
-		if(right)		{ rect.i +=  (x - lx); }
-		if(bottom)		{ rect.j +=  (y - ly); }
+		if(right)		{ rect_i +=  (x - lx); }
+		if(bottom)		{ rect_j +=  (y - ly); }
 		if(left)		{ rect.x +=  (x - lx); }
 
 		// snap (seems a bit over complicated, but it works for now)
@@ -85,8 +86,8 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 					rect.y = snapValue(rect.y, _group.rect.y, snap_dsty);
 					rect.y = snapValue(rect.y, _group.rect.y + _group.rect.h, snap_dsty);
 				}else if(bottom) {
-					rect.j = snapValue(rect.j, _group.rect.y, snap_dsty);
-					rect.j = snapValue(rect.j, _group.rect.y + _group.rect.h, snap_dsty);
+					rect_j = snapValue(rect_j, _group.rect.y, snap_dsty);
+					rect_j = snapValue(rect_j, _group.rect.y + _group.rect.h, snap_dsty);
 				}
 
 				if(left && right) {
@@ -99,8 +100,8 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 					rect.x = snapValue(rect.x, _group.rect.x, snap_dstx);
 					rect.x = snapValue(rect.x, _group.rect.x + _group.rect.w, snap_dstx);
 				}else if(right) {
-					rect.i = snapValue(rect.i, _group.rect.x, snap_dstx);
-					rect.i = snapValue(rect.i, _group.rect.x + _group.rect.w, snap_dstx);
+					rect_i = snapValue(rect_i, _group.rect.x, snap_dstx);
+					rect_i = snapValue(rect_i, _group.rect.x + _group.rect.w, snap_dstx);
 				}
 			}
 		});
@@ -109,30 +110,30 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 		if(top && right && bottom && left) {
 			if(rect.x < 0) {
 				rect.x = 0;
-				rect.i = rect.x+rect.w;
+				rect_i = rect.x+rect.w;
 			}
-			if(rect.i > 1) {
-				rect.i = 1;
-				rect.x = rect.i - rect.w;
+			if(rect_i > 1) {
+				rect_i = 1;
+				rect.x = rect_i - rect.w;
 			}
 
 			if(rect.y < 0) {
 				rect.y = 0;
-				rect.j = rect.y+rect.h;
+				rect_j = rect.y+rect.h;
 			}
-			if(rect.j > 1) {
-				rect.j = 1;
-				rect.y = rect.j - rect.h;
+			if(rect_j > 1) {
+				rect_j = 1;
+				rect.y = rect_j - rect.h;
 			}
 		}else{
-			if(left)   { rect.x = clamp(rect.x, 0, rect.i-minw); }
-			if(right)  { rect.i = clamp(rect.i, rect.x+minw, 1); }
+			if(left)   { rect.x = clamp(rect.x, 0, rect_i-minw); }
+			if(right)  { rect_i = clamp(rect_i, rect.x+minw, 1); }
 
-			if(top)    { rect.y = clamp(rect.y, 0, rect.j-minh); }
-			if(bottom) { rect.j = clamp(rect.j, rect.y+minh, 1); }
+			if(top)    { rect.y = clamp(rect.y, 0, rect_j-minh); }
+			if(bottom) { rect_j = clamp(rect_j, rect.y+minh, 1); }
 
-			rect.w = Math.max(rect.i - rect.x, minw);
-			rect.h = Math.max(rect.j - rect.y, minh);
+			rect.w = Math.max(rect_i - rect.x, minw);
+			rect.h = Math.max(rect_j - rect.y, minh);
 		}
 
 		resizeGroups(group.id, rect);

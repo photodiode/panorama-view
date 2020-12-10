@@ -157,7 +157,7 @@ function makeDateString() {
 	return string;
 }
 
-async function saveBackup() {
+async function makeBackup() {
 
 	var data = {
 		file: {
@@ -202,11 +202,18 @@ async function saveBackup() {
 			}
 		}
 	}
+	
+	return data;
+}
+
+async function saveBackup() {
+
+	const data = await makeBackup();
 
 	var blob = new Blob([JSON.stringify(data, null, '\t')], {type : 'application/json'});
 	var dataUrl = window.URL.createObjectURL(blob);
 
-	var filename = 'panoramaView-backup-' + makeDateString() + '.json';
+	var filename = 'panorama-view-backup-' + makeDateString() + '.json';
 
 	await browser.downloads.download({
 		url: dataUrl,
@@ -214,10 +221,10 @@ async function saveBackup() {
 		conflictAction: 'uniquify',
 		saveAs: true
 	});
-	
+
 	/*let fileId = await browser.downloads.download({
 		url: dataUrl,
-		filename: filename,
+		filename: 'panorama-view-backups/' + filename,
 		conflictAction: 'overwrite',
 		saveAs: false
 	});*/
