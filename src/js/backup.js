@@ -1,6 +1,5 @@
 
 function convertBackup(tgData) {
-
 	var data = {
 		file: {
 			type: 'panoramaView',
@@ -45,10 +44,12 @@ function convertBackup(tgData) {
 var background = browser.extension.getBackgroundPage()
 
 async function openBackup(data) {
-
 	background.openingBackup = true;
 
+
+	console.log(data)
 	for(var wi in data.windows) {
+		console.log('window')
 
 		var groups = [];
 
@@ -96,7 +97,6 @@ async function openBackup(data) {
 
 		var pwTab = await browser.tabs.create({url: "/view.html", active: true, windowId: window.id});
 		await browser.sessions.setTabValue(pwTab.id, 'groupId', -1);
-		
 		browser.tabs.remove(window.tabs[0].id);
 	}
 	background.openingBackup = false;
@@ -230,6 +230,7 @@ async function saveBackup() {
 	});*/
 	
 	let onComplete = function(delta) {
+		alert(delta)
 		if (delta.state && delta.state.current === "complete") {
 			window.URL.revokeObjectURL(dataUrl);
 			/*browser.downloads.erase({
@@ -256,3 +257,38 @@ async function saveBackup() {
 	});
 
 }*/
+let autoBackupInterval = setInterval(() => null);
+async function autoBackupHelper(timeBetweenBackups) {
+	clearInterval(autoBackupInterval);
+	const minutesToMilliseconds = (minutes) => minutes * 1000 * 60;
+	if(timeBetweenBackups === 'false') return;
+
+	const panoramaViewBackup = await makeBackup();
+	browser.storage.local.set({panoramaViewBackup});
+	autoBackupInterval = setInterval(() => {
+		console.log('Saving Backup');
+		// Save in local storage the last automatic backup
+		browser.storage.local.set(panoramaViewBackup);
+	}, minutesToMilliseconds(timeBetweenBackups));
+}
+
+function startAutoBackup() {
+	const timeBetweenBackups = document.getElementById('useAutoBackup').value;
+	autoBackupHelper(timeBetweenBackups)
+}
+
+function changeAutoBackup() {
+	clearInterval(autoBackupInterval);
+	const timeBetweenBackups = document.getElementById('useAutoBackup').value;
+	autoBackupHelper(timeBetweenBackups)
+}
+
+async function loadAutomaticBackup() {
+	try {
+		let data = await browser.storage.local.get('panoramaViewBackup');
+		data = data.panoramaViewBackup;
+		openBackup(data);
+	} catch (e) {
+		document.getElementById('automaticBackupMessage').innerHTML = 'There are no backup saved.'
+	}
+}
