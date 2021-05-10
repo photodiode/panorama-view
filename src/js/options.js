@@ -175,11 +175,11 @@ async function init() {
 
 	document.getElementById('useDarkTheme').addEventListener('change', changeTheme);
 	document.getElementById('useBackdropFilters').addEventListener('change', changeBackdropFilters);
+
 	// Auto-Backup
 	startAutoBackup(); // Start on load
 	document.getElementById('useAutoBackup').addEventListener('change', changeAutoBackup);
 	document.getElementById('loadAutomaticBackup').addEventListener('click', loadAutomaticBackup);
-	startAutoBackup();
 
 	browser.tabs.onUpdated.addListener(getStatistics);
 }
