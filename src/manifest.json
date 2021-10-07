@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Panorama View",
 	"description": "Tab Groups with Panorama View",
-	"version": "0.8.6",
+	"version": "0.9.0",
 	"icons": {
 		"16": "icons/logo/logo-16.png",
 		"24": "icons/logo/logo-24.png",
@@ -18,23 +18,38 @@
 	},
 
 	"commands": {
-		"toggle-panorama-view": {
+		"toggle_panorama_view": {
 			"suggested_key": {
-				"default": "Ctrl+Shift+F",
-				"mac": "MacCtrl+Shift+F"
+				"default": "Ctrl+Alt+F",
+				"mac": "MacCtrl+Alt+F"
 			},
 			"description": "Toggle Panorama View"
 		},
-		"activate-next-group": {
+		"new_tab_group": {
 			"suggested_key": {
-				"default": "Alt+W"
+				"default": "Ctrl+Alt+G",
+				"mac": "MacCtrl+Alt+G"
 			},
-			"description": "Activate the next Tab Group"
+			"description": "New Tab Group"
+		},
+		"next_group": {
+			"suggested_key": {
+				"default": "Ctrl+Alt+W",
+				"mac": "MacCtrl+Alt+W"
+			},
+			"description": "Go to the next Tab Group"
+		},
+		"previous_group": {
+			"suggested_key": {
+				"default": "Ctrl+Alt+Q",
+				"mac": "MacCtrl+Alt+Q"
+			},
+			"description": "Go to the previous Tab Group"
 		}
 	},
 
 	"background": {
-		"scripts": ["js/background.js"]
+		"page": "background/background.html"
 	},
 
 	"browser_action": {
@@ -44,7 +59,8 @@
 			"light": "icons/icon_light.svg",
 			"dark": "icons/icon.svg",
 			"size": 16
-		}, {
+		},
+		{
 			"light": "icons/icon_light.svg",
 			"dark": "icons/icon.svg",
 			"size": 32
@@ -53,7 +69,7 @@
 
 	"options_ui": {
 		"browser_style": true,
-		"page": "options.html"
+		"page": "options/options.html"
 	},
 
 	"permissions": [
@@ -62,6 +78,7 @@
 		"tabHide",
 		"storage",
 		"sessions",
-		"downloads"
+		"downloads",
+		"menus"
 	]
 }

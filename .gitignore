@@ -1,4 +1,5 @@
 git.sh
 archive/*
 
-.idea/
+src/new
+src/old

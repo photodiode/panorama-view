@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="options.css">
+		<script src="backup.js"></script>
+		<script src="options.js"></script>
+	</head>
+	<body>
+		<section>
+			<h3>Keyboard Shortcuts</h3>
+			<div id="keyboardShortcuts" class="browser-style"></div>
+			<p>To change shortcuts please go to the Gear Icon in the top right and choose "Manage Extension Shortcuts"</p>
+		</section>
+		<section>
+			<h3>Theme</h3>
+
+			<form id="theme">
+				<div class="browser-style">
+					<label for="useDarkTheme">Use Dark Theme</label>
+					<input type="checkbox" id="useDarkTheme">
+
+					<label for="useBackdropFilters">Use Backdrop Filters (can be laggy)</label>
+					<input type="checkbox" id="useBackdropFilters">
+				</div>
+			</form>
+		</section>
+		<section>
+			<h3>Backups</h3>
+
+			<div class="browser-style">
+				<label for="backupFileInput">Import a .json backup file</label>
+				<input id="backupFileInput" name="backupFile" type="file" accept=".json" title="Imported backups will open in new windows and not overwrite anything">
+
+				<label for="saveBackupButton">Export backup as a .json file</label>
+				<button id="saveBackupButton">Export</button>
+
+				<label for="useAutoBackup">Automatic backup</label>
+				<select id="useAutoBackup">
+					<option value="false">Never</option>
+					<option value="5">15 min</option>
+					<option value="10">30 min</option>
+					<option value="15">1 hour</option>
+					<option value="30">2 hour</option>
+					<option value="60">4 hour</option>
+					<option value="120">6 hour</option>
+				</select>
+				<button id="loadAutomaticBackup">Load Last Backup</button>
+				<p id="automaticBackupMessage" style="color:darkred"></p>
+			</div>
+		</section>
+		<section>
+			<h3>Statistics</h3>
+			<div class="browser-style">
+				<label for="numberOfTabs">Number of Tabs</label>
+				<span id="numberOfTabs">Calculating..</span>
+
+				<label for="thumbnailCacheSize">Thumbnail Cache</label>
+				<span id="thumbnailCacheSize">Calculating..</span>
+			</div>
+		</section>
+	</body>
+</html>

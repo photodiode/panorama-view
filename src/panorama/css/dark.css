@@ -23,11 +23,7 @@ body.dark {
 }
 
 .dark #newGroup {
-	background-image: url(/icons/plus_light.svg);
-}
-
-.dark #toggleTheme {
-	background-image: url(/icons/icon_light.svg);
+	background-image: url(../gfx/plus_light.svg);
 }
 
 
@@ -52,7 +48,7 @@ body.dark {
 }
 
 .dark .group .header .close {
-	background-image: url(../icons/group_close_light.svg);
+	background-image: url(../gfx/group_close_light.svg);
 }
 
 .dark .group .header .close:hover {
@@ -100,7 +96,7 @@ body.dark {
 }
 
 .dark .newtab .border::after {
-	background-image: url(/icons/plus_light.svg);
+	background-image: url(../gfx/plus_light.svg);
 }
 
 .dark .newtab .border:hover {
@@ -133,11 +129,7 @@ body.dark {
 	}
 
 	#newGroup {
-		background-image: url(/icons/plus_light.svg);
-	}
-
-	#toggleTheme {
-		background-image: url(/icons/icon_light.svg);
+		background-image: url(../gfx/plus_light.svg);
 	}
 
 
@@ -162,7 +154,7 @@ body.dark {
 	}
 
 	.group .header .close {
-		background-image: url(../icons/group_close_light.svg);
+		background-image: url(../gfx/group_close_light.svg);
 	}
 
 	.group .header .close:hover {
@@ -210,7 +202,7 @@ body.dark {
 	}
 
 	.newtab .border::after {
-		background-image: url(/icons/plus_light.svg);
+		background-image: url(../gfx/plus_light.svg);
 	}
 
 	.newtab .border:hover {

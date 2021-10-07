@@ -17,11 +17,8 @@ Add-on for Firefox letting you organize tabs and tab groups visually in one plac
 
 
 ### Planned
-- Different views of the groups
-  - Set tab view type per group
-  - List view with vertical lists (scrollable)
-- Make new group and set active when you delete last group in a window
-- Drag and drop tabs and groups between windows (maybe)
+- List view inside groups (scrollable)
+- Drag and drop tabs and groups between windows (if possible)
 
 
 ### Waiting for API

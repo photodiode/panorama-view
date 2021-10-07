@@ -1,8 +1,16 @@
 
-body {
-	line-height: 20px;
-	text-shadow: 0 1px 1px #fefffe;
+label {
+	width: 50%;
+	height: 2.5em;
+
+	display: inline-block;
 }
+
+span {
+	font-weight: bold;
+}
+
+/*
 
 h2 {
 	min-height: 30px;
@@ -14,15 +22,6 @@ h2 {
 
 h3 {
 	font-size: 1em;
-}
-
-label {
-	width: 50%;
-	height: 24px;
-
-	margin: 4px 0;
-
-	display: inline-block;
 }
 
 input[type=button] {
@@ -83,3 +82,4 @@ input[type=checkbox] {
 	display: inline-block;
 	vertical-align: bottom;
 }
+*/

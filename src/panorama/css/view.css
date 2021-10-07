@@ -1,6 +1,7 @@
 
 :root {
-	--background-color: #ededf0;
+	--color-background: #ededf0;
+	--color-text: #0c0c0d;
 }
 
 body {
@@ -8,9 +9,9 @@ body {
 
 	margin: 0;
 
-	background-color: var(--background-color);
+	background-color: var(--color-background);
 
-	color: #0c0c0d;
+	color: var(--color-text);
 	font-family: sans-serif;
 	-moz-user-select: none;
 }
@@ -28,6 +29,8 @@ body {
 #toolbar {
 	width: 30px;
 	padding: 5px;
+	
+	display: none;
 
 	position: fixed;
 	top: 64px;
@@ -61,7 +64,7 @@ body {
 }
 
 #newGroup {
-	background-image: url(../icons/plus_dark.svg);
+	background-image: url(../gfx/plus_dark.svg);
 }
 
 .drag_indicator {

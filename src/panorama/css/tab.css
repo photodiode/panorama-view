@@ -18,17 +18,21 @@
 	transition: opacity 500ms cubic-bezier(.08,.82,.17,1), transform 500ms cubic-bezier(.08,.82,.17,1);
 }
 
-.tab:hover, .tab.inactive:hover {
+.tab:hover, .tab.inactive:hover, .tab.selected {
 	box-shadow: 0 1px 4px rgba(12, 12, 13, 0.1), 0 0 0 3px rgba(12, 12, 13, 0.15);
 }
 
-.tab.selected {
-	border-color: #45a1ff;
+.tab.active {
+	outline: 2px solid #45a1ff;
 }
 
 .tab.inactive {
 	filter: saturate(0.8);
 	opacity: 0.65;
+}
+
+.tab.selected {
+	transform: scale(0.95);
 }
 
 .tab.drag {
@@ -93,15 +97,25 @@
 	right: 0;
 	top: 0;
 
-	background-image: url(../icons/tab_close.svg);
+	background-image: url(../gfx/tab_close.svg);
 	background-repeat: no-repeat;
 	background-size: 10px;
 	background-position: center;
+	
+	border-radius: 2px;
 
 	z-index: 10;
+
+	opacity: 0.5;
 }
 
-.tab .name {
+.tab .close:hover {
+	background-color: rgba(12, 12, 13, 0.15);
+
+	opacity: 1;
+}
+
+.tab .title {
 	position: absolute;
 	bottom: -1px;
 	left: 3px;
@@ -114,11 +128,10 @@
 	z-index: 10;
 }
 
-.tab .name span {
+.tab .title span {
 	max-width: 100%;
-	height: 21px;
 
-	padding: 1px 6px;
+	padding: 2px 6px;
 
 	display: inline-block;
 	box-sizing: border-box;
@@ -163,7 +176,7 @@
 	
 	transform: translate(-50%, -50%);
 
-	background-image: url(../icons/plus_dark.svg);
+	background-image: url(../gfx/plus_dark.svg);
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
@@ -195,8 +208,8 @@
 	box-shadow: none;
 }
 
-.tab.small .name span {
-	height: 18px;
+.tab.small .title span {
+	padding: 0 5px;
 
 	font-size: 10px;
 	text-overflow: "";
@@ -206,6 +219,6 @@
 	display: none;
 }
 
-.tab.tiny .name {
+.tab.tiny .title {
 	display: none;
 }
