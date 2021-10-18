@@ -54,25 +54,28 @@ async function getCommands() {
 // ----
 
 
-// backup
-async function saveBackup() {
+function getDateString(date) {
 
-	const backup = await backups.create();
-
-	// get date string
-	const date = new Date();
-	      date.setMinutes(date.getMinutes() - date.getTimezoneOffset()); // time-zone fix
+	date.setMinutes(date.getMinutes() - date.getTimezoneOffset()); // time-zone fix
 
 	let dateString = date.toISOString();
 	    dateString = dateString.replaceAll('-', '');
 	    dateString = dateString.replaceAll('T', '-');
 	    dateString = dateString.replaceAll(':', '');
 	    dateString = dateString.replace(/\..*/, '');
-	// ----
+	    
+	return dateString;
+}
+
+
+// backup
+async function saveBackup() {
+
+	const backup = await backups.create();
 
 	const blob     = new Blob([JSON.stringify(backup, null, '\t')], {type : 'application/json'});
 	const dataUrl  = window.URL.createObjectURL(blob);
-	const filename = 'panorama-view-backup-' + dateString + '.json';
+	const filename = 'panorama-view-backup-' + getDateString(new Date()) + '.json';
 
 	const onComplete = (delta) => {
 		if (delta.state && delta.state.current == 'complete') {
