@@ -38,30 +38,26 @@ async function createGroupInWindow(window) {
 /** Put any tabs that do not have a group into the active group */
 async function salvageGrouplessTabs() {
 
-	// make array of all groups for quick look-up
-	let windowMap = {};
-	const windows = await browser.windows.getAll({});
+	const windows = await browser.windows.getAll({populate: true});
 
 	for (const window of windows) {
-		windowMap[window.id] = {groups: await addon.tabGroups.query({windowId: window.id})};
-	}
+		const tabGroups = await addon.tabGroups.query({windowId: window.id});
 
-	// check all tabs
-	const tabs = browser.tabs.query({});
+		for (const tab of window.tabs) {
 
-	for (const tab of await tabs) {
-		const groupId = await addon.tabs.getGroupId(tab.id);
+			if (tab.pinned) {
+				addon.tabs.setGroupId(tab.id, -1);
+			} else {
+				const tabGroupId = await addon.tabs.getGroupId(tab.id);
 
-		let groupExists = false;
-		for (let i in windowMap[tab.windowId].groups) {
-			if(windowMap[tab.windowId].groups[i].id == groupId) {
-				groupExists = true;
-				break;
+				if (tabGroupId != -1) {
+					const tabGroupExists = tabGroups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
+					if (!tabGroupExists) {
+						const activeGroup = await addon.tabGroups.getActiveId(tab.windowId);
+						addon.tabs.setGroupId(tab.id, activeGroup);
+					}
+				}
 			}
-		}
-		if (!groupExists && groupId != -1) {
-			const activeGroup = await addon.tabGroups.getActiveId(tab.windowId);
-			addon.tabs.setGroupId(tab.id, activeGroup);
 		}
 	}
 }
