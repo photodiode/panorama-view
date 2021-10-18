@@ -1,4 +1,4 @@
-# ![Panorama View Logo](https://github.com/photodiode/panorama-view/raw/master/src/icons/logo/logo-24.png) Panorama View
+# ![Panorama View Logo](https://github.com/photodiode/panorama-view/raw/master/src/gfx/logo/logo-24.png) Panorama View
 
 [![Version](https://img.shields.io/amo/v/panorama-view?label=version)](https://addons.mozilla.org/firefox/addon/panorama-view/)
 [![Daily users](https://img.shields.io/amo/users/panorama-view)](https://addons.mozilla.org/firefox/addon/panorama-view/)
@@ -10,8 +10,8 @@ Add-on for Firefox letting you organize tabs and tab groups visually in one plac
 
 
 ## Features
-- Create and organize Tab Groups visually
-- Select and move multiple Tabs between Tab Groups and Windows
+- Create and organize tab groups visually
+- Select and move multiple tabs between tab groups and windows
 - Keyboard shortcuts
 - Session backups
 - Light/Dark theme
