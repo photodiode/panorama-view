@@ -22,8 +22,8 @@ export async function migrate() {
 
 		// update tab groups object
 		for (let i in groups) {
-			groups[i].title       = groups[i].name;
-			groups[i].lastUpdated = groups[i].lastMoved;
+			groups[i].title        = groups[i].name;
+			groups[i].lastAccessed = groups[i].lastMoved;
 		}
 		await browser.sessions.setWindowValue(window.id, 'groups', groups);
 	}

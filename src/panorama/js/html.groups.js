@@ -182,7 +182,7 @@ export async function resize(node, rect) {
 
 export async function stack(node, tabGroup) {
 	tabGroup = tabGroup || await addon.tabGroups.get(parseInt(node.id.substr(8)));
-	node.style.zIndex = Math.floor(tabGroup.lastUpdated / 100).toString().substr(-9);
+	node.style.zIndex = Math.floor(tabGroup.lastAccessed / 100).toString().substr(-9);
 }
 
 export function resizeTitle(node) {

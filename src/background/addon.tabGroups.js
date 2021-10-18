@@ -47,8 +47,8 @@ export async function create(createInfo = {}) {
 		title:        createInfo.title       || 'Untitled',
 		containerId:  createInfo.containerId || 'firefox-default',
 
-		lastUpdated: (new Date).getTime(),
-		rect:        createInfo.rect // temporary
+		lastAccessed: (new Date).getTime(),
+		rect:         createInfo.rect // temporary
 	};
 
 	// update tab groups in window
@@ -168,7 +168,7 @@ export async function update(tabGroupId, updateInfo) {
 	}
 	
 	if (updatedTabGroup) {
-		updatedTabGroup.lastUpdated = (new Date).getTime();
+		updatedTabGroup.lastAccessed = (new Date).getTime();
 	}
 	
 	await setTabGroups(windowId, tabGroups);

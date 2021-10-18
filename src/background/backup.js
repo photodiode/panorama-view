@@ -29,7 +29,7 @@ export async function create() {
 
 		const groups = await browser.sessions.getWindowValue(window.id, 'groups');
 		groups.sort((a, b) => {
-			return a.lastUpdated - b.lastUpdated;
+			return a.lastAccessed - b.lastAccessed;
 		});
 
 		let pinnedTabs = [];
@@ -114,11 +114,11 @@ export async function open(backup) {
 		let z = 0;
 		for (const _tabGroup of _window.tabGroups) {
 			const tabGroup = await addon.tabGroups.create({
-				windowId: window.id,
-				title:    _tabGroup.title,
-				rect:     _tabGroup.rect,
-				empty:    true,
-				lastUpdated: z
+				windowId:     window.id,
+				title:        _tabGroup.title,
+				rect:         _tabGroup.rect,
+				empty:        true,
+				lastAccessed: z
 			});
 
 			z++;
