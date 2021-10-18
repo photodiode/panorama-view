@@ -7,7 +7,7 @@ import * as core from './core.js';
 export async function handleCommands(command) {
 	switch (command) {
 		case 'toggle_panorama_view': {
-			toggleView();
+			core.toggleView();
 			break;
 		}
 		case 'new_tab_group': {
