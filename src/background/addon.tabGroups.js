@@ -85,7 +85,7 @@ export async function remove(tabGroupId) {
 			tabsToRemove.push(tab.id);
 		}
 	}
-	browser.tabs.remove(tabsToRemove);
+	browser.tabs.remove(tabsToRemove); //!\ check for error and don't remove group if all tabs are not closed
 	// ----
 
 	const windowId = (await browser.windows.getCurrent()).id

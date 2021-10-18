@@ -78,11 +78,12 @@ export async function open(backup) {
 		let tabFailed = false;
 
 		const tab = await browser.tabs.create({
-			url:       _tab.url,
-			title:     _tab.title,
-			active:    false,
-			discarded: true,
-			windowId:  windowId,
+			url:           _tab.url,
+			title:         _tab.title,
+			active:        false,
+			discarded:     true,
+			windowId:      windowId,
+			cookieStoreId: _tab.cookieStoreId
 		}).catch((err) => {
 			console.log(err);
 			tabFailed = true;
