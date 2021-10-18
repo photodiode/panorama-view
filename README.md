@@ -6,12 +6,4 @@
 
 Add-on for Firefox letting you organize tabs and tab groups visually in one place.
 
-[![https://addons.mozilla.org/firefox/addon/panorama-view/](https://ffp4g1ylyit3jdyti1hqcvtb-wpengine.netdna-ssl.com/addons/files/2015/11/get-the-addon-small.png)](https://addons.mozilla.org/firefox/addon/panorama-view/)
-
-
-## Features
-- Create and organize tab groups visually
-- Select and move multiple tabs between tab groups and windows
-- Keyboard shortcuts
-- Session backups
-- Light/Dark theme
+[https://addons.mozilla.org/firefox/addon/panorama-view/](https://addons.mozilla.org/firefox/addon/panorama-view/)
