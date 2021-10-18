@@ -304,10 +304,6 @@ async function init() {
 	
 	const backupFileInput = document.getElementById('backupFileInput');
 	const selectBackup    = document.getElementById('selectBackup');
-	
-	autoBackups = await backups.get();
-	
-	fillBackupSelection(autoBackups);
 
 	backupFileInput.addEventListener('change', (e) => {
 		const filename = e.target.value.split(/(\\|\/)/g).pop();
@@ -322,7 +318,10 @@ async function init() {
 		}
 	});
 
-	selectBackup.addEventListener('mousedown', (e) => {
+	selectBackup.addEventListener('mousedown', async(e) => {
+		autoBackups = await backups.get();
+		fillBackupSelection(autoBackups);
+
 		const file = e.target.querySelector('[value="file"]')
 		if (file) file.remove();
 		backupFileInput.value = null;
