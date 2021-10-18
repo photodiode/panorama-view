@@ -99,7 +99,7 @@ async function init() {
 	await setupWindows();
 	await salvageGrouplessTabs();
 
-	await migrate(); //keep until everyone are on 0.8.0
+	await migrate(); // keep until everyone's on 0.9.0
 
 	// meny entries
 	browser.menus.create({

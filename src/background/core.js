@@ -63,7 +63,7 @@ export async function toggleView() {
 	
 	const panoramaViewTab = await getPanoramaViewTab();
 
-	if (panoramaViewTab != undefined) {
+	if (panoramaViewTab) {
 
 		const currentTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
 
