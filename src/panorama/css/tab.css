@@ -8,18 +8,18 @@
 }
 
 .tab {
-	border: 2px solid rgba(255, 255, 255, 1);
+	border: 2px solid var(--color-tab);
 	border-radius: 5px;
 
-	box-shadow: 0 1px 4px rgba(12, 12, 13, 0.1), 0 0 0 1px rgba(12, 12, 13, 0.1);
+	box-shadow: 0 1px 4px var(--color-shadow), 0 0 0 1px var(--color-tab-border);
 	
 	overflow: hidden;
 
-	transition: opacity 500ms cubic-bezier(.08,.82,.17,1), transform 500ms cubic-bezier(.08,.82,.17,1);
+	transition: opacity 400ms cubic-bezier(.08,.82,.17,1), transform 400ms cubic-bezier(.08,.82,.17,1);
 }
 
 .tab:hover, .tab.inactive:hover, .tab.selected {
-	box-shadow: 0 1px 4px rgba(12, 12, 13, 0.1), 0 0 0 3px rgba(12, 12, 13, 0.15);
+	box-shadow: 0 1px 4px var(--color-shadow), 0 0 0 3px var(--color-tab-border);
 }
 
 .tab.active {
@@ -27,8 +27,8 @@
 }
 
 .tab.inactive {
-	filter: saturate(0.8);
 	opacity: 0.65;
+	filter: saturate(0.8);
 }
 
 .tab.selected {
@@ -36,10 +36,6 @@
 }
 
 .tab.drag {
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
-	outline: none;
-
 	opacity: 0.5;
 	transform: scale(0.9);
 }
@@ -73,9 +69,9 @@
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-origin: content-box;
-	background-color: rgba(255, 255, 255, 0.85);
+	background-color: var(--color-tab-overlay);
 
-	box-shadow: 0 0 0 1px rgba(12, 12, 13, 0.1);
+	box-shadow: 0 0 0 1px var(--color-shadow);
 
 	display: none;
 	
@@ -138,12 +134,11 @@
 
 	border-radius: 2px;
 
-	background-color: rgba(255, 255, 255, 0.9);
+	background-color: var(--color-tab-overlay);
 
-	box-shadow: 0 0 0 1px rgba(12, 12, 13, 0.1);
+	box-shadow: 0 0 0 1px var(--color-shadow);
 
 	text-overflow: "..";
-	text-shadow: 0 0 2px #ffffff;
 
 	overflow: hidden;
 }
@@ -155,10 +150,14 @@
 	left: 1px;
 	right: 1px;
 
-	border: rgba(12, 12, 13, 0.8) 2px dashed;
+	border: var(--color-group-text) 2px dashed;
 	border-radius: 5px;
 
-	opacity: 0.2;
+	opacity: 0.3;
+}
+
+.newtab .border:hover {
+	opacity: 0.5;
 }
 
 .newtab .border::after {
@@ -182,15 +181,11 @@
 	background-position: center;
 }
 
-.newtab .border:hover {
-	opacity: 0.4;
-}
-
-.tab.small .favicon[style] + .thumbnail {
+.small .tab .favicon[style] + .thumbnail, .tiny .tab .favicon[style] + .thumbnail {
 	display: none;
 }
 
-.tab.small .favicon {
+.small .tab .favicon, .tiny .tab .favicon {
 	width: auto;
 	height: auto;
 
@@ -204,21 +199,80 @@
 	bottom: 0;
 
 	background-size: cover;
-	background-color: #f7f7f9;
+	background-color: transparent;
 	box-shadow: none;
 }
 
-.tab.small .title span {
+.small .tab .title span {
 	padding: 0 5px;
 
 	font-size: 10px;
 	text-overflow: "";
 }
 
-.tab.small .close {
+.small .tab .close, .tiny .tab .close {
 	display: none;
 }
 
-.tab.tiny .title {
+.tiny .tab .title {
 	display: none;
+}
+
+
+.list .tab, .list .newtab {
+	width: calc(100% - 8px) !important;
+	height: 24px !important;
+
+	position: relative;
+	top: 0px !important;
+	left: 0px !important;
+}
+
+.list .tab .favicon {
+	margin: 2px;
+	padding: 0;
+
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	border-radius: 0px;
+	
+	background-color: transparent;
+
+	box-shadow: none;
+	
+	z-index: 10;
+}
+
+.list .tab .close {
+	margin: 2px;
+}
+
+.list .tab .thumbnail {
+	display: none;
+}
+
+.list .tab .title {
+	top: 2px;
+	bottom: 2px;
+	left: 24px;
+	right: 24px;
+
+	text-align: left;
+}
+
+.list .tab .title span {
+	padding: 0;
+
+	border-radius: 0;
+
+	background-color: transparent;
+
+	box-shadow: none;
+}
+
+.list .newtab .border::after {
+	max-width: 12px;
+	max-height: 12px;
 }

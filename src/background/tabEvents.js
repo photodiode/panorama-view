@@ -2,7 +2,9 @@
 'use strict';
 
 import {addon} from './addon.js';
-import * as core from "./core.js";
+import * as core from './core.js';
+
+import * as backup from './backup.js';
 
 
 export function handleTabEvents() {
@@ -15,11 +17,10 @@ export function handleTabEvents() {
 }
 
 
-let openingBackup = false;
 
 
 async function created(tab) {
-	if (!openingBackup) {
+	if (!backup.opening) {
 		if (!core.openingPanoramaView) {
 			// Normal case: everything except the Panorama View tab
 			// If the tab does not have a group, set its group to the current group
@@ -67,7 +68,6 @@ async function attached(tabId, attachInfo) {
 
 
 async function updated(tabId, changeInfo, tab) {
-
 	if (changeInfo.pinned != undefined) {
 		if (changeInfo.pinned) {
 			addon.tabs.setGroupId(tabId, -1);

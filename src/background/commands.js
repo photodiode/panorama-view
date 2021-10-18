@@ -2,7 +2,7 @@
 'use strict';
 
 import {addon} from './addon.js';
-import * as core from "./core.js";
+import * as core from './core.js';
 
 export async function handleCommands(command) {
 	switch (command) {

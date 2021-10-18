@@ -1,211 +1,26 @@
 
-/* view */
 body.dark {
-	background-color: #0c0c0d;
-}
+	--color-background: #0c0c0d;
+	--color-text: #ededf0;
+	--color-shadow: rgba(0, 0, 0, 0.5);
 
-.dark #toolbar {
-	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.5), inset 0 0 0 2px rgba(249, 249, 250, 0.1);
-	background-color: #2a2a2e;
-}
+	--color-group-background: #2a2a2e;
+	--color-group-text: rgba(249, 249, 250, 0.5);
+	--color-group-border: rgba(249, 249, 250, 0.1);
 
-.dark.backdrop #toolbar {
-	background-color: rgba(42, 42, 46, 0.8);
-	backdrop-filter: saturate(250%) blur(32px);
-}
-
-.dark #toolbar .button:hover {
-	background-color: rgba(249, 249, 250, 0.2);
-}
-
-.dark #toolbar .button:active {
-	background-color: rgba(249, 249, 250, 0.25);
-}
-
-.dark #newGroup {
-	background-image: url(../gfx/plus_light.svg);
-}
-
-
-/* groups */
-.dark .group::before {
-	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.5), inset 0 0 0 2px rgba(249, 249, 250, 0.1);
-	background-color: #2a2a2e;
-}
-
-.dark.backdrop .group::before {
-	background-color: rgba(42, 42, 46, 0.8);
-	backdrop-filter: saturate(250%) blur(32px);
-}
-
-.dark .group .header input, .group .header .name {
-	color: rgba(249, 249, 250, 0.5);
-}
-
-.dark .group .header .tab_count {
-	background-color: rgba(249, 249, 250, 0.2);
-	color: rgba(249, 249, 250, 0.5);
-}
-
-.dark .group .header .close {
-	background-image: url(../gfx/group_close_light.svg);
-}
-
-.dark .group .header .close:hover {
-	background-color: rgba(249, 249, 250, 0.2);
-	opacity: 0.75;
-}
-
-
-/* tabs */
-.dark .tab {
-	border-color: #4a4a4f;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.5);
-	background-color: #38383d;
-}
-
-.dark .tab:hover, .dark .tab.inactive:hover {
-	border-color: #b1b1b3;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 0 3px rgba(0, 0, 0, 0.8);
-}
-
-.dark .tab.selected {
-	border-color: #45a1ff;
-}
-
-.dark .tab.inactive {
-	opacity: 0.8;
+	--color-tab: #4a4a4f;
+	--color-tab-border: rgba(0, 0, 0, 0.9);
+	--color-tab-overlay: rgba(12, 12, 13, 0.8);
 }
 
 .dark .tab .thumbnail {
 	opacity: 0.9;
 }
 
-.dark .tab .name span {
-	background-color: rgba(0, 0, 0, 0.7);
-
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-
-	color: #ededf0;
-	text-shadow: none;
-}
-
-.dark .newtab .border {
-	border-color: rgba(249, 249, 250, 1);
-	opacity: 0.25;
+.dark .group .header .close {
+	background-image: url(../gfx/group_close_light.svg);
 }
 
 .dark .newtab .border::after {
 	background-image: url(../gfx/plus_light.svg);
-}
-
-.dark .newtab .border:hover {
-	opacity: 0.4;
-}
-
-@media (prefers-color-scheme: dark) {
-
-	/* view */
-	body {
-		background-color: #0c0c0d;
-	}
-
-	#toolbar {
-		box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.5), inset 0 0 0 2px rgba(249, 249, 250, 0.1);
-		background-color: #2a2a2e;
-	}
-
-	.backdrop #toolbar {
-		background-color: rgba(42, 42, 46, 0.8);
-		backdrop-filter: saturate(250%) blur(32px);
-	}
-
-	#toolbar .button:hover {
-		background-color: rgba(249, 249, 250, 0.2);
-	}
-
-	#toolbar .button:active {
-		background-color: rgba(249, 249, 250, 0.25);
-	}
-
-	#newGroup {
-		background-image: url(../gfx/plus_light.svg);
-	}
-
-
-	/* groups */
-	.group::before {
-		box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.5), inset 0 0 0 2px rgba(249, 249, 250, 0.1);
-		background-color: #2a2a2e;
-	}
-
-	.backdrop .group::before {
-		background-color: rgba(42, 42, 46, 0.8);
-		backdrop-filter: saturate(250%) blur(32px);
-	}
-
-	.group .header input, .group .header .name {
-		color: rgba(249, 249, 250, 0.5);
-	}
-
-	.group .header .tab_count {
-		background-color: rgba(249, 249, 250, 0.2);
-		color: rgba(249, 249, 250, 0.5);
-	}
-
-	.group .header .close {
-		background-image: url(../gfx/group_close_light.svg);
-	}
-
-	.group .header .close:hover {
-		background-color: rgba(249, 249, 250, 0.2);
-		opacity: 0.75;
-	}
-
-
-	/* tabs */
-	.tab {
-		border-color: #4a4a4f;
-		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.5);
-		background-color: #38383d;
-	}
-
-	.tab:hover, .tab.inactive:hover {
-		border-color: #b1b1b3;
-		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 0 3px rgba(0, 0, 0, 0.8);
-	}
-
-	.tab.selected {
-		border-color: #45a1ff;
-	}
-
-	.tab.inactive {
-		opacity: 0.8;
-	}
-
-	.tab .thumbnail {
-		opacity: 0.9;
-	}
-
-	.tab .name span {
-		background-color: rgba(0, 0, 0, 0.7);
-
-		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-
-		color: #ededf0;
-		text-shadow: none;
-	}
-
-	.newtab .border {
-		border-color: rgba(249, 249, 250, 1);
-		opacity: 0.25;
-	}
-
-	.newtab .border::after {
-		background-image: url(../gfx/plus_light.svg);
-	}
-
-	.newtab .border:hover {
-		opacity: 0.4;
-	}
 }

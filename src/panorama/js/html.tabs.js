@@ -14,7 +14,7 @@ export function create(tab) {
 	let title         = newElement('span');
 	let nameContainer = newElement('div', {class: 'title'}, [title]);
 
-	let node = newElement('div', {class: 'tab', draggable: 'true', id: 'tab'+tab.id, title: ""}, [favicon, thumbnail, close, nameContainer]);
+	let node = newElement('div', {class: 'tab', draggable: 'true', id: 'tab'+tab.id, title: ''}, [favicon, thumbnail, close, nameContainer]);
 
 	node.addEventListener('click', function(event) {
 		event.preventDefault();
@@ -88,9 +88,9 @@ export async function setActive() {
 	var lastActiveTabId = -1;
 	var lastAccessed = 0;
 
-	let tabs = browser.tabs.query({currentWindow: true});
+	let tabs = await browser.tabs.query({currentWindow: true});
 	
-	for (let tab of await tabs) {
+	for (let tab of tabs) {
 		tab.groupId = await addon.tabs.getGroupId(tab.id);
 		if (tab.lastAccessed > lastAccessed && tab.groupId >= 0) {
 			lastAccessed = tab.lastAccessed;

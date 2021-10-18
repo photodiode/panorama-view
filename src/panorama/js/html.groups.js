@@ -21,10 +21,10 @@ export function create(group) {
 	var top_left     = newElement('div', {class: 'top_left'});
 
 	// header
-	var name  = newElement('span', {class: 'name', content: group.title});
-	var input = newElement('input', {type: 'text', value: group.title});
+	var name     = newElement('span', {class: 'name', content: group.title});
+	var input    = newElement('input', {type: 'text', value: group.title});
 	var tabCount = newElement('span', {class: 'tab_count'});
-	var close = newElement('div', {class: 'close'});
+	var close    = newElement('div', {class: 'close'});
 
 	var header = newElement('div', {class: 'header'}, [name, input, tabCount, close]);
 	// ----
@@ -48,11 +48,13 @@ export function create(group) {
 		var tabCount = childNodes.length-1;
 
 		if (tabCount > 0) {
-			if (window.confirm('Closing this Group will close the ' + tabCount + ' tab' + (tabCount == 1 ? '' : 's') + ' within it')) {
+			if (window.confirm(`Closing this Tab Group will close the ${tabCount} tab${(tabCount == 1 ? '' : 's')} within it`)) {
 				addon.tabGroups.remove(group.id);
+				node.remove();
 			}
 		} else {
 			addon.tabGroups.remove(group.id);
+			node.remove();
 		}
 	}, false);
 
@@ -184,8 +186,8 @@ export async function stack(node, tabGroup) {
 }
 
 export function resizeTitle(node) {
-	let input = node.querySelector("input");
-	let name  = node.querySelector(".name");
+	let input = node.querySelector('input');
+	let name  = node.querySelector('.name');
 	input.style.width = name.getBoundingClientRect().width + 'px';
 }
 
@@ -232,6 +234,16 @@ function getFit(param) {
 }
 
 export function fitTabs(tabGroupNode) {
+	if (tabGroupNode == undefined) {
+		for (let tabGroupNode of document.getElementById('groups').childNodes) {
+			fitTabsInGroup(tabGroupNode);
+		}
+	} else {
+		fitTabsInGroup(tabGroupNode);
+	}
+}
+
+export function fitTabsInGroup(tabGroupNode) {
 
 	let tabsNode   = tabGroupNode.querySelector('.tabs');
 	let childNodes = tabsNode.childNodes;
@@ -302,25 +314,26 @@ export function fitTabs(tabGroupNode) {
 	if (h < 20) h = 20;
 
 	// icon view
-	let small = false;
-	let tiny  = false;
+	let size = 'normal';
 
-	if (w < 60) small = true;
-	if (w < 40) tiny  = true;
+	if (w < 60) size = 'small';
+	if (w < 40) size = 'tiny';
+	if (w < 24) size = 'list';
+
+
+	tabsNode.classList.remove('small');
+	tabsNode.classList.remove('tiny');
+	tabsNode.classList.remove('list');
+
+	if (size == 'small') {
+		tabsNode.classList.add('small');
+	} else if (size == 'tiny') {
+		tabsNode.classList.add('tiny');
+	} else if (size == 'list') {
+		tabsNode.classList.add('list');
+	}
 
 	for (let i = 0; i < childNodes.length; i++) {
-		if (small) {
-			childNodes[i].classList.add('small');
-		} else {
-			childNodes[i].classList.remove('small');
-		}
-
-		if (tiny) {
-			childNodes[i].classList.add('tiny');
-		} else {
-			childNodes[i].classList.remove('tiny');
-		}
-
 		childNodes[i].style.width  = w + 'px';
 		childNodes[i].style.height = h + 'px';
 
@@ -345,7 +358,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 		}
 	};
 
-	document.getElementsByTagName("body")[0].setAttribute('style', 'cursor: ' + window.getComputedStyle(elem).cursor);
+	document.getElementsByTagName('body')[0].setAttribute('style', 'cursor: ' + window.getComputedStyle(elem).cursor);
 
 	var groupsRect = document.getElementById('groups').getBoundingClientRect();
 	var nodeRect = node.getBoundingClientRect();
@@ -476,7 +489,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 			group.rect = rect;
 			addon.tabGroups.update(group.id, {rect: rect});
 		}
-		document.getElementsByTagName("body")[0].removeAttribute('style');
+		document.getElementsByTagName('body')[0].removeAttribute('style');
 
 		document.removeEventListener('mousemove', onmousemove);
 	}, false);

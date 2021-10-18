@@ -16,9 +16,9 @@
 
 	border-radius: 6px;
 
-	box-shadow: 0 1px 8px rgba(12, 12, 13, 0.1), 0 0 0 1px rgba(12, 12, 13, 0.1), inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+	box-shadow: 0 1px 8px var(--color-shadow), 0 0 0 1px var(--color-shadow), inset 0 0 0 2px var(--color-group-border);
 
-	background-color: #f7f7f9;
+	background-color: var(--color-group-background);
 }
 
 .group .header {
@@ -50,7 +50,7 @@
 
 	background: none;
 
-	color: rgba(12, 12, 13, 0.5);
+	color: var(--color-group-text);
 	font-size: 12px;
 	line-height: 19px;
 	font-family: inherit;
@@ -58,7 +58,8 @@
 }
 
 .group .header input:focus {
-	color: rgba(12, 12, 13, 0.8);
+	color: var(--color-text);
+	outline: none;
 }
 
 .group .header .name {
@@ -77,14 +78,13 @@
 
 	border-radius: 0 0 3px 3px;
 
-	background-color: rgba(255, 255, 255, 0.9);
+	background-color: var(--color-group-border);
 
 	backdrop-filter: saturate(300%);
 
-	color: rgba(12, 12, 13, 0.4);
+	color: var(--color-group-text);
 	font-size: 12px;
 	font-family: inherit;
-	font-weight: bold;
 	line-height: 19px;
 }
 
@@ -109,11 +109,7 @@
 }
 
 .group .header .close:hover {
-	background-color: rgba(12, 12, 13, 0.2);
-
-	backdrop-filter: saturate(300%);
-
-	opacity: 0.5;
+	opacity: 0.7;
 }
 
 .group .tabs {
@@ -123,7 +119,7 @@
 	left: 8px;
 	bottom: 8px;
 	
-	overflow-x: auto;
+	overflow-x: none;
 	overflow-y: auto;
 	scrollbar-width: thin;
 }

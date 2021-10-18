@@ -14,7 +14,7 @@ export async function migrate() {
 		if (groups[0].title != undefined) return;
 
 		// remove old panorama view tabs
-		let extensionTabs = await browser.tabs.query({url: browser.runtime.getURL("view.html")});
+		let extensionTabs = await browser.tabs.query({url: browser.runtime.getURL('view.html')});
 		for (let tab of extensionTabs) {
 			browser.tabs.remove(tab.id);
 		}

@@ -2,6 +2,15 @@
 :root {
 	--color-background: #ededf0;
 	--color-text: #0c0c0d;
+	--color-shadow: rgba(12, 12, 13, 0.1);
+
+	--color-group-background: #f7f7f9;
+	--color-group-text: rgba(12, 12, 13, 0.5);
+	--color-group-border: rgba(255, 255, 255, 0.9);
+
+	--color-tab: #ffffff;
+	--color-tab-border: rgba(12, 12, 13, 0.15);
+	--color-tab-overlay: rgba(255, 255, 255, 0.9);
 }
 
 body {
@@ -24,61 +33,4 @@ body {
 	left: 4px;
 
 	overflow: hidden;
-}
-
-#toolbar {
-	width: 30px;
-	padding: 5px;
-	
-	display: none;
-
-	position: fixed;
-	top: 64px;
-	right: -2px;
-
-	z-index: 9999999999;
-
-	border-radius: 4px 0 0 4px;
-
-	box-shadow: 0 1px 16px rgba(12, 12, 13, 0.1), 0 0 0 1px rgba(12, 12, 13, 0.1), inset 0 0 0 2px rgba(255, 255, 255, 0.9);
-
-	background-color: #f6f6f7;
-}
-
-#toolbar .button {
-	width: 28px;
-	height: 28px;
-
-	border-radius: 4px;
-
-	background-repeat: no-repeat;
-	background-position: center;
-}
-
-#toolbar .button:hover {
-	background-color: rgba(12, 12, 13, 0.1);
-}
-
-#toolbar .button:active {
-	background-color: rgba(12, 12, 13, 0.15);
-}
-
-#newGroup {
-	background-image: url(../gfx/plus_dark.svg);
-}
-
-.drag_indicator {
-	width: 2px;
-	height: 100px;
-
-	position: absolute;
-	z-index: 1000000000;
-
-	background-color: #00adff;
-
-	display: none;
-}
-
-.drag_indicator.show {
-	display: block;
 }

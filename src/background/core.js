@@ -12,7 +12,7 @@ export function setOpeningPanoramaView(value) {
 
 
 export function getPanoramaViewURL() {
-	return browser.runtime.getURL("panorama/view.html");
+	return browser.runtime.getURL('panorama/view.html');
 }
 
 
@@ -85,6 +85,6 @@ export async function toggleView() {
 	// if there is no Panorama View tab, make one
 	} else {
 		openingPanoramaView = true;
-		browser.tabs.create({url: "/panorama/view.html", active: true});
+		browser.tabs.create({url: '/panorama/view.html', active: true});
 	}
 }

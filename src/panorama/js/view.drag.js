@@ -4,8 +4,6 @@
 import {addon} from './addon.js';
 import {html}  from './html.js';
 
-import {tabMoved} from './view.js'
-
 
 let selectedTabs = [];
 
@@ -181,12 +179,29 @@ export async function tabDrop(e) {
 	}
 	// ----
 
+	// get taget tab group ID
+	let groupNode = e.target;
+	while (!groupNode.classList.contains('group')) {
+		groupNode = groupNode.parentNode;
+	}
+	const tabGroupId = Number(groupNode.id.substr(8));
+	// ----
+
 
 	const rect = tabNode.getBoundingClientRect();
 	let dropBefore = true;
-	if (e.clientX > rect.left+(rect.width/2)) {
-		dropBefore = false;
+	
+	if (groupNode.querySelector('.tabs').classList.contains('list')) {
+		if (e.clientY > rect.top+(rect.height/2)) {
+			dropBefore = false;
+		}
+	} else {
+		if (e.clientX > rect.left+(rect.width/2)) {
+			dropBefore = false;
+		}
 	}
+	
+	
 
 	// move the tab node
 	for (const tabIdData of e.dataTransfer.items) {
@@ -209,14 +224,6 @@ export async function tabDrop(e) {
 	
 	const tabId = Number(tabNode.id.substr(3));
 	const tab = await browser.tabs.get(tabId);
-
-	// get taget tab group ID
-	let groupNode = e.target;
-	while (!groupNode.classList.contains('group')) {
-		groupNode = groupNode.parentNode;
-	}
-	const tabGroupId = Number(groupNode.id.substr(8));
-	// ----
 	
 	const currentWindowId = (await browser.windows.getCurrent()).id;
 

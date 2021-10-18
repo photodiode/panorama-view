@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 16 16">
+	<defs>
+		<clipPath id="logo">
+			<path d="M.5 9a.5.5 0 0 0-.5.5V14c0 1.1.9 2 2 2h2.5a.5.5 0 0 0 .5-.5v-6a.5.5 0 0 0-.5-.5z"/>
+			<path d="M16 2a2 2 0 0 0-2-2h-2.5a.5.5 0 0 0-.5.5v6c0 .28.22.5.5.5h4a.5.5 0 0 0 .5-.5z"/>
+			<path d="M15.5 9c.28 0 .5.22.5.5V14a2 2 0 0 1-2 2H7.5a.5.5 0 0 1-.5-.5v-6c0-.28.22-.5.5-.5z"/>
+			<path d="M9 .5a.5.5 0 0 0-.5-.5H2a2 2 0 0 0-2 2v4.5c0 .28.22.5.5.5h8a.5.5 0 0 0 .5-.5z"/>
+		</clipPath>
+		<filter id="glow">
+			<feFlood flood-color="#ffc47c" flood-opacity=".1" result="flood"/>
+			<feComposite in2="SourceGraphic" operator="out"/>
+			<feGaussianBlur stdDeviation="1" result="blur"/>
+			<feComposite in2="SourceGraphic" operator="atop"/>
+		</filter>
+	</defs>
+	<g filter="url(#glow)">
+		<rect fill="#a6085e" width="16" height="16" clip-path="url(#logo)"/>
+		<circle fill="#da0942" cx="-44.2812" cy="-19.4558" r="64" clip-path="url(#logo)"/>
+		<circle fill="#ff4646" cx="-31.5768" cy="-42.6668" r="64" clip-path="url(#logo)"/>
+		<circle fill="#ff8d64" cx="-12.5882" cy="-57.7498" r="64" clip-path="url(#logo)"/>
+	</g>
+</svg>

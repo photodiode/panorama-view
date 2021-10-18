@@ -1,8 +1,8 @@
 
 'use strict';
 
-import * as addon_tabs from "./addon.tabs.js";
-import * as core from "./core.js";
+import * as addon_tabs from './addon.tabs.js';
+import * as core from './core.js';
 
 // internal
 async function newTabGroupId(windowId) {
@@ -32,40 +32,7 @@ export async function getActiveId(windowId) {
 export async function setActiveId(windowId, tabGroupId) {
 	return browser.sessions.setWindowValue(windowId, 'activeGroup', tabGroupId);
 }
-
-async function handleActions(message, sender, sendResponse) {
-
-	let response;
-
-	switch (message.action) {
-		case 'browser.tabGroups.create': {
-			response = await create(message.info);
-			break;
-		}
-		case 'browser.tabGroups.remove': {
-			response = await remove(message.info);
-			break;
-		}
-		case 'browser.tabGroups.query': {
-			response = await query(message.info);
-			break;
-		}
-		case 'browser.tabGroups.update': {
-			response = await update(message.id, message.info);
-			break;
-		}
-		default:
-			console.log('Unknown action');
-	}
-
-	return response;
-}
 // ----
-
-
-export function initialize() {
-	browser.runtime.onMessage.addListener(handleActions);
-}
 
 
 export async function create(createInfo = {}) {
@@ -99,7 +66,7 @@ export async function create(createInfo = {}) {
 		browser.tabs.create({});
 	}
 
-	browser.runtime.sendMessage({event: "browser.tabGroups.onCreated", windowId: createInfo.windowId, data: tabGroup});
+	browser.runtime.sendMessage({event: 'browser.tabGroups.onCreated', windowId: createInfo.windowId, data: tabGroup});
 
 	return tabGroup;
 }
@@ -108,14 +75,17 @@ export async function create(createInfo = {}) {
 export async function remove(tabGroupId) {
 	
 	// remove tabs in group
-	const tabs = browser.tabs.query({currentWindow: true});
+	const tabs = await browser.tabs.query({currentWindow: true});
 	
-	for (let tab of await tabs) {
+	let tabsToRemove = [];
+	
+	for (let tab of tabs) {
 		tab.groupId = await addon_tabs.getGroupId(tab.id);
 		if (tab.groupId == tabGroupId) {
-			browser.tabs.remove(tab.id);
+			tabsToRemove.push(tab.id);
 		}
 	}
+	browser.tabs.remove(tabsToRemove);
 	// ----
 
 	const windowId = (await browser.windows.getCurrent()).id
@@ -133,7 +103,7 @@ export async function remove(tabGroupId) {
 		await create({windowId: windowId, empty: false});
 	}
 
-	browser.runtime.sendMessage({event: "browser.tabGroups.onRemoved", windowId: windowId, data: tabGroupId});
+	browser.runtime.sendMessage({event: 'browser.tabGroups.onRemoved', windowId: windowId, data: tabGroupId});
 
 	return tabGroupId;
 }
@@ -203,7 +173,7 @@ export async function update(tabGroupId, updateInfo) {
 	
 	await setTabGroups(windowId, tabGroups);
 
-	browser.runtime.sendMessage({event: "browser.tabGroups.onUpdated", windowId: windowId, data: updatedTabGroup});
+	browser.runtime.sendMessage({event: 'browser.tabGroups.onUpdated', windowId: windowId, data: updatedTabGroup});
 
 	return updatedTabGroup;
 }
