@@ -42,9 +42,6 @@ export function create(tab) {
 	}, false);
 
 	node.addEventListener('dragstart', drag.tabDragStart, false);
-	/*node.addEventListener('dragenter', tabDragEnter, false);
-	node.addEventListener('dragover', tabDragOver, false);
-	node.addEventListener('dragleave', tabDragLeave, false);*/
 	node.addEventListener('drop', drag.tabDrop, false);
 	node.addEventListener('dragend', drag.tabDragEnd, false);
 	
@@ -57,7 +54,7 @@ export function get(tabId) {
 
 export async function update(tabNode, tab) {
 
-	if(tabNode) {
+	if (tabNode) {
 		tabNode.querySelector('.title span').innerHTML = '';
 		tabNode.querySelector('.title span').appendChild(document.createTextNode(tab.title));
 
@@ -73,7 +70,7 @@ export async function update(tabNode, tab) {
 
 export async function updateThumbnail(tabNode, tabId, thumbnail) {
 
-	let formatThumbnail = function(data) {
+	const formatThumbnail = function(data) {
 		return (data) ? 'url(' + data + ')' : '';
 	}
 
