@@ -14,6 +14,19 @@ export let viewWindowId = undefined;
 export let viewTabId    = undefined;
 
 
+
+/*if (browser.tabGroups == undefined) {
+	browser.tabGroups = {
+		get: () => {
+			return 32;
+		}
+	};
+	
+	console.log(browser.tabGroups.get());
+}*/
+
+
+
 async function initialize() {
 	
 	viewWindowId = (await browser.windows.getCurrent()).id;
@@ -155,10 +168,12 @@ async function initializeTabNodes() {
 	let tabs = await browser.tabs.query({currentWindow: true});
 	
 	var fragments = {};
+	
+	await Promise.all(tabs.map(async(tab) => {
+		tab.groupId = await addon.tabs.getGroupId(tab.id);
+	}));
 
 	for (let tab of tabs) {
-		
-		tab.groupId = await addon.tabs.getGroupId(tab.id);
 
 		let tabNode = html.tabs.create(tab);
 		html.tabs.update(tabNode, tab);
