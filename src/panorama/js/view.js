@@ -44,7 +44,6 @@ async function initialize() {
 			browser.tabs.onUpdated.removeListener(captureThumbnail);
 			viewLastAccessed = (new Date).getTime();
 		} else {
-			captureThumbnails(); // base on time
 			browser.tabs.onUpdated.addListener(captureThumbnail);
 		}
 	}, false);
@@ -187,10 +186,19 @@ async function initializeTabNodes() {
 }
 
 
-export async function captureThumbnail(tabId) {
-	const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 70, scale: 0.25});
-	html.tabs.updateThumbnail(html.tabs.get(tabId), tabId, thumbnail);
-	browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
+export async function captureThumbnail(tabId, changeInfo, tab) {
+	
+	let update = true;
+	
+	if (tab && tab.lastAccessed < viewLastAccessed) {
+		update = false;
+	}
+	
+	if (update) {
+		const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 70, scale: 0.25});
+		html.tabs.updateThumbnail(html.tabs.get(tabId), tabId, thumbnail);
+		browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
+	}
 }
 
 let viewLastAccessed = 0;

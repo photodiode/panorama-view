@@ -91,8 +91,7 @@ export async function setActive() {
 	let tabs = await browser.tabs.query({currentWindow: true});
 	
 	for (let tab of tabs) {
-		tab.groupId = await addon.tabs.getGroupId(tab.id);
-		if (tab.lastAccessed > lastAccessed && tab.groupId >= 0) {
+		if (tab.lastAccessed > lastAccessed && get(tab.id)) {
 			lastAccessed = tab.lastAccessed;
 			lastActiveTabId = tab.id;
 		}
