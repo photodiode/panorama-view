@@ -16,11 +16,3 @@ body.dark {
 .dark .tab .thumbnail {
 	opacity: 0.9;
 }
-
-.dark .group .header .close {
-	background-image: url(../gfx/group_close_light.svg);
-}
-
-.dark .newtab .border::after {
-	background-image: url(../gfx/plus_light.svg);
-}

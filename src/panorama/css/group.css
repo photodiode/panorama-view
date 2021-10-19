@@ -68,12 +68,12 @@
 }
 
 .group .header .tab_count {
-	height: 20px;
+	height: 19px;
 
-	padding: 5px 6px 2px 6px;
+	padding: 4px 6px 3px 6px;
 
 	position: absolute;
-	top: -5px;
+	top: -4px;
 	right: 26px;
 
 	border-radius: 0 0 3px 3px;
@@ -97,19 +97,17 @@
 	right: 0px;
 
 	cursor: default;
+	
+	background-color: var(--color-group-text);
 
-	border-radius: 2px;
+	mask: no-repeat center / 12px;
+	mask-image: url(../gfx/group_close.svg);
 
-	background-image: url(../gfx/group_close_dark.svg);
-	background-repeat: no-repeat;
-	background-size: 12px;
-	background-position: center;
-
-	opacity: 0.4;
+	opacity: 0.5;
 }
 
 .group .header .close:hover {
-	opacity: 0.7;
+	opacity: 1;
 }
 
 .group .tabs {

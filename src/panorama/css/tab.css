@@ -174,11 +174,11 @@
 	left: 50%;
 	
 	transform: translate(-50%, -50%);
+	
+	background-color: var(--color-group-text);
 
-	background-image: url(../gfx/plus_dark.svg);
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center;
+	mask: no-repeat center / cover;
+	mask-image: url(../gfx/plus.svg);
 }
 
 .small .tab .favicon[style] + .thumbnail, .tiny .tab .favicon[style] + .thumbnail {
