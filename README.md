@@ -1,4 +1,4 @@
-# ![Panorama View Logo](https://github.com/photodiode/panorama-view/raw/master/src/gfx/logo/logo-24.png) Panorama View
+# ![Panorama View Logo](https://github.com/photodiode/panorama-view/raw/master/logo/logo.svg) Panorama View
 
 [![Version](https://img.shields.io/amo/v/panorama-view?label=version)](https://addons.mozilla.org/firefox/addon/panorama-view/)
 [![Daily users](https://img.shields.io/amo/users/panorama-view)](https://addons.mozilla.org/firefox/addon/panorama-view/)

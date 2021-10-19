@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 16 16">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
 	<defs>
 		<clipPath id="logo">
 			<path d="M.5 9a.5.5 0 0 0-.5.5V14c0 1.1.9 2 2 2h2.5a.5.5 0 0 0 .5-.5v-6a.5.5 0 0 0-.5-.5z"/>
