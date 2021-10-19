@@ -481,17 +481,20 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 		resize(node, rect);
 		fitTabs(node);
 	}
-
-	document.addEventListener('mousemove', onmousemove, false);
-	document.addEventListener('mouseup', function() {
-
+	
+	const onmouseup = () => {
 		if(rect.x !== undefined) {
 			group.rect = rect;
 			addon.tabGroups.update(group.id, {rect: rect});
 		}
+		
 		document.getElementsByTagName('body')[0].removeAttribute('style');
 
 		document.removeEventListener('mousemove', onmousemove);
-	}, false);
+		document.removeEventListener('mouseup', onmouseup);
+	};
+
+	document.addEventListener('mousemove', onmousemove, false);
+	document.addEventListener('mouseup', onmouseup, false);
 
 }

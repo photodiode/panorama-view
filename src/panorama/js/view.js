@@ -32,6 +32,12 @@ async function initialize() {
 			addon.tabGroups.create();
 		}
 	}, false);
+
+	document.getElementById('groups').addEventListener('auxclick', (event) => {
+		if (event.target == document.getElementById('groups') && event.button == 1) {
+			addon.tabGroups.create();
+		}
+	}, false);
 	
 	document.addEventListener('visibilitychange', () => {
 		if (document.hidden) {
