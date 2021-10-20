@@ -92,8 +92,7 @@ export function create(group) {
 	}, false);
 
 	input.addEventListener('input', function(event) {
-		name.innerHTML = '';
-		name.appendChild(document.createTextNode(this.value))
+		name.textContent = this.value;
 		input.style.width = name.getBoundingClientRect().width + 'px';
 	}, false);
 
@@ -248,8 +247,7 @@ export function fitTabsInGroup(tabGroupNode) {
 	let tabsNode   = tabGroupNode.querySelector('.tabs');
 	let childNodes = tabsNode.childNodes;
 
-	tabGroupNode.querySelector('.tab_count').innerHTML = '';
-	tabGroupNode.querySelector('.tab_count').appendChild(document.createTextNode(childNodes.length-1));
+	tabGroupNode.querySelector('.tab_count').textContent = childNodes.length - 1;
 
 	// fit
 	let rect = tabsNode.getBoundingClientRect();

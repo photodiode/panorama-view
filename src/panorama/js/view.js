@@ -52,11 +52,12 @@ async function initialize() {
 		}
 	}, false);
 	
-	document.addEventListener('visibilitychange', () => {
+	document.addEventListener('visibilitychange', async() => {
 		if (document.hidden) {
 			browser.tabs.onUpdated.removeListener(captureThumbnail);
 			viewLastAccessed = (new Date).getTime();
 		} else {
+			await captureThumbnails();
 			browser.tabs.onUpdated.addListener(captureThumbnail);
 		}
 	}, false);
@@ -179,7 +180,7 @@ async function initializeTabNodes() {
 		html.tabs.update(tabNode, tab);
 		html.tabs.updateThumbnail(tabNode, tab.id);
 		
-		updateFavicon(tab, tabNode);
+		html.tabs.updateFavicon(tabNode, tab);
 		
 		if (!fragments[tab.groupId]) {
 			fragments[tab.groupId] = document.createDocumentFragment();
@@ -202,18 +203,9 @@ async function initializeTabNodes() {
 
 
 export async function captureThumbnail(tabId, changeInfo, tab) {
-	
-	let update = true;
-	
-	if (tab && tab.lastAccessed < viewLastAccessed) {
-		update = false;
-	}
-	
-	if (update) {
-		const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 70, scale: 0.25});
-		html.tabs.updateThumbnail(html.tabs.get(tabId), tabId, thumbnail);
-		browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
-	}
+	const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 70, scale: 0.25});
+	html.tabs.updateThumbnail(html.tabs.get(tabId), tabId, thumbnail);
+	browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
 }
 
 let viewLastAccessed = 0;
@@ -223,55 +215,11 @@ async function captureThumbnails() {
 
 	for(const tab of await tabs) {
 		if (tab.lastAccessed > viewLastAccessed) {
-			captureThumbnail(tab.id);
+			await captureThumbnail(tab.id);
 		}
 	}
 }
 
-async function testImage(url) {
-	return new Promise(function (resolve, reject) {
-
-		let img = new Image();
-
-		img.onerror = img.onabort = function () {
-			reject('error');
-		};
-
-		img.onload = function () {
-			resolve('success');
-		};
-
-		img.src = url;
-	});
-}
-
-export async function updateFavicon(tab, tabNode) {
-
-	tabNode = tabNode || html.tabs.get(tab.id);
-	
-	if (!tabNode) return;
-
-	let faviconNode = tabNode.querySelector('.favicon');
-
-	if (faviconNode) {
-		if (tab.favIconUrl &&
-			tab.favIconUrl.substr(0, 22) != 'chrome://mozapps/skin/' &&
-			tab.favIconUrl != tab.url) {
-			testImage(tab.favIconUrl).then(
-				_ => {
-					faviconNode.style.backgroundImage = `url(${tab.favIconUrl})`;
-					faviconNode.classList.add('visible');
-				}, _ => {
-					faviconNode.removeAttribute('style');
-					faviconNode.classList.remove('visible');
-				}
-			);
-		} else {
-			faviconNode.removeAttribute('style');
-			faviconNode.classList.remove('visible');
-		}
-	}
-}
 
 
 

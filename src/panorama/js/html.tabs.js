@@ -8,8 +8,8 @@ import * as drag from './view.drag.js';
 
 export function create(tab) {
 
-	let thumbnail     = newElement('div', {class: 'thumbnail'});
-	let favicon       = newElement('div', {class: 'favicon'});
+	let thumbnail     = newElement('img', {class: 'thumbnail'});
+	let favicon       = newElement('img', {class: 'favicon'});
 	let close         = newElement('div', {class: 'close'});
 	let title         = newElement('span');
 	let nameContainer = newElement('div', {class: 'title'}, [title]);
@@ -53,57 +53,52 @@ export function get(tabId) {
 }
 
 export async function update(tabNode, tab) {
-
 	if (tabNode) {
-		tabNode.querySelector('.title span').innerHTML = '';
-		tabNode.querySelector('.title span').appendChild(document.createTextNode(tab.title));
+		tabNode.querySelector('.title span').textContent = tab.title;
 
-		tabNode.title = tab.title + ((tab.url.substr(0, 5) !== 'data:') ? ' - ' + decodeURI(tab.url) : '');
+		tabNode.title = tab.title + ((tab.url.substr(0, 5) != 'data:') ? ' - ' + decodeURI(tab.url) : '');
 
-		if(tab.discarded) {
+		if (tab.discarded) {
 			tabNode.classList.add('inactive');
-		}else{
+		} else {
 			tabNode.classList.remove('inactive');
 		}
 	}
 }
 
-export async function updateThumbnail(tabNode, tabId, thumbnail) {
-
-	const formatThumbnail = function(data) {
-		return (data) ? 'url(' + data + ')' : '';
+export async function updateFavicon(tabNode, tab) {
+	if (tabNode) {
+		if (tab.favIconUrl &&
+		    tab.favIconUrl.substr(0, 22) != 'chrome://mozapps/skin/' &&
+		    tab.favIconUrl != tab.url) {
+			tabNode.querySelector('.favicon').src = tab.favIconUrl;
+		}
 	}
+}
 
+
+export async function updateThumbnail(tabNode, tabId, thumbnail) {
 	if (tabNode) {
 		if (!thumbnail) thumbnail = await browser.sessions.getTabValue(tabId, 'thumbnail');
-		tabNode.querySelector('.thumbnail').style.backgroundImage = formatThumbnail(thumbnail);
+		if (thumbnail)  tabNode.querySelector('.thumbnail').src = thumbnail;
 	}
 }
 
 export async function setActive() {
-	
-	var lastActiveTabId = -1;
-	var lastAccessed = 0;
 
 	let tabs = await browser.tabs.query({currentWindow: true});
 	
-	for (let tab of tabs) {
-		if (tab.lastAccessed > lastAccessed && get(tab.id)) {
-			lastAccessed = tab.lastAccessed;
-			lastActiveTabId = tab.id;
-		}
-	}
+	tabs.sort((tabA, tabB) => {
+		return tabB.lastAccessed - tabA.lastAccessed;
+	});
+	
+	const activeTabId = (tabs[0].url == browser.runtime.getURL('panorama/view.html')) ? tabs[1].id : tabs[0].id ;
 
-	let tabNode    = get(lastActiveTabId);
-	let activeNode = document.querySelector('.tab.active');
+	const tabNode    = get(activeTabId);
+	const activeNode = document.querySelector('.tab.active');
 
-	if (activeNode) {
-		activeNode.classList.remove('active');
-	}
-
-	if (tabNode) {
-		tabNode.classList.add('active');
-	}
+	if (activeNode) activeNode.classList.remove('active');
+	if (tabNode)    tabNode.classList.add('active');
 }
 
 export async function insert(tabNode, tab) {

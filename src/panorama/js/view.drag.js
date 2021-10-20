@@ -9,19 +9,25 @@ let selectedTabs = [];
 
 
 
-async function moveTabs(e, windowId, tabGroupId, index) {
-
-	let tabIds = [];
-	for (const tabIdData of e.dataTransfer.items) {
-		const tabId = Number(e.dataTransfer.getData(tabIdData.type));
-		tabIds.push(tabId);
-	}
+async function moveTabs(tabIds, windowId, tabGroupId, index) {
 
 	browser.tabs.move(tabIds, {index: index, windowId: windowId});
 	
 	for (let tabId of tabIds) {
 		addon.tabs.setGroupId(tabId, tabGroupId);
 	}
+}
+
+
+function getTabIds(e) {
+	let tabIds = [];
+	for (const tabIdData of e.dataTransfer.items) {
+		if (tabIdData.type.includes('text/panorama-view-tab-id-')) {
+			const tabId = Number(e.dataTransfer.getData(tabIdData.type));
+			tabIds.push(tabId);
+		}
+	}
+	return tabIds;
 }
 
 
@@ -40,10 +46,10 @@ export async function viewDrop(e) {
 
 	// move the tab node
 	let groupNode = html.groups.get(tabGroup.id);
+	
+	const tabIds = getTabIds(e);
 
-	for (const tabIdData of e.dataTransfer.items) {
-		const tabId = Number(e.dataTransfer.getData(tabIdData.type));
-		
+	for (const tabId of tabIds) {
 		const tabNode = html.tabs.get(tabId);
 		if (tabNode) {
 			groupNode.querySelector('.newtab').insertAdjacentElement('beforebegin', tabNode);
@@ -55,7 +61,7 @@ export async function viewDrop(e) {
 	}
 	// ----
 	
-	moveTabs(e, currentWindowId, tabGroup.id, -1);
+	moveTabs(tabIds, currentWindowId, tabGroup.id, -1);
 
 	return false;
 }
@@ -78,8 +84,9 @@ export async function groupDrop(e) {
 	}
 	
 	// move the tab node
-	for (const tabIdData of e.dataTransfer.items) {
-		const tabId = Number(e.dataTransfer.getData(tabIdData.type));
+	const tabIds = getTabIds(e);
+	
+	for (const tabId of tabIds) {
 		const tabNode = html.tabs.get(tabId);
 		if (tabNode) {
 			groupNode.querySelector('.newtab').insertAdjacentElement('beforebegin', tabNode);
@@ -94,7 +101,7 @@ export async function groupDrop(e) {
 	const tabGroupId = Number(groupNode.id.substr(8));
 	const currentWindowId = (await browser.windows.getCurrent()).id;
 	
-	moveTabs(e, currentWindowId, tabGroupId, -1);
+	moveTabs(tabIds, currentWindowId, tabGroupId, -1);
 	
 	return false;
 }
@@ -147,14 +154,19 @@ export function tabDragStart(e) {
 
 	e.dataTransfer.effectAllowed = 'move';
 	
+	const tabId = Number(this.id.substr(3));
+	if (!selectedTabs.includes(tabId)) {
+		clearTabSelection(e);
+	}
+	
 	if (selectedTabs.length == 0) {
-		selectTab(Number(this.id.substr(3)));
+		selectTab(tabId);
 	}
 
 	for (const i in selectedTabs) {
 		const tabNode = html.tabs.get(selectedTabs[i]);
 
-		e.dataTransfer.setData('text/panorama-view-tab-id-'+i, selectedTabs[i]);
+		e.dataTransfer.setData(`text/panorama-view-tab-id-${i}`, selectedTabs[i]);
 		
 		tabNode.classList.add('drag');
 	}
@@ -176,6 +188,14 @@ export async function tabDrop(e) {
 	let tabNode = e.target;
 	while (!tabNode.classList.contains('tab')) {
 		tabNode = tabNode.parentNode;
+	}
+	// ----
+	
+	const tabIds = getTabIds(e);
+
+	// abort if you drop over moved tab
+	for (const tabId of tabIds) {
+		if (html.tabs.get(tabId) == tabNode) return false; 
 	}
 	// ----
 
@@ -204,9 +224,9 @@ export async function tabDrop(e) {
 	
 
 	// move the tab node
-	for (const tabIdData of e.dataTransfer.items) {
-		const tabId = Number(e.dataTransfer.getData(tabIdData.type));
+	for (const tabId of tabIds) {
 		const _tabNode = html.tabs.get(tabId);
+		if (_tabNode == tabNode) return false; // abort if you drop over moved tab
 		if (_tabNode) {
 			if (dropBefore) {
 				tabNode.insertAdjacentElement('beforebegin', _tabNode);
@@ -230,7 +250,7 @@ export async function tabDrop(e) {
 	// find new index
 	let toIndex = Number(tab.index);
 	
-	const fromTabId = Number(e.dataTransfer.getData(e.dataTransfer.items[0].type));
+	const fromTabId = tabIds[0];
 	let fromIndex = (await browser.tabs.get(fromTabId)).index;
 	
 	if (fromIndex < toIndex) {
@@ -244,7 +264,7 @@ export async function tabDrop(e) {
 	}
 	// ----
 	
-	moveTabs(e, currentWindowId, tabGroupId, toIndex);
+	moveTabs(tabIds, currentWindowId, tabGroupId, toIndex);
 	
 	return false;
 }

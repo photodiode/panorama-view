@@ -39,12 +39,12 @@ export async function tabCreated(tab) {
 			tab.groupId = await addon.tabs.getGroupId(tab.id);
 		}
 
-		let tabNode = html.tabs.create(tab);
+		const tabNode = html.tabs.create(tab);
 		html.tabs.update(tabNode, tab);
 
 		await html.tabs.insert(tabNode, tab);
 		
-		core.updateFavicon(tab);
+		html.tabs.updateFavicon(tabNode, tab);
 
 		let tabGroupNode = html.groups.get(tab.groupId);
 		html.groups.fitTabs(tabGroupNode);
@@ -60,14 +60,16 @@ export async function tabRemoved(tabId, removeInfo) {
 }
 
 export async function tabUpdated(tabId, changeInfo, tab) {
+	
+	const tabNode = html.tabs.get(tabId);
 
 	if (core.viewWindowId == tab.windowId){
-		html.tabs.update(html.tabs.get(tabId), tab);
+		html.tabs.update(tabNode, tab);
 	}
 
 	if (changeInfo.pinned != undefined) {
 		if (changeInfo.pinned) {
-			html.tabs.get(tabId).remove();
+			tabNode.remove();
 			html.groups.fitTabs();
 			html.tabs.setActive();
 		} else {
@@ -79,10 +81,10 @@ export async function tabUpdated(tabId, changeInfo, tab) {
 			}
 			
 			await tabCreated(tab);
-			core.updateFavicon(tab);
+			html.tabs.updateFavicon(tabNode, tab);
 		}
 	} else {
-		core.updateFavicon(tab);
+		html.tabs.updateFavicon(tabNode, tab);
 	}
 }
 
