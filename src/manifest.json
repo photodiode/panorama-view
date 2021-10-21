@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Panorama View",
 	"description": "Tab Groups with Panorama View",
-	"version": "0.9.1",
+	"version": "0.9.2",
 	"icons": {
 		"16": "gfx/logo/logo-16.png",
 		"24": "gfx/logo/logo-24.png",

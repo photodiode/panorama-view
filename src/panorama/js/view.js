@@ -108,8 +108,6 @@ async function initialize() {
 	document.getElementById('groups').addEventListener('dragover', drag.viewDragOver, false);
 	document.getElementById('groups').addEventListener('drop', drag.viewDrop, false);
 	// ----
-	
-	//alert('To create a new Tab Group you can\n- Double click on an empty space\n- Drag a Tab to an empty space\n- Right click the Panorama View button and choose "New Tab Group"');
 }
 
 

@@ -91,15 +91,14 @@ async function activated(activeInfo) {
 
 	if (!tab.pinned) {
 		// Set the window's active group to the new active tab's group
-		let activeGroupId = undefined;
-		while (activeGroupId == undefined) {
-			activeGroupId = await addon.tabs.getGroupId(activeInfo.tabId);
-		}
-		
-		if (activeGroupId != -1) {
-			addon.tabGroups.setActiveId(tab.windowId, activeGroupId);
+		let newGroupId = undefined;
+		while (newGroupId == undefined) {
+			newGroupId = await addon.tabs.getGroupId(activeInfo.tabId);
 		}
 
-		core.toggleVisibleTabs(tab.windowId, activeGroupId);
+		if (newGroupId != -1) {
+			addon.tabGroups.setActiveId(tab.windowId, newGroupId);
+		}
+		core.toggleVisibleTabs(tab.windowId, newGroupId);
 	}
 }

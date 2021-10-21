@@ -101,6 +101,15 @@ async function init() {
 
 	await migrate(); // keep until everyone's on 0.9.0
 
+	handleTabEvents();
+
+	browser.commands.onCommand.addListener(handleCommands);
+	browser.browserAction.onClicked.addListener(core.toggleView);
+
+	browser.windows.onCreated.addListener(createGroupInWindow);
+	
+	await salvageGrouplessTabs();
+
 	// meny entries
 	browser.menus.create({
 		id: 'newTabGroup',
@@ -123,13 +132,6 @@ async function init() {
 		browser.tabs.remove(tab.id);
 	}
 	// ----
-
-	browser.commands.onCommand.addListener(handleCommands);
-	browser.browserAction.onClicked.addListener(core.toggleView);
-
-	browser.windows.onCreated.addListener(createGroupInWindow);
-
-	handleTabEvents();
 	
 	// auto bakup
 	backup.start();
