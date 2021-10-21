@@ -113,27 +113,43 @@ async function initialize() {
 }
 
 
+function toRGBA(input) {
+	// get computed color
+	const tmpElement = document.body.appendChild(document.createElement('tmpColorElement'));
+	      tmpElement.style.color = input;
+
+	const computedColor = window.getComputedStyle(tmpElement).color;
+
+	      tmpElement.remove();
+	// ----
+
+	let color = computedColor.match(/[\.\d]+/g);
+
+	if (!color) return undefined;
+
+	if (color.length == 3) color.push(1);
+	if (color.length != 4) color = [0, 0, 0, 0];
+
+	return {
+		r: Number(color[0]),
+		g: Number(color[1]),
+		b: Number(color[2]),
+		a: Number(color[3])
+	};
+}
+
 async function setTheme(theme) {
 
 	if (!theme) {
 		theme = await browser.theme.getCurrent();
 	}
 
-	let toGray = (input) => {
-		const div = document.createElement('div');
-		      div.style.color = input;
-
-		const color = div.style.color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
-
-		if (color) {
-			return (0.2126 * color[1] + 0.7152 * color[2] + 0.0722 * color[3]) / 255;
-		} else {
-			return 1;
-		}
+	const toGray = (color) => {
+		return (0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b) / 255;
 	}
 	
 	if (theme && theme.colors) {
-		if (toGray(theme.colors.frame) < 0.5) {
+		if (toGray(toRGBA(theme.colors.frame)) < 0.5) {
 			document.body.classList.add('dark');
 			document.getElementById('favicon').href = '../gfx/icon_light.svg';
 		} else {
