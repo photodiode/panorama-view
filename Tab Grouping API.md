@@ -4,32 +4,31 @@
 
 ### Types
 + tabGroup
-```
-collapsed     // boolean
-color         // color
-containerId   // string
-id            // integer
-lastAccessed  // unix timestamp
-title         // string
-windowId      // id
-```
+  - collapsed `boolean` Whether the group is collapsed. A collapsed group is one whose tabs are hidden.
+  - color `color`
+  - cookieStoreId `string` 
+  - id `integer`
+  - lastAccessed `unix time (milliseconds)`
+  - title `string`
+  - windowId `integer`
+
 
 ### Methods
-+ get  
++ **get**  
   Retrieves details about the specified group.
-```
+```javascript
 var getting = browser.tabGroups.get(
 	groupId,  // integer
 )
 ```
-+ move  
++ **move**  
   Same as:
   - query for tabs with groupId
   - move them to some index and window
   - update group's windowId
 
-+ query
-```
++ **query**
+```javascript
 var querying = browser.tabGroups.query(
 	{
 		collapsed,
@@ -41,8 +40,8 @@ var querying = browser.tabGroups.query(
 	}
 )
 ```
-+ update
-```
++ **update**
+```javascript
 var updating = browser.tabGroups.update(
 	groupId,  // integer
 	{
@@ -55,28 +54,28 @@ var updating = browser.tabGroups.update(
 ```
 
 ### Events
-+ onCreated
-```
++ **onCreated**
+```javascript
 browser.tabGroups.onCreated.addListener(listener)
 browser.tabGroups.onCreated.removeListener(listener)
 browser.tabGroups.onCreated.hasListener(listener)
 ```
 
-+ onMoved  
++ **onMoved**  
   Fired when a group is moved within a window. Move events are still fired for the individual tabs within the group, as well as for the group itself. This event is not fired when a group is moved between windows; instead, it will be removed from one window and created in another.
-```
+```javascript
 browser.tabGroups.onMoved.addListener(listener)
 browser.tabGroups.onMoved.removeListener(listener)
 browser.tabGroups.onMoved.hasListener(listener)
 ```
-+ onRemoved
-```
++ **onRemoved**
+```javascript
 browser.tabGroups.onRemoved.addListener(listener)
 browser.tabGroups.onRemoved.removeListener(listener)
 browser.tabGroups.onRemoved.hasListener(listener)
 ```
-+ onUpdated
-```
++ **onUpdated**
+```javascript
 browser.tabGroups.onUpdated.addListener(listener)
 browser.tabGroups.onUpdated.removeListener(listener)
 browser.tabGroups.onUpdated.hasListener(listener)
@@ -86,44 +85,44 @@ browser.tabGroups.onUpdated.hasListener(listener)
 ## browser.tabs
 
 ### Types
-- tab  
-  add groupId
+- **tab**
+  - groupId `integer`
 
 ### Methods
-- create
+- **create**  
   add groupId option
 
-- get  
+- **get**  
   insert groupId
 
-- getCurrent  
+- **getCurrent**  
   insert groupId
 
-+ group  
++ **group**  
   Adds one or more tabs to a specified group, or if no group is specified, adds the given tabs to a newly created group.
-```
+```javascript
 var grouping = browser.tabs.group(
 	tabIds,  // integer or integer array
 	groupId  // integer
 )
 ```
-- query  
+- **query**  
   add option for groupId  
   insert groupId
 
-+ ungroup  
++ **ungroup**  
   Removes one or more tabs from their respective groups. If any groups become empty, they are deleted.
-```
+```javascript
 var ungrouping = browser.tabs.ungroup(
 	tabIds  // integer or integer array
 )
 ```
 
 ### Events
-- onCreated  
+- **onCreated**  
   insert groupId
 
-- onUpdated  
+- **onUpdated**  
   insert groupId into tab  
   insert groupId into extraParameters.properties on addListener
 
@@ -131,26 +130,26 @@ var ungrouping = browser.tabs.ungroup(
 ## browser.sessions
 
 ### Methods
-+ setGroupValue  
++ **setGroupValue**  
   Store a key/value pair associated with a given group.
-```
+```javascript
 var setting = browser.sessions.setGroupValue(
 	groupId,  // integer
 	key,      // string
 	value     // string or object
 )
 ```
-+ getGroupValue  
++ **getGroupValue**  
   Retrieve a previously stored value for a given group, given its key.
-```
+```javascript
 var getting = browser.sessions.getGroupValue(
 	groupId,  // integer
 	key       // string
 )
 ```
-+ removeGroupValue  
++ **removeGroupValue**  
 Remove a key/value pair from a given group.
-```
+```javascript
 var removing = browser.sessions.removeGroupValue(
 	groupId,  // integer
 	key       // string
