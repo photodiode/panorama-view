@@ -1,7 +1,7 @@
 
 'use strict';
 
-import {newElement} from './html.js';
+import {newElement} from '../../common/html.js';
 import {addon} from './addon.js';
 import * as drag from './view.drag.js';
 
@@ -356,7 +356,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 		}
 	};
 
-	document.getElementsByTagName('body')[0].setAttribute('style', 'cursor: ' + window.getComputedStyle(elem).cursor);
+	document.body.setAttribute('style', 'cursor: ' + window.getComputedStyle(elem).cursor);
 
 	var groupsRect = document.getElementById('groups').getBoundingClientRect();
 	var nodeRect = node.getBoundingClientRect();
@@ -486,7 +486,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 			addon.tabGroups.update(group.id, {rect: rect});
 		}
 		
-		document.getElementsByTagName('body')[0].removeAttribute('style');
+		document.body.removeAttribute('style');
 
 		document.removeEventListener('mousemove', onmousemove);
 		document.removeEventListener('mouseup', onmouseup);

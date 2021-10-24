@@ -2,14 +2,34 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+
 		<link rel="stylesheet" type="text/css" href="options.css">
+		<link rel="stylesheet" type="text/css" href="dark.css">
+
 		<script type="module" src="./options.js"></script>
 	</head>
-	<body>
+	<body class="dark">
 		<section>
 			<h3>Keyboard Shortcuts</h3>
 			<div id="keyboardShortcuts"></div>
 			<p>To change shortcuts please go to the Gear Icon in the top right and choose "Manage Extension Shortcuts"</p>
+		</section>
+		<section>
+			<h3>General</h3>
+			<div>
+				<div>
+					<label>Theme Override</label>
+					<select id="themeSelect">
+						<option value="false">None</option>
+						<option value="light">Light</option>
+						<option value="dark">Dark</option>
+					</select>
+				</div>
+				<div>
+					<label for="listView">List view for tiny tabs</label>
+					<input type="checkbox" id="listView">
+				</div>
+			</div>
 		</section>
 		<section>
 			<h3>Backup</h3>
@@ -38,11 +58,11 @@
 			<h3>Statistics</h3>
 			<div>
 				<div>
-					<label for="numberOfTabs">Number of Tabs</label>
+					<label>Number of Tabs</label>
 					<span id="numberOfTabs">Calculating..</span>
 				</div>
 				<div>
-					<label for="thumbnailCacheSize">Thumbnail Cache</label>
+					<label>Thumbnail Cache</label>
 					<span id="thumbnailCacheSize">Calculating..</span>
 				</div>
 			</div>

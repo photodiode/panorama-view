@@ -1,7 +1,7 @@
 
 'use strict';
 
-import {newElement} from './html.js';
+import {newElement} from '../../common/html.js';
 import {addon} from './addon.js';
 import * as drag from './view.drag.js';
 

@@ -1,4 +1,14 @@
 
+:root {
+	--color-background: #ffffff;
+	--color-text: #0c0c0d;
+}
+
+body {
+	background-color: var(--color-background);
+	color: var(--color-text);
+}
+
 label {
 	width: 40%;
 	height: 2em;
