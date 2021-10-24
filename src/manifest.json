@@ -54,7 +54,7 @@
 
 	"browser_action": {
 		"browser_style": true,
-		"default_icon": "gfx/icon_dark.svg",
+		"default_icon": "gfx/icon.svg",
 		"theme_icons": [{
 			"light": "gfx/icon_light.svg",
 			"dark": "gfx/icon_dark.svg",
