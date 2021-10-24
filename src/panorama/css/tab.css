@@ -57,6 +57,7 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+	object-position: top center;
 }
 
 .tab .thumbnail:not([src]) {
@@ -96,11 +97,8 @@
 	position: absolute;
 	right: 0;
 	top: 0;
-
-	background-image: url(../gfx/tab_close.svg);
-	background-repeat: no-repeat;
-	background-size: 10px;
-	background-position: center;
+	
+	background: url(../gfx/tab_close.svg) no-repeat center / 10px;
 	
 	border-radius: 2px;
 

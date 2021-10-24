@@ -14,10 +14,6 @@
 }
 
 body {
-	-moz-appearance: none;
-
-	margin: 0;
-
 	background-color: var(--color-background);
 
 	color: var(--color-text);
@@ -35,14 +31,15 @@ body {
 	overflow: hidden;
 }
 
+/* phantom new group button to lure people into double or middle clicking the background */
 #groups::before {
 	content: '';
 
 	width: 32px;
 	height: 32px;
-	
+
 	display: block;
-	
+
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -51,6 +48,6 @@ body {
 
 	mask: no-repeat center / 16px;
 	mask-image: url(../gfx/plus.svg);
-	
+
 	opacity: 0.2;
 }

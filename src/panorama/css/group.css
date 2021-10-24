@@ -8,6 +8,7 @@
 
 .group::before {
 	content: '';
+
 	position: absolute;
 	top: 4px;
 	left: 4px;
@@ -23,12 +24,10 @@
 
 .group .header {
 	height: 20px;
+	
+	margin: 10px;
 
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	left: 10px;
-	z-index: 100;
+	position: relative;
 
 	cursor: move;
 }
@@ -80,11 +79,8 @@
 
 	background-color: var(--color-group-border);
 
-	backdrop-filter: saturate(300%);
-
 	color: var(--color-group-text);
 	font-size: 12px;
-	font-family: inherit;
 	line-height: 19px;
 }
 
@@ -100,8 +96,7 @@
 	
 	background-color: var(--color-group-text);
 
-	mask: no-repeat center / 12px;
-	mask-image: url(../gfx/group_close.svg);
+	mask: url(../gfx/group_close.svg) no-repeat center / 12px;
 
 	opacity: 0.5;
 }
@@ -116,25 +111,19 @@
 	right: 8px;
 	left: 8px;
 	bottom: 8px;
-	
-	overflow-x: none;
+
 	overflow-y: auto;
 	scrollbar-width: thin;
 }
 
 /* resize */
-.group .resize {
+.group .resize > * {
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
 }
 
 .group .resize .top {
 	height: 8px;
 
-	position: absolute;
 	top: 0;
 	left: 20px;
 	right: 20px;
@@ -145,7 +134,6 @@
 .group .resize .right {
 	width: 8px;
 
-	position: absolute;
 	top: 20px;
 	bottom: 20px;
 	right: 0;
@@ -156,7 +144,6 @@
 .group .resize .bottom {
 	height: 8px;
 
-	position: absolute;
 	bottom: 0;
 	left: 20px;
 	right: 20px;
@@ -167,7 +154,6 @@
 .group .resize .left {
 	width: 8px;
 
-	position: absolute;
 	top: 20px;
 	bottom: 20px;
 	left: 0;
@@ -179,7 +165,6 @@
 	width: 22px;
 	height: 22px;
 
-	position: absolute;
 	top: 0;
 	right: 0;
 
@@ -190,7 +175,6 @@
 	width: 22px;
 	height: 22px;
 
-	position: absolute;
 	bottom: 0;
 	right: 0;
 
@@ -201,7 +185,6 @@
 	width: 22px;
 	height: 22px;
 
-	position: absolute;
 	bottom: 0;
 	left: 0;
 
@@ -212,7 +195,6 @@
 	width: 22px;
 	height: 22px;
 
-	position: absolute;
 	top: 0;
 	left: 0;
 
