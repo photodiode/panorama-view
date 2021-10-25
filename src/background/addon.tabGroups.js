@@ -13,7 +13,7 @@ async function newTabGroupId(windowId) {
 	return tabGroupId;
 }
 
-export async function getTabGroups(windowId) {
+async function getTabGroups(windowId) {
 	let groups = await browser.sessions.getWindowValue(windowId, 'groups');
 	if (groups == undefined) {
 		groups = [];
@@ -21,18 +21,26 @@ export async function getTabGroups(windowId) {
 	return groups;
 }
 
-export async function setTabGroups(windowId, tabGroups) {
+async function setTabGroups(windowId, tabGroups) {
 	await browser.sessions.setWindowValue(windowId, 'groups', tabGroups);
 }
+// ----
 
 export async function getActiveId(windowId) {
 	return browser.sessions.getWindowValue(windowId, 'activeGroup');
 }
 
 export async function setActiveId(windowId, tabGroupId) {
+
+	let tabGroups = await getTabGroups(windowId);
+
+	const i = tabGroups.findIndex((tabGroup) => { return tabGroup.id == tabGroupId; });
+	if (i != -1) tabGroups[i].lastAccessed = (new Date).getTime();
+
+	await setTabGroups(windowId, tabGroups);
+
 	return browser.sessions.setWindowValue(windowId, 'activeGroup', tabGroupId);
 }
-// ----
 
 
 export async function create(createInfo = {}) {
@@ -91,13 +99,20 @@ export async function remove(tabGroupId) {
 	const windowId = (await browser.windows.getCurrent()).id
 	let tabGroups = await getTabGroups(windowId);
 
-	for (let i = 0; i < tabGroups.length; i++) {
-		if (tabGroups[i].id == tabGroupId) {
-			tabGroups.splice(i, 1);
-			break;
-		}
-	}
+	const i = tabGroups.findIndex((tabGroup) => { return tabGroup.id == tabGroupId; });
+	if (i != -1) tabGroups.splice(i, 1);
+
 	await setTabGroups(windowId, tabGroups);
+	
+	// set new active group
+	let activeGroup = await getActiveId(windowId);
+	if (activeGroup == tabGroupId) {
+		tabGroups.sort((a, b) => {
+			return a.lastAccessed - b.lastAccessed;
+		});
+		await setActiveId(windowId, tabGroups[0].id);
+	}
+	// ----
 
 	if (tabGroups.length == 0) {
 		await create({windowId: windowId, empty: false});

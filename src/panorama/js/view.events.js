@@ -34,9 +34,12 @@ export async function groupRemoved(tabGroupId) {
 export async function tabCreated(tab) {
 	if (core.viewWindowId == tab.windowId){
 
+		let tabGroupNode = null;
 		tab.groupId = undefined;
-		while (tab.groupId == undefined) {
-			tab.groupId = await addon.tabs.getGroupId(tab.id);
+
+		while (tabGroupNode == null) {
+			tab.groupId  = await addon.tabs.getGroupId(tab.id);
+			tabGroupNode = html.groups.get(tab.groupId);
 		}
 
 		const tabNode = html.tabs.create(tab);
@@ -45,8 +48,6 @@ export async function tabCreated(tab) {
 		await html.tabs.insert(tabNode, tab);
 		
 		html.tabs.updateFavicon(tabNode, tab);
-
-		let tabGroupNode = html.groups.get(tab.groupId);
 		html.groups.fitTabs(tabGroupNode);
 	}
 }

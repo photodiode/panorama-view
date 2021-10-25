@@ -21,25 +21,37 @@ export function handleTabEvents() {
 
 async function created(tab) {
 	if (!backup.opening) {
-		if (!core.openingPanoramaView) {
-			// Normal case: everything except the Panorama View tab
-			// If the tab does not have a group, set its group to the current group
-			const tabGroupId = await addon.tabs.getGroupId(tab.id);
-
-			if (tabGroupId == undefined) {
-
-				let activeGroup = undefined;
-
-				while (activeGroup == undefined) {
-					activeGroup = await addon.tabGroups.getActiveId(tab.windowId);
-				}
-				addon.tabs.setGroupId(tab.id, activeGroup);
-			}
-		} else {
-			// Opening the Panorama View tab
-			// Make sure it's in the special group
+		
+		if (core.openingPanoramaView) {
 			core.setOpeningPanoramaView(false);
 			addon.tabs.setGroupId(tab.id, -1);
+
+		} else if (tab.pinned) {
+			addon.tabs.setGroupId(tab.id, -1);
+
+		} else {
+			let tabGroupId = await addon.tabs.getGroupId(tab.id);
+
+			if (tabGroupId == undefined) {
+				tabGroupId = undefined;
+				while (tabGroupId == undefined) {
+					tabGroupId = await addon.tabGroups.getActiveId(tab.windowId);
+				}
+				addon.tabs.setGroupId(tab.id, tabGroupId);
+
+			} else {
+				// check if group exists
+				const tabGroups = await addon.tabGroups.query({windowId: tab.windowId});
+				const tabGroupExists = tabGroups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
+				
+				if (!tabGroupExists) {
+					tabGroupId = undefined;
+					while (tabGroupId == undefined) {
+						tabGroupId = await addon.tabGroups.getActiveId(tab.windowId);
+					}
+					addon.tabs.setGroupId(tab.id, tabGroupId);
+				}
+			}
 		}
 	}
 }
@@ -90,15 +102,28 @@ async function activated(activeInfo) {
 	const tab = await browser.tabs.get(activeInfo.tabId);
 
 	if (!tab.pinned) {
+		
 		// Set the window's active group to the new active tab's group
-		let newGroupId = undefined;
-		while (newGroupId == undefined) {
-			newGroupId = await addon.tabs.getGroupId(activeInfo.tabId);
+		let tabGroupId = undefined;
+		while (tabGroupId == undefined) {
+			tabGroupId = await addon.tabs.getGroupId(activeInfo.tabId);
 		}
 
-		if (newGroupId != -1) {
-			addon.tabGroups.setActiveId(tab.windowId, newGroupId);
+		if (tabGroupId != -1) {
+			// check if group exists
+			const tabGroups = await addon.tabGroups.query({windowId: activeInfo.windowId});
+			const tabGroupExists = tabGroups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
+			
+			if (!tabGroupExists) {
+				tabGroupId = undefined;
+				while (tabGroupId == undefined) {
+					tabGroupId = await addon.tabGroups.getActiveId(activeInfo.windowId);
+				}
+			}
+			// ----
+
+			addon.tabGroups.setActiveId(tab.windowId, tabGroupId);
 		}
-		core.toggleVisibleTabs(tab.windowId, newGroupId);
+		core.toggleVisibleTabs(tab.windowId, tabGroupId);
 	}
 }
