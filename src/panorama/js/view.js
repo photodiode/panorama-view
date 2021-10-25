@@ -13,8 +13,8 @@ export let viewWindowId = undefined;
 export let viewTabId    = undefined;
 
 export let options = {
-	themeOverride: undefined,
-	listView:      undefined
+	themeOverride: false,
+	listView:      false
 };
 
 
@@ -33,6 +33,16 @@ document.addEventListener('DOMContentLoaded', async() => {
 	
 	viewWindowId = (await browser.windows.getCurrent()).id;
 	viewTabId    = (await browser.tabs.getCurrent()).id;
+	
+	// get options
+	const storage = await browser.storage.local.get();
+	if (storage.hasOwnProperty('themeOverride')) {
+		options.themeOverride = storage.themeOverride;
+	}
+	if (storage.hasOwnProperty('listView')) {
+		options.listView = storage.listView;
+	}
+	// ----
 	
 	theme.set();
 
@@ -88,11 +98,11 @@ document.addEventListener('DOMContentLoaded', async() => {
 			}
 
 			case 'addon.options.onUpdated': {
-				if (message.data.themeOverride != undefined) {
+				if (message.data.hasOwnProperty('themeOverride')) {
 					options.themeOverride = message.data.themeOverride;
 					theme.set();
 				}
-				if (message.data.listView != undefined) {
+				if (message.data.hasOwnProperty('listView')) {
 					options.listView = message.data.listView;
 					html.groups.fitTabs();
 				}

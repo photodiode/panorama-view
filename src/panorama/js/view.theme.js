@@ -9,7 +9,7 @@ export async function set(theme) {
 
 	let darkTheme = false;
 	
-	if (options.themeOverride == undefined) {
+	if (options.themeOverride == false) {
 		if (!theme) theme = await browser.theme.getCurrent();
 
 		if (theme && theme.colors) {

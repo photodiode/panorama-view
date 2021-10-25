@@ -81,13 +81,13 @@ document.addEventListener('DOMContentLoaded', async() => {
 	// theme override select
 	const themeSelect = document.getElementById('themeSelect');
 
-	if (storage.themeOverride) {
+	if (storage.hasOwnProperty('themeOverride')) {
 		themeSelect.value = storage.themeOverride;
 	}
 
 	themeSelect.addEventListener('input', async(e) => {
 
-		let themeOverride = undefined;
+		let themeOverride = false;
 
 		switch(e.target.value) {
 			case 'light': {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 	// list view
 	const listView = document.getElementById('listView');
 
-	if (storage.listView) {
+	if (storage.hasOwnProperty('listView')) {
 		listView.checked = storage.listView;
 	}
 
