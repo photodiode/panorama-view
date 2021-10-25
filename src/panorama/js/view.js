@@ -12,6 +12,10 @@ import * as drag   from './view.drag.js';
 export let viewWindowId = undefined;
 export let viewTabId    = undefined;
 
+export let options = {
+	themeOverride: undefined,
+	listView:      undefined
+};
 
 
 /*if (browser.tabGroups == undefined) {
@@ -71,14 +75,27 @@ document.addEventListener('DOMContentLoaded', async() => {
 	
 	// tab group events
 	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-		if (message.windowId != viewWindowId) return;
 		switch (message.event) {
 			case 'browser.tabGroups.onCreated': {
+				if (message.windowId != viewWindowId) return;
 				events.groupCreated(message.data);
 				break;
 			}
 			case 'browser.tabGroups.onRemoved': {
+				if (message.windowId != viewWindowId) return;
 				events.groupRemoved(message.data);
+				break;
+			}
+
+			case 'addon.options.onUpdated': {
+				if (message.data.themeOverride != undefined) {
+					options.themeOverride = message.data.themeOverride;
+					theme.set();
+				}
+				if (message.data.listView != undefined) {
+					options.listView = message.data.listView;
+					html.groups.fitTabs();
+				}
 				break;
 			}
 			default:
@@ -124,8 +141,6 @@ async function initializeTabGroupNodes() {
 
 		html.groups.resizeTitle(tabGroupNode);
 	}
-	
-	html.groups.fitTabs();
 }
 
 

@@ -65,7 +65,7 @@ async function getStatistics() {
 // ----
 
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async() => {
 
 	theme.set();
 	
@@ -75,6 +75,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	getCommands();
 	getStatistics();
+
+	const storage = await browser.storage.local.get();
+
+	// theme override select
+	const themeSelect = document.getElementById('themeSelect');
+
+	if (storage.themeOverride) {
+		themeSelect.value = storage.themeOverride;
+	}
+
+	themeSelect.addEventListener('input', async(e) => {
+
+		let themeOverride = undefined;
+
+		switch(e.target.value) {
+			case 'light': {
+				themeOverride = 'light';
+				await browser.storage.local.set({themeOverride: themeOverride});
+				break;
+			}
+			case 'dark': {
+				themeOverride = 'dark';
+				await browser.storage.local.set({themeOverride: themeOverride});
+				break;
+			}
+			default: {
+				await browser.storage.local.remove('themeOverride');
+				break;
+			}
+		}
+		browser.runtime.sendMessage({event: 'addon.options.onUpdated', data: {themeOverride: themeOverride}});
+		theme.set();
+	});
+	// ----
+	
+	// list view
+	const listView = document.getElementById('listView');
+
+	if (storage.listView) {
+		listView.checked = storage.listView;
+	}
+
+	listView.addEventListener('change', async(e) => {
+		await browser.storage.local.set({listView: e.target.checked});
+		browser.runtime.sendMessage({event: 'addon.options.onUpdated', data: {listView: e.target.checked}});
+	});
+	// ----
 
 	backup.createUI();
 

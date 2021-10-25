@@ -3,18 +3,26 @@
 
 import * as colors from '../../common/colors.js';
 
+import {options} from './view.js';
+
 export async function set(theme) {
 
-	if (!theme) theme = await browser.theme.getCurrent();
-
 	let darkTheme = false;
+	
+	if (options.themeOverride == undefined) {
+		if (!theme) theme = await browser.theme.getCurrent();
 
-	if (theme && theme.colors) {
-		if (colors.toGray(colors.toRGBA(theme.colors.frame)) < 0.5) {
+		if (theme && theme.colors) {
+			if (colors.toGray(colors.toRGBA(theme.colors.frame)) < 0.5) {
+				darkTheme = true;
+			}
+		} else if (window.matchMedia('(prefers-color-scheme: dark)')) {
 			darkTheme = true;
 		}
-	} else if (window.matchMedia('(prefers-color-scheme: dark)')) {
-		darkTheme = true;
+	} else {
+		if (options.themeOverride == 'dark') {
+			darkTheme = true;
+		}
 	}
 
 	if (darkTheme) {

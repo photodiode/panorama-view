@@ -5,6 +5,8 @@ import {newElement} from '../../common/html.js';
 import {addon} from './addon.js';
 import * as drag from './view.drag.js';
 
+import {options} from './view.js';
+
 
 export function create(group) {
 
@@ -316,7 +318,10 @@ export function fitTabsInGroup(tabGroupNode) {
 
 	if (w < 60) size = 'small';
 	if (w < 40) size = 'tiny';
-	if (w < 24) size = 'list';
+
+	if (w < 24 && options.listView == true) {
+		size = 'list';
+	}
 
 
 	tabsNode.classList.remove('small');
