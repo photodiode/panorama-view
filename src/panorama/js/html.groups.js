@@ -7,6 +7,8 @@ import * as drag from './view.drag.js';
 
 import {options} from './view.js';
 
+import './tabGroups-polyfill.js';
+
 
 export function create(group) {
 
@@ -66,8 +68,7 @@ export function create(group) {
 
 	newtab.addEventListener('click', async function(event) {
 		event.stopPropagation();
-		await addon.tabGroups.setActiveGroupId(group.windowId, group.id);
-		await browser.tabs.create({active: true});
+		await browser.tabs.create({active: true, groupId: group.id});
 	}, false);
 
 	// move
@@ -107,7 +108,7 @@ export function create(group) {
 	input.addEventListener('blur', function(event) {
 		input.setSelectionRange(0, 0);
 		
-		addon.tabGroups.update(group.id, {title: this.value});
+		addon.tabGroups.update(group.id, {title: input.value});
 
 		header.addEventListener('mousedown', moveFunc, false);
 
@@ -182,7 +183,10 @@ export async function resize(node, rect) {
 }
 
 export async function stack(node, tabGroup) {
-	tabGroup = tabGroup || await addon.tabGroups.get(parseInt(node.id.substr(8)));
+	const tabGroupId = parseInt(node.id.substr(8));
+
+	tabGroup = tabGroup || await addon.tabGroups.query({windowId: (await browser.windows.getCurrent()).id, id: tabGroupId});
+
 	node.style.zIndex = Math.floor(tabGroup.lastAccessed / 100).toString().substr(-9);
 }
 

@@ -1,18 +1,8 @@
 
 'use strict';
 
-// internal
-let windowIdCurrent = (async function(){
-	return (await browser.windows.getCurrent()).id;
-})();
-// ----
-
-export async function getActiveGroupId(windowId) {
-	return await browser.sessions.getWindowValue(await windowIdCurrent, 'activeGroup') || null;
-}
-
 export async function setActiveGroupId(windowId, tabGroupId) {
-	await browser.sessions.setWindowValue(await windowIdCurrent, 'activeGroup', tabGroupId);
+	await browser.sessions.setWindowValue((await browser.windows.getCurrent()).id, 'activeGroup', tabGroupId);
 }
 
 export function create(createInfo) {
@@ -44,6 +34,3 @@ export function update(tabGroupId, updateInfo) {
 	});
 }
 
-export async function get(tabGroupId) {
-	return query({windowId: await windowIdCurrent, id: tabGroupId});
-}

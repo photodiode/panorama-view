@@ -7,23 +7,27 @@ import * as core from './view.js';
 
 
 export async function groupCreated(tabGroup) {
+	if (core.viewWindowId == tabGroup.windowId){
 
-	let tabGroupNode = html.groups.create(tabGroup);
+		let tabGroupNode = html.groups.create(tabGroup);
 
-	html.groups.resize(tabGroupNode, tabGroup.rect);
-	html.groups.stack(tabGroupNode);
+		html.groups.resize(tabGroupNode, tabGroup.rect);
+		html.groups.stack(tabGroupNode);
 
-	document.getElementById('groups').appendChild(tabGroupNode);
+		document.getElementById('groups').appendChild(tabGroupNode);
 
-	html.groups.resizeTitle(tabGroupNode);
-	html.groups.fitTabs(tabGroupNode);
+		html.groups.resizeTitle(tabGroupNode);
+		html.groups.fitTabs(tabGroupNode);
+	}
 }
 
 
-export async function groupRemoved(tabGroupId) {
-	let groupNode = await html.groups.get(tabGroupId);
-	if (groupNode) {
-		groupNode.remove();
+export async function groupRemoved(tabGroupId, removeInfo) {
+	if (core.viewWindowId == removeInfo.windowId) {
+		let groupNode = await html.groups.get(tabGroupId);
+		if (groupNode) {
+			groupNode.remove();
+		}
 	}
 }
 
@@ -32,15 +36,9 @@ export async function groupRemoved(tabGroupId) {
 
 
 export async function tabCreated(tab) {
-	if (core.viewWindowId == tab.windowId){
+	if (core.viewWindowId == tab.windowId) {
 
-		let tabGroupNode = null;
-		tab.groupId = undefined;
-
-		while (tabGroupNode == null) {
-			tab.groupId  = await addon.tabs.getGroupId(tab.id);
-			tabGroupNode = html.groups.get(tab.groupId);
-		}
+		let tabGroupNode = html.groups.get(tab.groupId);
 
 		const tabNode = html.tabs.create(tab);
 		html.tabs.update(tabNode, tab);

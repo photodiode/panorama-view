@@ -1,6 +1,8 @@
 
 'use strict';
 
+import './tabGroups-polyfill.js';
+
 import {addon} from './addon.js';
 import {html}  from './html.js';
 
@@ -18,18 +20,11 @@ export let options = {
 };
 
 
-/*if (browser.tabGroups == undefined) {
-	browser.tabGroups = {
-		get: () => {
-			return 32;
-		}
-	};
-	
-	console.log(browser.tabGroups.get());
-}*/
-
-
 document.addEventListener('DOMContentLoaded', async() => {
+
+	/*messagePort.onMessage.addListener(function(m) {
+		console.log(m.greeting);
+	});*/
 	
 	viewWindowId = (await browser.windows.getCurrent()).id;
 	viewTabId    = (await browser.tabs.getCurrent()).id;
@@ -70,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 			viewLastAccessed = (new Date).getTime();
 		} else {
 			await captureThumbnails();
-			browser.tabs.onUpdated.addListener(captureThumbnail);
+			browser.tabs.onUpdated.addListener(captureThumbnail, {properties: ['url', 'status']});
 		}
 	}, false);
 
@@ -83,20 +78,8 @@ document.addEventListener('DOMContentLoaded', async() => {
 	});
 	// ----
 	
-	// tab group events
 	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		switch (message.event) {
-			case 'browser.tabGroups.onCreated': {
-				if (message.windowId != viewWindowId) return;
-				events.groupCreated(message.data);
-				break;
-			}
-			case 'browser.tabGroups.onRemoved': {
-				if (message.windowId != viewWindowId) return;
-				events.groupRemoved(message.data);
-				break;
-			}
-
 			case 'addon.options.onUpdated': {
 				if (message.data.hasOwnProperty('themeOverride')) {
 					options.themeOverride = message.data.themeOverride;
@@ -112,12 +95,16 @@ document.addEventListener('DOMContentLoaded', async() => {
 				break;
 		}
 	});
+	
+	// tab group events
+	browser.tabGroups.onCreated.addListener(events.groupCreated);
+	browser.tabGroups.onRemoved.addListener(events.groupRemoved);
 	// ----
 	
 	// tab events
 	browser.tabs.onCreated.addListener(events.tabCreated);
 	browser.tabs.onRemoved.addListener(events.tabRemoved);
-	browser.tabs.onUpdated.addListener(events.tabUpdated);
+	browser.tabs.onUpdated.addListener(events.tabUpdated), {properties: ['favIconUrl', 'pinned', 'title', 'url', 'discarded', 'status']};
 
 	browser.tabs.onActivated.addListener(events.tabActivated);
 
@@ -138,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 
 async function initializeTabGroupNodes() {
 
-	let tabGroups = await addon.tabGroups.query({windowId: viewWindowId});
+	let tabGroups = await browser.tabGroups.query({windowId: viewWindowId});
 
 	for (let tabGroup of tabGroups) {
 
@@ -159,10 +146,6 @@ async function initializeTabNodes() {
 	let tabs = await browser.tabs.query({currentWindow: true});
 	
 	var fragments = {};
-	
-	await Promise.all(tabs.map(async(tab) => {
-		tab.groupId = await addon.tabs.getGroupId(tab.id);
-	}));
 
 	for (let tab of tabs) {
 
@@ -193,6 +176,7 @@ async function initializeTabNodes() {
 
 
 export async function captureThumbnail(tabId, changeInfo, tab) {
+	//console.log(tabId, changeInfo, tab);
 	const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 70, scale: 0.25});
 	html.tabs.updateThumbnail(html.tabs.get(tabId), tabId, thumbnail);
 	browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);

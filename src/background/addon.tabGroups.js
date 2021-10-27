@@ -5,6 +5,10 @@ import * as addon_tabs from './addon.tabs.js';
 import * as core from './core.js';
 
 // internal
+async function getCurrentWindowId() {
+	return (await browser.windows.getCurrent()).id;
+}
+
 async function newTabGroupId(windowId) {
 	let groupIndex = await browser.sessions.getWindowValue(windowId, 'groupIndex');
 	let tabGroupId = groupIndex || 0;
@@ -45,7 +49,7 @@ export async function setActiveId(windowId, tabGroupId) {
 
 export async function create(createInfo = {}) {
 
-	createInfo.windowId = createInfo.windowId || (await browser.windows.getCurrent()).id;
+	createInfo.windowId = createInfo.windowId || await getCurrentWindowId();
 	createInfo.rect = createInfo.rect || {x: 0.3, y: 0.3, w: 0.4, h: 0.4};
 	
 	const tabGroupId = await newTabGroupId(createInfo.windowId);
@@ -73,8 +77,10 @@ export async function create(createInfo = {}) {
 	if ((!panoramaViewTab || !panoramaViewTab.active) && !createInfo.empty) {
 		browser.tabs.create({});
 	}
+	
+	tabGroup.windowId = createInfo.windowId;
 
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onCreated', windowId: createInfo.windowId, data: tabGroup});
+	browser.runtime.sendMessage({event: 'browser.tabGroups.onCreated', data: tabGroup});
 
 	return tabGroup;
 }
@@ -93,10 +99,13 @@ export async function remove(tabGroupId) {
 			tabsToRemove.push(tab.id);
 		}
 	}
-	browser.tabs.remove(tabsToRemove); //!\ check for error and don't remove group if all tabs are not closed
+	const removing = browser.tabs.remove(tabsToRemove); //!\ check for error and don't remove group if all tabs are not closed
+	// I might not be able to check if the tabs ACTUALLY got removed..
+	// beforeunload and such
+	// removing.then(() => { console.log('removed'); }, (error) => { console.log(error);});
 	// ----
 
-	const windowId = (await browser.windows.getCurrent()).id
+	const windowId = await getCurrentWindowId()
 	let tabGroups = await getTabGroups(windowId);
 
 	const i = tabGroups.findIndex((tabGroup) => { return tabGroup.id == tabGroupId; });
@@ -118,22 +127,34 @@ export async function remove(tabGroupId) {
 		await create({windowId: windowId, empty: false});
 	}
 
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onRemoved', windowId: windowId, data: tabGroupId});
+	browser.runtime.sendMessage({event: 'browser.tabGroups.onRemoved', data: {groupId: tabGroupId, removeInfo: {windowId: windowId}}});
 
 	return tabGroupId;
 }
 
+export async function get(tabGroupId) {
+	if (tabGroupId == undefined) return;
 
-export async function query(queryInfo) {
+	const windowId  = await getCurrentWindowId();
+	let   tabGroups = await getTabGroups(windowId);
 
-	queryInfo = queryInfo || {};
+	let tabGroup = tabGroups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
+	if (!tabGroup) return;
+
+	tabGroup.windowId = windowId;
+
+	return tabGroup;
+}
+
+
+export async function query(queryInfo = {}) {
 
 	let matchingTabGroups = [];
 	
 	if (queryInfo.windowId) {
 		matchingTabGroups = matchingTabGroups.concat(await getTabGroups(queryInfo.windowId));
 	} else if (queryInfo.currentWindow) {
-		const currentWindowId = (await browser.windows.getCurrent()).id;
+		const currentWindowId = await getCurrentWindowId();
 		matchingTabGroups = matchingTabGroups.concat(await getTabGroups(currentWindowId));
 	} else {
 		const windows = await browser.windows.getAll({windowTypes: ['normal']});
@@ -149,46 +170,34 @@ export async function query(queryInfo) {
 			}
 		}
 	}
-	
-	if (queryInfo.populate) {
-		// get tabs in group
-	}
 
 	return matchingTabGroups;
 }
 
 
-export async function update(tabGroupId, updateInfo) {
+export async function update(tabGroupId, updateInfo = {}) {
 
-	updateInfo = updateInfo || {};
-	
-	let updatedTabGroup = undefined;
-
-	const windowId = (await browser.windows.getCurrent()).id
+	const windowId = await getCurrentWindowId()
 	let tabGroups = await getTabGroups(windowId);
 
-	for (let tabGroup of tabGroups) {
-		if (tabGroup.id == tabGroupId) {
+	let tabGroup = tabGroups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
+	if (!tabGroup) return;
 
-			for (const key in updateInfo) {
-				if (tabGroup[key]) {
-					tabGroup[key] = updateInfo[key];
-				}
-			}
-			
-			updatedTabGroup = tabGroup;
+	if (updateInfo.hasOwnProperty('title')) {
+		tabGroup.title = updateInfo.title;
+	}
 
-			break;
-		}
+	if (updateInfo.hasOwnProperty('rect')) {
+		tabGroup.rect = updateInfo.rect;
 	}
 	
-	if (updatedTabGroup) {
-		updatedTabGroup.lastAccessed = (new Date).getTime();
-	}
+	tabGroup.lastAccessed = (new Date).getTime();
 	
 	await setTabGroups(windowId, tabGroups);
+	
+	tabGroup.windowId = windowId;
 
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onUpdated', windowId: windowId, data: updatedTabGroup});
-
-	return updatedTabGroup;
+	browser.runtime.sendMessage({event: 'browser.tabGroups.onUpdated', data: tabGroup});
+	
+	return tabGroup;
 }

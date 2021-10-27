@@ -78,12 +78,25 @@ async function handleActions(message, sender, sendResponse) {
 			response = await addon.tabGroups.remove(message.info);
 			break;
 		}
+		case 'browser.tabGroups.get': {
+			response = await addon.tabGroups.get(message.info);
+			break;
+		}
 		case 'browser.tabGroups.query': {
 			response = await addon.tabGroups.query(message.info);
 			break;
 		}
 		case 'browser.tabGroups.update': {
 			response = await addon.tabGroups.update(message.id, message.info);
+			break;
+		}
+
+		case 'browser.tabs.create': {
+			response = await addon.tabs.create(message.info);
+			break;
+		}
+		case 'browser.tabs.query': {
+			response = await addon.tabs.query(message.info);
 			break;
 		}
 		default:

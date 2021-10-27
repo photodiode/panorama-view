@@ -1,8 +1,9 @@
 
 'use strict';
 
+import './tabGroups-polyfill.js';
+
 import {newElement} from '../../common/html.js';
-import {addon} from './addon.js';
 import * as drag from './view.drag.js';
 
 
@@ -109,8 +110,7 @@ export async function insert(tabNode, tab) {
 
 	let lastTab = undefined;
 	for (let _tab of tabs) {
-		
-		_tab.groupId = await addon.tabs.getGroupId(_tab.id);
+
 		if (_tab.groupId != tab.groupId) continue;
 		
 		if (_tab.id == tab.id) {

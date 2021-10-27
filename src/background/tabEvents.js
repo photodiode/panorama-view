@@ -20,40 +20,40 @@ export function handleTabEvents() {
 
 
 async function created(tab) {
-	if (!backup.opening) {
+
+	tab.groupId = undefined;
+
+	if (core.openingPanoramaView) {
+		core.setOpeningPanoramaView(false);
+		tab.groupId = -1;
+
+	} else if (tab.pinned) {
+		tab.groupId = -1;
+
+	} else {
+		if (tab.groupId == undefined) {
+			const start = (new Date).getTime();
+			while (tab.groupId == undefined) {
+				tab.groupId = await addon.tabs.getGroupId(tab.id);
+				if (((new Date).getTime() - start) > 50) break; // timeout
+			}
+
+		}
+		// check if group exists
+		const tabGroups = await addon.tabGroups.query({windowId: tab.windowId});
+		const tabGroupExists = tabGroups.find((tabGroup) => { return tabGroup.id == tab.groupId; });
 		
-		if (core.openingPanoramaView) {
-			core.setOpeningPanoramaView(false);
-			addon.tabs.setGroupId(tab.id, -1);
-
-		} else if (tab.pinned) {
-			addon.tabs.setGroupId(tab.id, -1);
-
-		} else {
-			let tabGroupId = await addon.tabs.getGroupId(tab.id);
-
-			if (tabGroupId == undefined) {
-				tabGroupId = undefined;
-				while (tabGroupId == undefined) {
-					tabGroupId = await addon.tabGroups.getActiveId(tab.windowId);
-				}
-				addon.tabs.setGroupId(tab.id, tabGroupId);
-
-			} else {
-				// check if group exists
-				const tabGroups = await addon.tabGroups.query({windowId: tab.windowId});
-				const tabGroupExists = tabGroups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
-				
-				if (!tabGroupExists) {
-					tabGroupId = undefined;
-					while (tabGroupId == undefined) {
-						tabGroupId = await addon.tabGroups.getActiveId(tab.windowId);
-					}
-					addon.tabs.setGroupId(tab.id, tabGroupId);
-				}
+		if (!tabGroupExists) {
+			tab.groupId = undefined;
+			while (tab.groupId == undefined) {
+				tab.groupId = await addon.tabGroups.getActiveId(tab.windowId);
 			}
 		}
 	}
+	
+	addon.tabs.setGroupId(tab.id, tab.groupId);
+
+	browser.runtime.sendMessage({event: 'browser.tabs.onCreated', data: tab});
 }
 
 
@@ -80,9 +80,13 @@ async function attached(tabId, attachInfo) {
 
 
 async function updated(tabId, changeInfo, tab) {
-	if (changeInfo.pinned != undefined) {
-		if (changeInfo.pinned) {
-			addon.tabs.setGroupId(tabId, -1);
+
+	tab.groupId = undefined;
+	
+	if (changeInfo.hasOwnProperty('pinned')) {
+		if (changeInfo.pinned == true) {
+			tab.groupId = -1;
+			addon.tabs.setGroupId(tabId, tab.groupId);
 		} else {
 			const activeGroupId = await addon.tabGroups.getActiveId(tab.windowId);
 			addon.tabs.setGroupId(tabId, activeGroupId);
@@ -94,6 +98,17 @@ async function updated(tabId, changeInfo, tab) {
 			}
 		}
 	}
+	
+	if (tab.groupId == undefined) {
+		const start = (new Date).getTime();
+		while (tab.groupId == undefined) {
+			tab.groupId = await addon.tabs.getGroupId(tab.id);
+			if (((new Date).getTime() - start) > 50) break; // timeout
+		}
+
+	}
+	
+	browser.runtime.sendMessage({event: 'browser.tabs.onUpdated', data: {tabId: tabId, changeInfo: changeInfo, tab: tab}});
 }
 
 
