@@ -4,28 +4,34 @@
 import * as colors from '../common/colors.js';
 
 export async function set(theme) {
-
-	let darkTheme = false;
 	
 	const storage = await browser.storage.local.get();
+	let themeType = storage.themeOverride;
 	
-	if (storage.themeOverride == undefined) {
+	if (!themeType) {
 		if (!theme) theme = await browser.theme.getCurrent();
-
 		if (theme && theme.colors) {
-			if (colors.toGray(colors.toRGBA(theme.colors.frame)) < 0.5) {
-				darkTheme = true;
+
+			const color = colors.toRGBA(theme.colors.frame);
+			if (color) {
+				if (colors.toGray(color) < 0.5) {
+					themeType = 'dark';
+				} else {
+					themeType = 'light';
+				}
 			}
-		} else if (window.matchMedia('(prefers-color-scheme: dark)')) {
-			darkTheme = true;
 		}
-	} else {
-		if (storage.themeOverride == 'dark') {
-			darkTheme = true;
+	}
+	
+	if (!themeType) {
+		if (window.matchMedia('(prefers-color-scheme: dark)')) {
+			themeType = 'dark';
+		} else {
+			themeType = 'light';
 		}
 	}
 
-	if (darkTheme) {
+	if (themeType == 'dark') {
 		document.body.classList.add('dark');
 	} else {
 		document.body.classList.remove('dark');

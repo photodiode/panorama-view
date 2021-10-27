@@ -2,6 +2,9 @@
 'use strict';
 
 export function toRGBA(input) {
+
+	if (!input) return undefined;
+
 	// get computed color
 	const tmpElement = document.body.appendChild(document.createElement('tmpColorElement'));
 	      tmpElement.style.color = input;
@@ -13,11 +16,10 @@ export function toRGBA(input) {
 
 	let color = computedColor.match(/[\.\d]+/g);
 
-	if (!color) color = [0, 0, 0, 0];
-	if (!input) color = [0, 0, 0, 0];
+	if (!color) return undefined;
 
 	if (color.length == 3) color.push(1);
-	if (color.length != 4) color = [0, 0, 0, 0];
+	if (color.length != 4) return undefined;
 
 	return {
 		r: Number(color[0]),
