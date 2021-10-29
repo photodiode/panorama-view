@@ -35,6 +35,12 @@ if (!browser.hasOwnProperty('tabGroups')) {
 	let tabGroups_onUpdated = new listenerObject();
 
 	browser.tabGroups = {
+		create: (createInfo) => {
+			return browser.runtime.sendMessage({
+				action: 'browser.tabGroups.create',
+				info:    createInfo
+			});
+		},
 		get: (groupId) => {
 			return browser.runtime.sendMessage({
 				action:  'browser.tabGroups.get',
@@ -52,6 +58,12 @@ if (!browser.hasOwnProperty('tabGroups')) {
 			return browser.runtime.sendMessage({
 				action: 'browser.tabGroups.query',
 				info:    queryInfo
+			});
+		},
+		remove: (groupId) => {
+			return browser.runtime.sendMessage({
+				action: 'browser.tabGroups.remove',
+				info:    groupId
 			});
 		},
 		update: (groupId, updateInfo) => {
@@ -78,36 +90,30 @@ if (!browser.hasOwnProperty('tabGroups')) {
 			info:   createInfo
 		});
 	}
-	/*browser.tabs.get = (tabId) => {
+	browser.tabs.get = (tabId) => {
 		return browser.runtime.sendMessage({
 			action: 'browser.tabs.get',
 			tabId:   tabId
 		});
-	}*/
-	/*browser.tabs.getCurrent = () => {
+	}
+	const browser_tabs_getCurrent = browser.tabs.getCurrent;
+	browser.tabs.getCurrent = () => {
+		return browser_tabs_getCurrent().then(tab => browser.tabs.get(tab.id));
+	}
+	browser.tabs.move = (tabIds, moveInfo) => {
 		return browser.runtime.sendMessage({
-			action: 'browser.tabs.getCurrent'
-		});
-	}*/
-	/*browser.tabs.group = (tabIds, groupId) => {
-		return browser.runtime.sendMessage({
-			action: 'browser.tabs.group',
+			action: 'browser.tabs.move',
 			tabIds:  tabIds,
-			groupId: groupId
+			info:    moveInfo
 		});
-	}*/
+	}
 	browser.tabs.query = (queryInfo) => {
+		//!\ intercept currentWindow and replace with windowId
 		return browser.runtime.sendMessage({
 			action: 'browser.tabs.query',
 			info:   queryInfo
 		});
 	}
-	/*browser.tabs.ungroup = (tabIds, groupId) => {
-		return browser.runtime.sendMessage({
-			action: 'browser.tabs.ungroup',
-			tabIds:  tabIds
-		});
-	}*/
 
 	browser.tabs.onCreated = tabs_onCreated.functions;
 	browser.tabs.onUpdated = tabs_onUpdated.functions;

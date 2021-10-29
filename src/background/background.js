@@ -95,6 +95,14 @@ function handleActions(message, sender, sendResponse) {
 			response = addon.tabs.create(message.info);
 			break;
 		}
+		case 'browser.tabs.get': {
+			response = addon.tabs.get(message.tabId);
+			break;
+		}
+		case 'browser.tabs.move': {
+			response = addon.tabs.move(message.tabIds, message.info);
+			break;
+		}
 		case 'browser.tabs.query': {
 			response = addon.tabs.query(message.info);
 			break;

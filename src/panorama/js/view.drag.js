@@ -1,8 +1,9 @@
 
 'use strict';
 
-import {addon} from './addon.js';
 import {html}  from './html.js';
+
+import './tabGroups-polyfill.js';
 
 
 let selectedTabs = [];
@@ -10,12 +11,7 @@ let selectedTabs = [];
 
 
 async function moveTabs(tabIds, windowId, tabGroupId, index) {
-
-	browser.tabs.move(tabIds, {index: index, windowId: windowId});
-	
-	for (let tabId of tabIds) {
-		addon.tabs.setGroupId(tabId, tabGroupId);
-	}
+	browser.tabs.move(tabIds, {index: index, windowId: windowId, groupId: tabGroupId});
 }
 
 
@@ -42,7 +38,7 @@ export async function viewDrop(e) {
 	e.stopPropagation();
 	
 	const currentWindowId = (await browser.windows.getCurrent()).id;
-	const tabGroup = await addon.tabGroups.create({windowId: currentWindowId});
+	const tabGroup = await browser.tabGroups.create({windowId: currentWindowId});
 
 	// move the tab node
 	let groupNode = html.groups.get(tabGroup.id);

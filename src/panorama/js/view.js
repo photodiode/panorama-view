@@ -3,7 +3,6 @@
 
 import './tabGroups-polyfill.js';
 
-import {addon} from './addon.js';
 import {html}  from './html.js';
 
 import * as theme  from './view.theme.js';
@@ -45,13 +44,13 @@ document.addEventListener('DOMContentLoaded', async() => {
 	// view events
 	document.getElementById('groups').addEventListener('dblclick', (event) => {
 		if (event.target == document.getElementById('groups')) {
-			addon.tabGroups.create();
+			browser.tabGroups.create();
 		}
 	}, false);
 
 	document.getElementById('groups').addEventListener('auxclick', (event) => {
 		if (event.target == document.getElementById('groups') && event.button == 1) {
-			addon.tabGroups.create();
+			browser.tabGroups.create();
 		}
 	}, false);
 	

@@ -1,9 +1,10 @@
 
 'use strict';
 
-import {addon} from './addon.js';
 import {html}  from './html.js';
 import * as core from './view.js';
+
+import './tabGroups-polyfill.js';
 
 
 export async function groupCreated(tabGroup) {
@@ -72,13 +73,6 @@ export async function tabUpdated(tabId, changeInfo, tab) {
 			html.groups.fitTabs();
 			html.tabs.setActive();
 		} else {
-			
-			// wait for the group id to be updated
-			let tabGroupId = -1;
-			while (tabGroupId == -1) {
-				tabGroupId = await addon.tabs.getGroupId(tabId);
-			}
-			
 			await tabCreated(tab);
 			html.tabs.updateFavicon(tabNode, tab);
 		}
@@ -94,7 +88,6 @@ export async function tabActivated(activeInfo) {
 export async function tabMoved(tabId, moveInfo) {
 
 	let tab = await browser.tabs.get(tabId);
-	    tab.groupId = await addon.tabs.getGroupId(tab.id);
 
 	let tabNode = html.tabs.get(tabId);
 

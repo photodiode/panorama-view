@@ -42,6 +42,51 @@ export async function create(createInfo) {
 	return tab;
 }
 
+export async function get(tabId) {
+
+	let tab = await browser.tabs.get(tabId);
+
+	if (!tab) return;
+
+	tab.groupId = await getGroupIdTimeout(tab.id, 100);
+
+	return tab;
+}
+
+export async function move(tabIds, moveInfo) {
+	
+	let groupId = undefined;
+
+	if (moveInfo.hasOwnProperty('groupId')) {
+		groupId = moveInfo.groupId;
+		delete moveInfo.groupId;
+	}
+	
+	if (groupId) {
+		if (Array.isArray(tabIds)) {
+			await Promise.all(tabIds.map(async(tabId) => {
+				await setGroupId(tabId, groupId);
+			}));
+		} else {
+			await setGroupId(tabIds, groupId);
+		}
+	}
+	
+	let tabs = await browser.tabs.move(tabIds, moveInfo);
+	
+	if (groupId) {
+		for (let tab of tabs) {
+			tab.groupId = groupId;
+		}
+	} else {
+		await Promise.all(tabs.map(async(tab) => {
+			tab.groupId = await getGroupId(tab.id);
+		}));
+	}
+	
+	return tabs;
+}
+
 export async function query(queryInfo) {
 	
 	let groupId = undefined;
@@ -51,7 +96,7 @@ export async function query(queryInfo) {
 		delete queryInfo.groupId;
 	}
 	
-	let tabs = await browser.tabs.query({currentWindow: true});
+	let tabs = await browser.tabs.query(queryInfo);
 	
 	await Promise.all(tabs.map(async(tab) => {
 		tab.groupId = await getGroupId(tab.id);

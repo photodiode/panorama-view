@@ -2,7 +2,6 @@
 'use strict';
 
 import {newElement} from '../../common/html.js';
-import {addon} from './addon.js';
 import * as drag from './view.drag.js';
 
 import {options} from './view.js';
@@ -53,11 +52,11 @@ export function create(group) {
 
 		if (tabCount > 0) {
 			if (window.confirm(`Closing this Tab Group will close the ${tabCount} tab${(tabCount == 1 ? '' : 's')} within it`)) {
-				addon.tabGroups.remove(group.id);
+				browser.tabGroups.remove(group.id);
 				node.remove();
 			}
 		} else {
-			addon.tabGroups.remove(group.id);
+			browser.tabGroups.remove(group.id);
 			node.remove();
 		}
 	}, false);

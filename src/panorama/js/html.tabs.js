@@ -5,6 +5,7 @@ import './tabGroups-polyfill.js';
 
 import {newElement} from '../../common/html.js';
 import * as drag from './view.drag.js';
+import * as core from './view.js';
 
 
 export function create(tab) {
@@ -106,7 +107,7 @@ export async function insert(tabNode, tab) {
 
 	let tabGroupNode = document.getElementById('tabGroup'+tab.groupId);
 
-	let tabs = await browser.tabs.query({currentWindow: true});
+	let tabs = await browser.tabs.query({windowId: core.viewWindowId});
 
 	let lastTab = undefined;
 	for (let _tab of tabs) {
