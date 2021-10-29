@@ -9,6 +9,15 @@ export function getGroupId(tabId) {
 	return browser.sessions.getTabValue(tabId, 'groupId');
 }
 
+export async function getGroupIdTimeout(tabId, timeout) {
+	let groupId = undefined;
+	const start = (new Date).getTime();
+	while (groupId == undefined && (((new Date).getTime() - start) < timeout)) {
+		groupId = await browser.sessions.getTabValue(tabId, 'groupId');
+	}
+	return groupId;
+}
+
 export async function create(createInfo) {
 
 	let groupId = undefined;
@@ -18,16 +27,13 @@ export async function create(createInfo) {
 		delete createInfo.groupId;
 	}
 
-	if (createInfo.hasOwnProperty('pinned') && createInfo.pinned == true) {
-		groupId = -1;
-	}
-
 	let tab = await browser.tabs.create(createInfo);
 
 	if (!tab) return;
 
+	// wait for onCreated to add a groupId if none is set
 	if (groupId == undefined) {
-		groupId = await addon.tabGroups.getActiveId(tab.windowId);
+		groupId = await getGroupIdTimeout(tab.id, 100); // random timeout
 	}
 	
 	setGroupId(tab.id, groupId);

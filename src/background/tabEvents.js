@@ -32,12 +32,7 @@ async function created(tab) {
 
 	} else {
 		if (tab.groupId == undefined) {
-			const start = (new Date).getTime();
-			while (tab.groupId == undefined) {
-				tab.groupId = await addon.tabs.getGroupId(tab.id);
-				if (((new Date).getTime() - start) > 50) break; // timeout
-			}
-
+			tab.groupId = await addon.tabs.getGroupIdTimeout(tab.id, 100); // random timeout
 		}
 		// check if group exists
 		const tabGroups = await addon.tabGroups.query({windowId: tab.windowId});
@@ -121,10 +116,7 @@ async function activated(activeInfo) {
 	if (!tab.pinned) {
 		
 		// Set the window's active group to the new active tab's group
-		let tabGroupId = undefined;
-		while (tabGroupId == undefined) {
-			tabGroupId = await addon.tabs.getGroupId(activeInfo.tabId);
-		}
+		let tabGroupId = await addon.tabs.getGroupIdTimeout(activeInfo.tabId, 100); // random timeout
 
 		if (tabGroupId != -1) {
 			// check if group exists
