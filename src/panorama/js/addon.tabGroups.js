@@ -18,19 +18,3 @@ export function remove(tabGroupId) {
 		info:   tabGroupId
 	});
 }
-
-export function query(queryInfo) {
-	return browser.runtime.sendMessage({
-		action: 'browser.tabGroups.query',
-		info:   queryInfo
-	});
-}
-
-export function update(tabGroupId, updateInfo) {
-	return browser.runtime.sendMessage({
-		action: 'browser.tabGroups.update',
-		id:     tabGroupId,
-		info:   updateInfo
-	});
-}
-

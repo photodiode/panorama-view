@@ -21,10 +21,6 @@ export let options = {
 
 
 document.addEventListener('DOMContentLoaded', async() => {
-
-	/*messagePort.onMessage.addListener(function(m) {
-		console.log(m.greeting);
-	});*/
 	
 	viewWindowId = (await browser.windows.getCurrent()).id;
 	viewTabId    = (await browser.tabs.getCurrent()).id;
@@ -176,7 +172,6 @@ async function initializeTabNodes() {
 
 
 export async function captureThumbnail(tabId, changeInfo, tab) {
-	//console.log(tabId, changeInfo, tab);
 	const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 70, scale: 0.25});
 	html.tabs.updateThumbnail(html.tabs.get(tabId), tabId, thumbnail);
 	browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);

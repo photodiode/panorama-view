@@ -80,7 +80,8 @@ export async function create(createInfo = {}) {
 	
 	tabGroup.windowId = createInfo.windowId;
 
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onCreated', data: tabGroup});
+	const sending = browser.runtime.sendMessage({event: 'browser.tabGroups.onCreated', group: tabGroup});
+	      sending.catch(error => {});
 
 	return tabGroup;
 }
@@ -127,7 +128,8 @@ export async function remove(tabGroupId) {
 		await create({windowId: windowId, empty: false});
 	}
 
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onRemoved', data: {groupId: tabGroupId, removeInfo: {windowId: windowId}}});
+	const sending = browser.runtime.sendMessage({event: 'browser.tabGroups.onRemoved', groupId: tabGroupId, removeInfo: {windowId: windowId}});
+	      sending.catch(error => {});
 
 	return tabGroupId;
 }
@@ -197,7 +199,8 @@ export async function update(tabGroupId, updateInfo = {}) {
 	
 	tabGroup.windowId = windowId;
 
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onUpdated', data: tabGroup});
+	const sending = browser.runtime.sendMessage({event: 'browser.tabGroups.onUpdated', group: tabGroup});
+	      sending.catch(error => {});
 	
 	return tabGroup;
 }

@@ -108,7 +108,7 @@ export function create(group) {
 	input.addEventListener('blur', function(event) {
 		input.setSelectionRange(0, 0);
 		
-		addon.tabGroups.update(group.id, {title: input.value});
+		browser.tabGroups.update(group.id, {title: input.value});
 
 		header.addEventListener('mousedown', moveFunc, false);
 
@@ -185,7 +185,7 @@ export async function resize(node, rect) {
 export async function stack(node, tabGroup) {
 	const tabGroupId = parseInt(node.id.substr(8));
 
-	tabGroup = tabGroup || await addon.tabGroups.query({windowId: (await browser.windows.getCurrent()).id, id: tabGroupId});
+	tabGroup = tabGroup || await browser.tabGroups.query({windowId: (await browser.windows.getCurrent()).id, id: tabGroupId});
 
 	node.style.zIndex = Math.floor(tabGroup.lastAccessed / 100).toString().substr(-9);
 }
@@ -394,7 +394,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 			lx = x;
 			ly = y;
 			first = false;
-			addon.tabGroups.update(group.id, {rect: group.rect}).then(tabGroup => {
+			browser.tabGroups.update(group.id, {rect: group.rect}).then(tabGroup => {
 				stack(node, tabGroup);
 			});
 		}
@@ -492,7 +492,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 	const onmouseup = () => {
 		if(rect.x !== undefined) {
 			group.rect = rect;
-			addon.tabGroups.update(group.id, {rect: rect});
+			browser.tabGroups.update(group.id, {rect: rect});
 		}
 		
 		document.body.removeAttribute('style');

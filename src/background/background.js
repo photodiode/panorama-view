@@ -63,7 +63,7 @@ async function salvageGrouplessTabs() {
 }
 
 
-async function handleActions(message, sender, sendResponse) {
+function handleActions(message, sender, sendResponse) {
 	
 	if (!message.action) return;
 
@@ -71,32 +71,32 @@ async function handleActions(message, sender, sendResponse) {
 
 	switch (message.action) {
 		case 'browser.tabGroups.create': {
-			response = await addon.tabGroups.create(message.info);
+			response = addon.tabGroups.create(message.info);
 			break;
 		}
 		case 'browser.tabGroups.remove': {
-			response = await addon.tabGroups.remove(message.info);
+			response = addon.tabGroups.remove(message.info);
 			break;
 		}
 		case 'browser.tabGroups.get': {
-			response = await addon.tabGroups.get(message.info);
+			response = addon.tabGroups.get(message.groupId);
 			break;
 		}
 		case 'browser.tabGroups.query': {
-			response = await addon.tabGroups.query(message.info);
+			response = addon.tabGroups.query(message.info);
 			break;
 		}
 		case 'browser.tabGroups.update': {
-			response = await addon.tabGroups.update(message.id, message.info);
+			response = addon.tabGroups.update(message.groupId, message.info);
 			break;
 		}
 
 		case 'browser.tabs.create': {
-			response = await addon.tabs.create(message.info);
+			response = addon.tabs.create(message.info);
 			break;
 		}
 		case 'browser.tabs.query': {
-			response = await addon.tabs.query(message.info);
+			response = addon.tabs.query(message.info);
 			break;
 		}
 		default:

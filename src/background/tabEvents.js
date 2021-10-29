@@ -53,7 +53,8 @@ async function created(tab) {
 	
 	addon.tabs.setGroupId(tab.id, tab.groupId);
 
-	browser.runtime.sendMessage({event: 'browser.tabs.onCreated', data: tab});
+	const sending = browser.runtime.sendMessage({event: 'browser.tabs.onCreated', tab: tab});
+	      sending.catch(error => {});
 }
 
 
@@ -107,8 +108,9 @@ async function updated(tabId, changeInfo, tab) {
 		}
 
 	}
-	
-	browser.runtime.sendMessage({event: 'browser.tabs.onUpdated', data: {tabId: tabId, changeInfo: changeInfo, tab: tab}});
+
+	const sending = browser.runtime.sendMessage({event: 'browser.tabs.onUpdated', tabId: tabId, changeInfo: changeInfo, tab: tab});
+	      sending.catch(error => {});
 }
 
 
