@@ -1,11 +1,9 @@
 
 'use strict';
 
-import './tabGroups-polyfill.js';
-
-import {newElement} from '../../common/html.js';
-import * as drag from './view.drag.js';
-import * as core from './view.js';
+import {newElement} from '/common/html.js'
+import * as drag from './view.drag.js'
+import * as core from './view.js'
 
 
 export function create(tab) {

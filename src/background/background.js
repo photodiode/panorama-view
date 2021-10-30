@@ -5,7 +5,7 @@ import {addon} from './addon.js'
 import * as core from './core.js'
 
 import {handleCommands} from './commands.js'
-import {handleTabEvents} from './tabEvents.js'
+import {handleTabEvents} from './addon.tabs.events.js'
 
 import * as backup from './backup.js'
 
@@ -72,14 +72,15 @@ async function init() {
 
 	// meny entries
 	browser.menus.create({
-		id: 'newTabGroup',
-		title: 'New Tab Group',
+		id:       'newTabGroup',
+		title:    'New Tab Group',
 		contexts: ['browser_action']
 	});
 
 	browser.menus.onClicked.addListener(async(info, tab) => {
 		if (info.menuItemId == 'newTabGroup') {
-			addon.tabGroups.create({}, (await browser.windows.getCurrent()).id);
+			const group = await addon.tabGroups.create({}, (await browser.windows.getCurrent()).id);
+			addon.tabs.create({groupId: group.id, windowId: group.windowId});
 		}
 	});
 	// ----

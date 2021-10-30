@@ -1,10 +1,8 @@
 
 'use strict';
 
-import {html}  from './html.js';
-import * as core from './view.js';
-
-import './tabGroups-polyfill.js';
+import {html}  from './html.js'
+import * as core from './view.js'
 
 
 export async function groupCreated(tabGroup) {

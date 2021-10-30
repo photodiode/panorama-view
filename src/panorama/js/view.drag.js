@@ -1,9 +1,7 @@
 
 'use strict';
 
-import {html}  from './html.js';
-
-import './tabGroups-polyfill.js';
+import {html}  from './html.js'
 
 
 let selectedTabs = [];

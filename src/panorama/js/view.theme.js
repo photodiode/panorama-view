@@ -1,9 +1,9 @@
 
 'use strict';
 
-import * as colors from '../../common/colors.js';
+import * as colors from '/common/colors.js'
 
-import {options} from './view.js';
+import {options} from './view.js'
 
 export async function set(theme) {
 

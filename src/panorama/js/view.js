@@ -1,13 +1,13 @@
 
 'use strict';
 
-import './tabGroups-polyfill.js';
+import '/common/tabGroups-polyfill.js'
 
-import {html}  from './html.js';
+import {html}  from './html.js'
 
-import * as theme  from './view.theme.js';
-import * as events from './view.events.js';
-import * as drag   from './view.drag.js';
+import * as theme  from './view.theme.js'
+import * as events from './view.events.js'
+import * as drag   from './view.drag.js'
 
 
 export let viewWindowId = undefined;

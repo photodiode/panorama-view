@@ -1,12 +1,10 @@
 
 'use strict';
 
-import {newElement} from '../../common/html.js';
-import * as drag from './view.drag.js';
+import {newElement} from '/common/html.js'
+import * as drag from './view.drag.js'
 
-import {options} from './view.js';
-
-import './tabGroups-polyfill.js';
+import {options} from './view.js'
 
 
 export function create(group) {
@@ -36,10 +34,7 @@ export function create(group) {
 	var newtab = newElement('div', {class: 'newtab'}, [newElement('div', {class: 'border'})]);
 
 	// group
-	var tabs = newElement('div', {class: 'tabs transition'}, [newtab]);
-	//    tabs.addEventListener('dragover', groupDragOver, false);
-	//    tabs.addEventListener('drop', groupDrop, false);
-
+	var tabs   = newElement('div', {class: 'tabs transition'}, [newtab]);
 	var resize = newElement('div', {class: 'resize'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left]);
 	var node   = newElement('div', {class: 'group', id: 'tabGroup'+group.id}, [resize, header, tabs]);
 	// ----
