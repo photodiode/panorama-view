@@ -18,6 +18,7 @@ export async function getGroupIdTimeout(tabId, timeout) {
 	return groupId;
 }
 
+
 export async function create(createInfo) {
 
 	let groupId = undefined;
@@ -35,12 +36,13 @@ export async function create(createInfo) {
 	if (groupId == undefined) {
 		groupId = await getGroupIdTimeout(tab.id, 100); // random timeout
 	}
-	
+
 	setGroupId(tab.id, groupId);
 	tab.groupId = groupId;
-	
+
 	return tab;
 }
+
 
 export async function get(tabId) {
 
@@ -53,15 +55,16 @@ export async function get(tabId) {
 	return tab;
 }
 
+
 export async function move(tabIds, moveInfo) {
-	
+
 	let groupId = undefined;
 
 	if (moveInfo.hasOwnProperty('groupId')) {
 		groupId = moveInfo.groupId;
 		delete moveInfo.groupId;
 	}
-	
+
 	if (groupId) {
 		if (Array.isArray(tabIds)) {
 			await Promise.all(tabIds.map(async(tabId) => {
@@ -71,9 +74,9 @@ export async function move(tabIds, moveInfo) {
 			await setGroupId(tabIds, groupId);
 		}
 	}
-	
+
 	let tabs = await browser.tabs.move(tabIds, moveInfo);
-	
+
 	if (groupId) {
 		for (let tab of tabs) {
 			tab.groupId = groupId;
@@ -83,28 +86,29 @@ export async function move(tabIds, moveInfo) {
 			tab.groupId = await getGroupId(tab.id);
 		}));
 	}
-	
+
 	return tabs;
 }
 
+
 export async function query(queryInfo) {
-	
+
 	let groupId = undefined;
 
 	if (queryInfo.hasOwnProperty('groupId')) {
 		groupId = queryInfo.groupId;
 		delete queryInfo.groupId;
 	}
-	
+
 	let tabs = await browser.tabs.query(queryInfo);
-	
+
 	await Promise.all(tabs.map(async(tab) => {
 		tab.groupId = await getGroupId(tab.id);
 	}));
-	
+
 	if (groupId != undefined) {
 		tabs = tabs.filter(tab => (tab.groupId == groupId));
 	}
-	
+
 	return tabs;
 }

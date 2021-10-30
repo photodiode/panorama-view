@@ -1,8 +1,6 @@
 
 'use strict';
 
-import * as tabGroups from './browser.tabGroups.js'
-
 import {addon} from './addon.js';
 import * as core from './core.js';
 
@@ -116,7 +114,7 @@ export async function open(backup) {
 
 		let z = 0;
 		for (const _tabGroup of _window.tabGroups) {
-			const tabGroup = await tabGroups.create({
+			const tabGroup = await addon.tabGroups.create({
 				windowId:     window.id,
 				title:        _tabGroup.title,
 				rect:         _tabGroup.rect,

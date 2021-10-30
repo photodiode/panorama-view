@@ -1,8 +1,6 @@
 
 'use strict';
 
-import * as tabGroups from './browser.tabGroups.js'
-
 import {addon} from './addon.js';
 import * as core from './core.js';
 
@@ -37,7 +35,7 @@ async function created(tab) {
 			tab.groupId = await addon.tabs.getGroupIdTimeout(tab.id, 100); // random timeout
 		}
 		// check if group exists
-		const groups = await tabGroups.query({windowId: tab.windowId});
+		const groups = await addon.tabGroups.query({windowId: tab.windowId});
 		const groupsExists = groups.find(group => group.id == tab.groupId);
 		
 		if (!groupsExists) {
@@ -122,7 +120,7 @@ async function activated(activeInfo) {
 
 		if (tabGroupId != -1) {
 			// check if group exists
-			const groups = await tabGroups.query({windowId: activeInfo.windowId});
+			const groups = await addon.tabGroups.query({windowId: activeInfo.windowId});
 			const groupsExists = groups.find(group => group.id == tabGroupId);
 			
 			if (!groupsExists) {
