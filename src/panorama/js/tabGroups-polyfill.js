@@ -28,7 +28,7 @@ if (!browser.hasOwnProperty('tabGroups')) {
 		}
 	}
 
-	// tabGroups
+	// browser.tabGroups
 	let tabGroups_onCreated = new listenerObject();
 	//let tabGroups_onMoved = new listenerObject();
 	let tabGroups_onRemoved = new listenerObject();
@@ -63,7 +63,7 @@ if (!browser.hasOwnProperty('tabGroups')) {
 		remove: (groupId) => {
 			return browser.runtime.sendMessage({
 				action: 'browser.tabGroups.remove',
-				info:    groupId
+				groupId: groupId
 			});
 		},
 		update: (groupId, updateInfo) => {
@@ -80,7 +80,7 @@ if (!browser.hasOwnProperty('tabGroups')) {
 	}
 	// ----
 	
-	// tabs hijack
+	// browser.tabs hijack
 	let tabs_onCreated = new listenerObject();
 	let tabs_onUpdated = new listenerObject();
 
@@ -118,7 +118,33 @@ if (!browser.hasOwnProperty('tabGroups')) {
 	browser.tabs.onCreated = tabs_onCreated.functions;
 	browser.tabs.onUpdated = tabs_onUpdated.functions;
 	// ----
+	
+	// browser.sessions additions
+	browser.sessions.setGroupValue = (groupId, key, value) => {
+		return browser.runtime.sendMessage({
+			action: 'browser.sessions.setGroupValue',
+			groupId: groupId,
+			key:     key,
+			value:   value
+		});
+	}
+	browser.sessions.getGroupValue = (groupId, key) => {
+		return browser.runtime.sendMessage({
+			action: 'browser.sessions.getGroupValue',
+			groupId: groupId,
+			key:     key
+		});
+	}
+	browser.sessions.removeGroupValue = (groupId, key) => {
+		return browser.runtime.sendMessage({
+			action: 'browser.sessions.removeGroupValue',
+			groupId: groupId,
+			key:     key
+		});
+	}
+	// ----
 
+	// event listeners
 	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		switch (message.event) {
 			case 'browser.tabGroups.onCreated': {
@@ -150,4 +176,5 @@ if (!browser.hasOwnProperty('tabGroups')) {
 				break;
 		}
 	});
+	// ----
 }

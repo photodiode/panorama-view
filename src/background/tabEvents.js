@@ -1,6 +1,8 @@
 
 'use strict';
 
+import * as tabGroups from './browser.tabGroups.js'
+
 import {addon} from './addon.js';
 import * as core from './core.js';
 
@@ -35,10 +37,10 @@ async function created(tab) {
 			tab.groupId = await addon.tabs.getGroupIdTimeout(tab.id, 100); // random timeout
 		}
 		// check if group exists
-		const tabGroups = await addon.tabGroups.query({windowId: tab.windowId});
-		const tabGroupExists = tabGroups.find((tabGroup) => { return tabGroup.id == tab.groupId; });
+		const groups = await tabGroups.query({windowId: tab.windowId});
+		const groupsExists = groups.find(group => group.id == tab.groupId);
 		
-		if (!tabGroupExists) {
+		if (!groupsExists) {
 			tab.groupId = undefined;
 			while (tab.groupId == undefined) {
 				tab.groupId = await addon.tabGroups.getActiveId(tab.windowId);
@@ -120,10 +122,10 @@ async function activated(activeInfo) {
 
 		if (tabGroupId != -1) {
 			// check if group exists
-			const tabGroups = await addon.tabGroups.query({windowId: activeInfo.windowId});
-			const tabGroupExists = tabGroups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
+			const groups = await tabGroups.query({windowId: activeInfo.windowId});
+			const groupsExists = groups.find(group => group.id == tabGroupId);
 			
-			if (!tabGroupExists) {
+			if (!groupsExists) {
 				tabGroupId = undefined;
 				while (tabGroupId == undefined) {
 					tabGroupId = await addon.tabGroups.getActiveId(activeInfo.windowId);

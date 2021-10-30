@@ -1,7 +1,8 @@
 
 'use strict';
 
-import {addon} from './addon.js';
+import * as tabGroups from './browser.tabGroups.js'
+
 import * as core from './core.js';
 
 export async function handleCommands(command) {
@@ -11,7 +12,7 @@ export async function handleCommands(command) {
 			break;
 		}
 		case 'new_tab_group': {
-			addon.tabGroups.create();
+			tabGroups.create({}, (await browser.windows.getCurrent()).id);
 			break;
 		}
 		case 'next_group': {

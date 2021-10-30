@@ -184,7 +184,7 @@ export async function resize(node, rect) {
 export async function stack(node, tabGroup) {
 	const tabGroupId = parseInt(node.id.substr(8));
 
-	tabGroup = tabGroup || await browser.tabGroups.query({windowId: (await browser.windows.getCurrent()).id, id: tabGroupId});
+	tabGroup = tabGroup || await browser.tabGroups.get(tabGroupId);
 
 	node.style.zIndex = Math.floor(tabGroup.lastAccessed / 100).toString().substr(-9);
 }

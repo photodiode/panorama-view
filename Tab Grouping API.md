@@ -8,12 +8,23 @@
   - color `color`
   - cookieStoreId `string` 
   - id `integer`
-  - lastAccessed `unix time (milliseconds)`
   - title `string`
   - windowId `integer`
 
 
 ### Methods
++ **create**  
+```javascript
+var getting = browser.tabGroups.create(
+	{
+		collapsed,
+		color,
+		containerId,
+		title,
+		windowId
+	}
+)
+```
 + **get**  
   Retrieves details about the specified group.
 ```javascript
@@ -34,10 +45,17 @@ var querying = browser.tabGroups.query(
 		collapsed,
 		color,
 		containerId,
-		lastAccessed,
+		groupId,
 		title,
 		windowId
 	}
+)
+```
++ **remove**  
+  Remove the specified group.
+```javascript
+var getting = browser.tabGroups.remove(
+	groupId,  // integer
 )
 ```
 + **update**
@@ -98,25 +116,12 @@ browser.tabGroups.onUpdated.hasListener(listener)
 - **getCurrent**  
   insert groupId
 
-+ **group**  
-  Adds one or more tabs to a specified group, or if no group is specified, adds the given tabs to a newly created group.
-```javascript
-var grouping = browser.tabs.group(
-	tabIds,  // integer or integer array
-	groupId  // integer
-)
-```
+- **move**  
+  add groupId option
+
 - **query**  
   add option for groupId  
   insert groupId
-
-+ **ungroup**  
-  Removes one or more tabs from their respective groups. If any groups become empty, they are deleted.
-```javascript
-var ungrouping = browser.tabs.ungroup(
-	tabIds  // integer or integer array
-)
-```
 
 ### Events
 - **onCreated**  

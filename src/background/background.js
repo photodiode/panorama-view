@@ -1,15 +1,17 @@
 
 'use strict';
 
-import {addon} from './addon.js';
-import * as core from './core.js';
+import * as tabGroups from './browser.tabGroups.js'
 
-import {handleCommands} from './commands.js';
-import {handleTabEvents} from './tabEvents.js';
+import {addon} from './addon.js'
+import * as core from './core.js'
 
-import * as backup from './backup.js';
+import {handleCommands} from './commands.js'
+import {handleTabEvents} from './tabEvents.js'
 
-import {migrate} from './migrate.js';
+import * as backup from './backup.js'
+
+import {migrate} from './migrate.js'
 
 
 
@@ -18,19 +20,10 @@ async function setupWindows() {
 
 	const windows = browser.windows.getAll({});
 
-	for(const window of await windows) {
-		createGroupInWindow(window);
-	}
-}
-
-/** Create the first group in a window
- * This handles new windows and, during installation, existing windows
- * that do not yet have a group */
-async function createGroupInWindow(window) {
-	if (!backup.opening) {
-		const groups = await addon.tabGroups.query({windowId: window.id});
+	for (const window of await windows) {
+		const groups = await tabGroups.query({windowId: window.id});
 		if (groups.length == 0) {
-			await addon.tabGroups.create({windowId: window.id, title: 'Default', rect: {x: 0, y: 0, w: 0.5, h: 0.5}, empty: true});
+			await tabGroups.create({windowId: window.id, rect: {x: 0, y: 0, w: 0.5, h: 0.5}});
 		}
 	}
 }
@@ -41,7 +34,7 @@ async function salvageGrouplessTabs() {
 	const windows = await browser.windows.getAll({populate: true});
 
 	for (const window of windows) {
-		const tabGroups = await addon.tabGroups.query({windowId: window.id});
+		const groups = await tabGroups.query({windowId: window.id});
 
 		for (const tab of window.tabs) {
 
@@ -51,7 +44,7 @@ async function salvageGrouplessTabs() {
 				const tabGroupId = await addon.tabs.getGroupId(tab.id);
 
 				if (tabGroupId != -1) {
-					const tabGroupExists = tabGroups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
+					const tabGroupExists = groups.find((tabGroup) => { return tabGroup.id == tabGroupId; });
 					if (!tabGroupExists) {
 						const activeGroup = await addon.tabGroups.getActiveId(tab.windowId);
 						addon.tabs.setGroupId(tab.id, activeGroup);
@@ -71,23 +64,23 @@ function handleActions(message, sender, sendResponse) {
 
 	switch (message.action) {
 		case 'browser.tabGroups.create': {
-			response = addon.tabGroups.create(message.info);
-			break;
-		}
-		case 'browser.tabGroups.remove': {
-			response = addon.tabGroups.remove(message.info);
+			response = tabGroups.create(message.info, sender.tab.windowId);
 			break;
 		}
 		case 'browser.tabGroups.get': {
-			response = addon.tabGroups.get(message.groupId);
+			response = tabGroups.get(message.groupId);
 			break;
 		}
 		case 'browser.tabGroups.query': {
-			response = addon.tabGroups.query(message.info);
+			response = tabGroups.query(message.info, sender.tab.windowId);
+			break;
+		}
+		case 'browser.tabGroups.remove': {
+			response = tabGroups.remove(message.groupId);
 			break;
 		}
 		case 'browser.tabGroups.update': {
-			response = addon.tabGroups.update(message.groupId, message.info);
+			response = tabGroups.update(message.groupId, message.info);
 			break;
 		}
 
@@ -116,6 +109,8 @@ function handleActions(message, sender, sendResponse) {
 
 
 async function init() {
+	
+	await tabGroups.initialize();
 
 	await setupWindows();
 	await salvageGrouplessTabs();
@@ -126,8 +121,6 @@ async function init() {
 
 	browser.commands.onCommand.addListener(handleCommands);
 	browser.browserAction.onClicked.addListener(core.toggleView);
-
-	browser.windows.onCreated.addListener(createGroupInWindow);
 	
 	await salvageGrouplessTabs();
 
@@ -140,7 +133,7 @@ async function init() {
 
 	browser.menus.onClicked.addListener(async(info, tab) => {
 		if (info.menuItemId == 'newTabGroup') {
-			addon.tabGroups.create();
+			tabGroups.create({}, (await browser.windows.getCurrent()).id);
 		}
 	});
 	// ----
