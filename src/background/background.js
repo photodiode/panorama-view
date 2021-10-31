@@ -21,7 +21,7 @@ async function setupWindows() {
 	for (const window of await windows) {
 		const groups = await addon.tabGroups.query({windowId: window.id});
 		if (groups.length == 0) {
-			await addon.tabGroups.create({windowId: window.id, rect: {x: 0, y: 0, w: 0.5, h: 0.5}});
+			await addon.tabGroups.create({windowId: window.id});
 		}
 	}
 }
@@ -79,8 +79,7 @@ async function init() {
 
 	browser.menus.onClicked.addListener(async(info, tab) => {
 		if (info.menuItemId == 'newTabGroup') {
-			const group = await addon.tabGroups.create({}, (await browser.windows.getCurrent()).id);
-			addon.tabs.create({groupId: group.id, windowId: group.windowId});
+			const group = await addon.tabGroups.create({populate: true}, (await browser.windows.getCurrent()).id);
 		}
 	});
 	// ----

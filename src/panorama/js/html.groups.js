@@ -349,7 +349,7 @@ export function fitTabsInGroup(tabGroupNode) {
 }
 
 
-function groupTransform(group, node, top, right, bottom, left, elem) {
+async function groupTransform(group, node, top, right, bottom, left, elem) {
 
 	let snapValue = function(a, b, dst) {
 		if (a >= b - dst && a <= b + dst){
@@ -363,6 +363,8 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 
 	var groupsRect = document.getElementById('groups').getBoundingClientRect();
 	var nodeRect = node.getBoundingClientRect();
+	
+	group.rect = await browser.sessions.getGroupValue(group.id, 'rect');
 
 	var minw = 120 / groupsRect.width;
 	var minh = 120 / groupsRect.height;
@@ -388,9 +390,8 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 			lx = x;
 			ly = y;
 			first = false;
-			browser.tabGroups.update(group.id, {rect: group.rect}).then(tabGroup => {
-				stack(node, tabGroup);
-			});
+			browser.sessions.setGroupValue(group.id, 'rect', group.rect);
+			browser.tabGroups.update(group.id, {}).then(group => stack(node, group));
 		}
 
 		rect.x = group.rect.x;
@@ -485,8 +486,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 	
 	const onmouseup = () => {
 		if(rect.x !== undefined) {
-			group.rect = rect;
-			browser.tabGroups.update(group.id, {rect: rect});
+			browser.sessions.setGroupValue(group.id, 'rect', rect);
 		}
 		
 		document.body.removeAttribute('style');

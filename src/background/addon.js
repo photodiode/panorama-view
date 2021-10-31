@@ -62,6 +62,19 @@ function handleActions(message, sender, sendResponse) {
 			response = addon.tabs.query(message.info);
 			break;
 		}
+		
+		case 'browser.sessions.setGroupValue': {
+			response = addon.tabGroups.setGroupValue(message.groupId, message.key, message.value, sender.id);
+			break;
+		}
+		case 'browser.sessions.getGroupValue': {
+			response = addon.tabGroups.getGroupValue(message.groupId, message.key, sender.id);
+			break;
+		}
+		case 'browser.sessions.removeGroupValue': {
+			response = addon.tabGroups.removeGroupValue(message.groupId, message.key, sender.id);
+			break;
+		}
 		default:
 			console.log(`Unknown action (${message.action})`);
 	}

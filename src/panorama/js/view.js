@@ -120,13 +120,20 @@ document.addEventListener('DOMContentLoaded', async() => {
 
 async function initializeTabGroupNodes() {
 
-	let tabGroups = await browser.tabGroups.query({windowId: viewWindowId});
+	let groups = await browser.tabGroups.query({windowId: viewWindowId});
 
-	for (let tabGroup of tabGroups) {
+	for (let group of groups) {
 
-		let tabGroupNode = html.groups.create(tabGroup);
+		let tabGroupNode = html.groups.create(group);
+		
+		let rect = await browser.sessions.getGroupValue(group.id, 'rect');
+		
+		if (!rect) {
+			rect = {x: 0, y: 0, w: 0.5, h: 0.5};
+			await browser.sessions.setGroupValue(group.id, 'rect', rect);
+		}
 
-		html.groups.resize(tabGroupNode, tabGroup.rect);
+		html.groups.resize(tabGroupNode, rect);
 		html.groups.stack(tabGroupNode);
 		
 		document.getElementById('groups').appendChild(tabGroupNode);

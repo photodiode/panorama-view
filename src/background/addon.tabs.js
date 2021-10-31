@@ -19,18 +19,21 @@ export async function getGroupIdTimeout(tabId, timeout) {
 }
 
 
-export async function create(createInfo) {
+export async function create(info) {
 
 	let groupId = undefined;
 
-	if (createInfo.hasOwnProperty('groupId')) {
-		groupId = createInfo.groupId;
-		delete createInfo.groupId;
+	if (info.hasOwnProperty('groupId')) {
+		groupId = info.groupId;
+		delete info.groupId;
 	}
 
-	let tab = await browser.tabs.create(createInfo);
-
-	if (!tab) return;
+	let tab;
+	try {
+		tab = await browser.tabs.create(info);
+	} catch (error) {
+		throw Error(error);
+	}
 
 	// wait for onCreated to add a groupId if none is set
 	if (groupId == undefined) {
@@ -46,9 +49,12 @@ export async function create(createInfo) {
 
 export async function get(tabId) {
 
-	let tab = await browser.tabs.get(tabId);
-
-	if (!tab) return;
+	let tab;
+	try {
+		tab = await browser.tabs.get(tabId);
+	} catch (error) {
+		throw Error(error);
+	}
 
 	tab.groupId = await getGroupIdTimeout(tab.id, 100);
 
@@ -56,13 +62,13 @@ export async function get(tabId) {
 }
 
 
-export async function move(tabIds, moveInfo) {
+export async function move(tabIds, info) {
 
 	let groupId = undefined;
 
-	if (moveInfo.hasOwnProperty('groupId')) {
-		groupId = moveInfo.groupId;
-		delete moveInfo.groupId;
+	if (info.hasOwnProperty('groupId')) {
+		groupId = info.groupId;
+		delete info.groupId;
 	}
 
 	if (groupId) {
@@ -75,7 +81,12 @@ export async function move(tabIds, moveInfo) {
 		}
 	}
 
-	let tabs = await browser.tabs.move(tabIds, moveInfo);
+	let tabs;
+	try {
+		tabs = await browser.tabs.move(tabIds, info);
+	} catch (error) {
+		throw Error(error);
+	}
 
 	if (groupId) {
 		for (let tab of tabs) {
@@ -91,16 +102,21 @@ export async function move(tabIds, moveInfo) {
 }
 
 
-export async function query(queryInfo) {
+export async function query(info) {
 
 	let groupId = undefined;
 
-	if (queryInfo.hasOwnProperty('groupId')) {
-		groupId = queryInfo.groupId;
-		delete queryInfo.groupId;
+	if (info.hasOwnProperty('groupId')) {
+		groupId = info.groupId;
+		delete info.groupId;
 	}
 
-	let tabs = await browser.tabs.query(queryInfo);
+	let tabs;
+	try {
+		tabs = await browser.tabs.query(info);
+	} catch (error) {
+		throw Error(error);
+	}
 
 	await Promise.all(tabs.map(async(tab) => {
 		tab.groupId = await getGroupId(tab.id);

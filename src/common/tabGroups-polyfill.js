@@ -108,7 +108,6 @@ if (!browser.hasOwnProperty('tabGroups')) {
 		});
 	}
 	browser.tabs.query = (queryInfo) => {
-		//!\ intercept currentWindow and replace with windowId
 		return browser.runtime.sendMessage({
 			action: 'browser.tabs.query',
 			info:   queryInfo

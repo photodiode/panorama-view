@@ -11,8 +11,7 @@ export async function handleCommands(command) {
 			break;
 		}
 		case 'new_tab_group': {
-			const group = await addon.tabGroups.create({}, (await browser.windows.getCurrent()).id);
-			addon.tabs.create({groupId: group.id, windowId: group.windowId});
+			const group = await addon.tabGroups.create({populate: true}, (await browser.windows.getCurrent()).id);
 			break;
 		}
 		case 'next_group': {

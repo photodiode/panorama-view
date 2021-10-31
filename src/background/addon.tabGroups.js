@@ -1,7 +1,8 @@
 
 'use strict';
 
-import * as core from './core.js';
+import * as core from './core.js'
+import * as addon_tabs from './addon.tabs.js'
 
 // internal
 let groupUuid = 0;
@@ -33,7 +34,6 @@ function sanitizeGroup(group) {
 		windowId:      group.windowId,
 
 		lastAccessed:  group.lastAccessed, // temporary
-		rect:          group.rect || {x: 0.3, y: 0.3, w: 0.4, h: 0.4} // temporary
 	}
 }
 // ----
@@ -86,13 +86,16 @@ export async function create(info = {}, currentWindowId) {
 		windowId:       info.windowId,
 
 		lastAccessed: (new Date).getTime(), // temporary
-		rect:         info.rect             // temporary
 	};
 
 	groups.push(group);
 	await saveGroups();
 
 	await setActiveId(group.windowId, group.id);
+	
+	if (info.hasOwnProperty('populate') && info.populate == true) {
+		addon_tabs.create({groupId: group.id, windowId: group.windowId});
+	}
 
 	const sending = browser.runtime.sendMessage({event: 'browser.tabGroups.onCreated', group: sanitizeGroup(group)});
 	      sending.catch(error => {});
@@ -102,7 +105,7 @@ export async function create(info = {}, currentWindowId) {
 
 export async function get(groupId) {
 	const group = groups.find(group => group.id == groupId);
-	if (!group) return undefined;
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
 	return sanitizeGroup(group);
 }
 
@@ -134,7 +137,7 @@ export async function query(info = {}, currentWindowId) {
 export async function remove(groupId) {
 
 	const group = groups.find(group => group.id == groupId);
-	if (!group) return undefined;
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
 
 	// remove tabs in group
 	const tabs = await browser.tabs.query({currentWindow: true});
@@ -169,7 +172,7 @@ export async function remove(groupId) {
 export async function update(groupId, info = {}) {
 
 	let group = groups.find(group => group.id == groupId);
-	if (!group) return undefined;
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
 
 	if (info.hasOwnProperty('title')) {
 		group.title = info.title;
@@ -187,4 +190,70 @@ export async function update(groupId, info = {}) {
 	      sending.catch(error => {});
 
 	return sanitizeGroup(group);
+}
+
+
+export async function setGroupValue(groupId, key, value, appId) {
+	
+	value = JSON.stringify(value);
+
+	let group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
+
+	if (!group.hasOwnProperty('sessionStorage')) {
+		group.sessionStorage = {};
+	}
+
+	if (!group.sessionStorage.hasOwnProperty(appId)) {
+		group.sessionStorage[appId] = {};
+	}
+
+	group.sessionStorage[appId][key] = value;
+
+	await saveGroups();
+
+	return;
+}
+
+
+export async function getGroupValue(groupId, key, appId) {
+
+	let group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
+
+	if (group.hasOwnProperty('sessionStorage')     &&
+	    group.sessionStorage.hasOwnProperty(appId) &&
+	    group.sessionStorage[appId].hasOwnProperty(key)) {
+		
+		let value;
+		try {
+			value = JSON.parse(group.sessionStorage[appId][key]);
+		} catch (error) {
+			value = undefined;
+		}
+
+		return value;
+	}
+
+	return undefined;
+}
+
+
+export async function removeGroupValue(groupId, key, appId) {
+
+	let group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
+
+	if (group.hasOwnProperty('sessionStorage')     &&
+	    group.sessionStorage.hasOwnProperty(appId) &&
+	    group.sessionStorage[appId].hasOwnProperty(key)) {
+
+		delete group.sessionStorage[appId][key];
+
+		await saveGroups();
+
+		return;
+	}
+
+	throw Error(`Invalid key: ${key}`);
 }

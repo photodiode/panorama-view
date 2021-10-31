@@ -5,12 +5,15 @@ import {html}  from './html.js'
 import * as core from './view.js'
 
 
-export async function groupCreated(tabGroup) {
-	if (core.viewWindowId == tabGroup.windowId){
+export async function groupCreated(group) {
+	if (core.viewWindowId == group.windowId){
 
-		let tabGroupNode = html.groups.create(tabGroup);
+		let tabGroupNode = html.groups.create(group);
+		
+		const rect = {x: 0.3, y: 0.3, w: 0.4, h: 0.4};
+		browser.sessions.setGroupValue(group.id, 'rect', rect);
 
-		html.groups.resize(tabGroupNode, tabGroup.rect);
+		html.groups.resize(tabGroupNode, rect);
 		html.groups.stack(tabGroupNode);
 
 		document.getElementById('groups').appendChild(tabGroupNode);

@@ -15,11 +15,11 @@
 ### Methods
 + **create**  
 ```javascript
-var getting = browser.tabGroups.create(
+var creating = browser.tabGroups.create(
 	{
 		collapsed,
 		color,
-		containerId,
+		cookieStoreId,
 		title,
 		windowId
 	}
@@ -37,6 +37,7 @@ var getting = browser.tabGroups.get(
   - query for tabs with groupId
   - move them to some index and window
   - update group's windowId
+  - issue tabGroups.onMoved event
 
 + **query**
 ```javascript
@@ -54,7 +55,7 @@ var querying = browser.tabGroups.query(
 + **remove**  
   Remove the specified group.
 ```javascript
-var getting = browser.tabGroups.remove(
+var removing = browser.tabGroups.remove(
 	groupId,  // integer
 )
 ```
