@@ -20,6 +20,7 @@ var creating = browser.tabGroups.create(
 		collapsed,
 		color,
 		cookieStoreId,
+		populate,
 		title,
 		windowId
 	}
@@ -45,7 +46,7 @@ var querying = browser.tabGroups.query(
 	{
 		collapsed,
 		color,
-		containerId,
+		cookieStoreId,
 		groupId,
 		title,
 		windowId
@@ -81,7 +82,9 @@ browser.tabGroups.onCreated.hasListener(listener)
 ```
 
 + **onMoved**  
-  Fired when a group is moved within a window. Move events are still fired for the individual tabs within the group, as well as for the group itself. This event is not fired when a group is moved between windows; instead, it will be removed from one window and created in another.
+  Fired when a group is moved within a window.  
+  Move events are still fired for the individual tabs within the group, as well as for the group itself.  
+  This event is not fired when a group is moved between windows; instead, it will be removed from one window and created in another.
 ```javascript
 browser.tabGroups.onMoved.addListener(listener)
 browser.tabGroups.onMoved.removeListener(listener)

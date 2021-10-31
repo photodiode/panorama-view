@@ -3,16 +3,15 @@
 
 import * as tabGroups from './addon.tabGroups.js';
 import * as tabs      from './addon.tabs.js';
-//import * as sessions  from './addon.sessions.js';
+import * as tabEvents from './addon.tabs.events.js'
 
 export let addon = {
 	tabGroups: tabGroups,
 	tabs:      tabs,
-	//sessions:  sessions,
 
 	initialize: async() => {
 		await tabGroups.initialize();
-		//await tabs.initialize();
+		await tabEvents.initialize();
 
 		browser.runtime.onMessage.addListener(handleActions);
 	}

@@ -7,7 +7,7 @@ import * as core from './core.js';
 import * as backup from './backup.js';
 
 
-export function handleTabEvents() {
+export function initialize() {
 	browser.tabs.onCreated.addListener(created);
 	browser.tabs.onUpdated.addListener(updated);
 

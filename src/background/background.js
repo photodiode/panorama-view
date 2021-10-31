@@ -5,7 +5,6 @@ import {addon} from './addon.js'
 import * as core from './core.js'
 
 import {handleCommands} from './commands.js'
-import {handleTabEvents} from './addon.tabs.events.js'
 
 import * as backup from './backup.js'
 
@@ -56,19 +55,24 @@ async function salvageGrouplessTabs() {
 
 async function init() {
 
+	// tab groups ----
 	await migrate(); // keep until everyone's on 0.9.0
 	
 	await addon.initialize();
 
-	handleTabEvents();
 	browser.commands.onCommand.addListener(handleCommands);
 
 	await setupWindows();
 	await salvageGrouplessTabs();
-
-	browser.browserAction.onClicked.addListener(core.toggleView);
 	
 	await salvageGrouplessTabs();
+
+	// auto bakup
+	backup.start();
+	// ----
+
+
+	// panorama view ----
 
 	// meny entries
 	browser.menus.create({
@@ -90,10 +94,8 @@ async function init() {
 		browser.tabs.remove(tab.id);
 	}
 	// ----
-	
-	// auto bakup
-	backup.start();
-	// ----
+
+	browser.browserAction.onClicked.addListener(core.toggleView);
 }
 
 init();
