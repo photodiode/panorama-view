@@ -20,7 +20,7 @@ var creating = browser.tabGroups.create(
 		collapsed,
 		color,
 		cookieStoreId,
-		populate,
+		populate,      // boolean, whether to add a new tab to the newly created group
 		title,
 		windowId
 	}

@@ -18,9 +18,8 @@ export let options = {
 	listView:      false
 };
 
-
 document.addEventListener('DOMContentLoaded', async() => {
-	
+
 	viewWindowId = (await browser.windows.getCurrent()).id;
 	viewTabId    = (await browser.tabs.getCurrent()).id;
 	
