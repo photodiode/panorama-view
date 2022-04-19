@@ -1,8 +1,11 @@
 
 'use strict';
 
-import * as html    from '../common/html.js';
-import * as backups from '../background/backup.js';
+import * as html    from '/common/html.js'
+import * as plurals from '/common/plurals.js'
+
+import * as backups from '/background/backup.js'
+
 
 function getDateString(date) {
 
@@ -59,7 +62,7 @@ async function loadBackup() {
 		if (!file) return;
 
 		if (file.type != 'application/json') {
-			alert('Invalid file type');
+			alert(browser.i18n.getMessage('optionLoadError'));
 			return;
 		}
 
@@ -251,13 +254,9 @@ export async function createUI() {
 		const hours   = Math.floor(value / 60);          
 		const minutes = value % 60;
 		if (hours == 0 && minutes == 0) {
-			return `Never`;
-		} else if (hours == 0) {
-			return `${minutes}min`;
-		} else if (minutes == 0) {
-			return `${hours} hour${(hours > 1) ? 's' : ''}`;
-		}  else {
-			return `${hours}h ${minutes}min`;
+			return browser.i18n.getMessage('optionAutomaticBackupIntervalNever');
+		} else {
+			return plurals.parse(browser.i18n.getMessage('optionAutomaticBackupIntervalValue', [hours, minutes]));
 		}
 	}
 

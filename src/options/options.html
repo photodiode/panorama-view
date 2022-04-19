@@ -32,38 +32,38 @@
 			</div>
 		</section>
 		<section>
-			<h3>Backup</h3>
+			<h3 data-i18n-message-name="optionBackup"></h3>
 			<div>
 				<div>
-					<label>Save new Backup to file</label>
-					<button id="saveBackup">Save As...</button>
+					<label data-i18n-message-name="optionSaveBackup"></label>
+					<button id="saveBackup" data-i18n-message-name="optionSaveBackupButton"></button>
 				</div>
 				<div>
-					<label>Load a Backup</label>
-					<input id="backupFileInput" name="backupFile" type="file" accept=".json" title="Imported backups will open in new windows and not overwrite anything" hidden>
+					<label data-i18n-message-name="optionLoadBackup"></label>
+					<input id="backupFileInput" name="backupFile" type="file" accept=".json" hidden>
 					<select id="selectBackup" style="min-width: 40%; max-width: 50%;">
-						<option value="false">Select Backup</option>
-						<option value="browse">Browse...</option>
+						<option value="false" data-i18n-message-name="optionLoadBackupSelect"></option>
+						<option value="browse" data-i18n-message-name="optionLoadBackupBrowse"></option>
 					</select>
-					<button id="loadBackup">Load</button>
+					<button id="loadBackup" data-i18n-message-name="optionLoadBackupButton"></button>
 				</div>
 				<div>
-					<label>Automatic Backup interval</label>
+					<label data-i18n-message-name="optionAutomaticBackupInterval"></label>
 					<input type="range" id="autoBackup" min="0" max="360" step="15" value="60">
 					<output for="autoBackup" id="autoBackupInterval"></output>
 				</div>
 			</div>
 		</section>
 		<section>
-			<h3>Statistics</h3>
+			<h3 data-i18n-message-name="optionStatistics"></h3>
 			<div>
 				<div>
-					<label>Number of Tabs</label>
-					<span id="numberOfTabs">Calculating..</span>
+					<label data-i18n-message-name="optionNumberOfTabs"></label>
+					<span id="numberOfTabs"></span>
 				</div>
 				<div>
-					<label>Thumbnail Cache</label>
-					<span id="thumbnailCacheSize">Calculating..</span>
+					<label data-i18n-message-name="optionThumbnailCache"></label>
+					<span id="thumbnailCacheSize"></span>
 				</div>
 			</div>
 		</section>

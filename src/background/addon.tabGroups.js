@@ -82,7 +82,7 @@ export async function create(info = {}, currentWindowId) {
 		cookieStoreId:  info.cookieStoreId || 'firefox-default',
 		id:             newGroupId(),
 		sessionStorage: {},
-		title:          info.title || 'Untitled',
+		title:          info.title || browser.i18n.getMessage('defaultGroupName'),
 		windowId:       info.windowId,
 
 		lastAccessed: (new Date).getTime(), // temporary

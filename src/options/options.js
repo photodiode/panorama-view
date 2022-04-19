@@ -1,9 +1,11 @@
 
 'use strict';
 
-import * as html   from '../common/html.js';
-import * as theme  from './theme.js';
-import * as backup from './backup.js';
+import * as html    from '/common/html.js'
+import * as plurals from '/common/plurals.js'
+
+import * as theme   from './theme.js'
+import * as backup  from './backup.js'
 
 
 // commands
@@ -59,8 +61,8 @@ async function getStatistics() {
 		if (!tab.discarded) numActiveTabs++;
 	}
 
+	document.getElementById('numberOfTabs').textContent = plurals.parse(browser.i18n.getMessage('optionNumberOfTabsValue', [tabs.length, numActiveTabs]));
 	document.getElementById('thumbnailCacheSize').textContent = formatByteSize(totalSize);
-	document.getElementById('numberOfTabs').textContent = `${tabs.length} (${numActiveTabs} active)`;
 }
 // ----
 
@@ -68,9 +70,13 @@ async function getStatistics() {
 document.addEventListener('DOMContentLoaded', async() => {
 
 	theme.set();
-	
+
 	browser.theme.onUpdated.addListener(({newTheme, windowId}) => {
 		theme.set(newTheme);
+	});
+	
+	document.querySelectorAll("[data-i18n-message-name]").forEach(element => {
+		element.textContent = browser.i18n.getMessage(element.dataset.i18nMessageName);
 	});
 
 	getCommands();

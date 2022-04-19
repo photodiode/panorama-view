@@ -1,0 +1,77 @@
+{
+	"defaultGroupName": {
+		"message": "Unnamed",
+		"description": "The default name of a newly created group"
+	},
+
+	"newTabGroup": {
+		"message": "New Tab Group",
+		"description": "Menu button for creating a new tab group"
+	},
+	"nextTabGroup": {
+		"message": "Next Tab Group",
+		"description": "Go to the next tab group"
+	},
+	"previousTabGroup": {
+		"message": "Previous Tab Group",
+		"description": "Go to the previous tab group"
+	},
+
+
+	"optionBackup": {
+		"message": "Backup"
+	},
+	"optionSaveBackup": {
+		"message": "Save new Backup to file"
+	},
+	"optionSaveBackupButton": {
+		"message": "Save As..."
+	},
+	"optionLoadBackup": {
+		"message": "Load a Backup"
+	},
+	"optionLoadBackupSelect": {
+		"message": "Select Backup"
+	},
+	"optionLoadBackupBrowse": {
+		"message": "Browse..."
+	},
+	"optionLoadBackupButton": {
+		"message": "Load"
+	},
+	"optionLoadError": {
+		"message": "Invalid file type"
+	},
+	"optionAutomaticBackupInterval": {
+		"message": "Automatic Backup interval"
+	},
+	"optionAutomaticBackupIntervalNever": {
+		"message": "Never"
+	},
+	"optionAutomaticBackupIntervalValue": {
+		"message": "$1h $2min"
+	},
+
+	"optionStatistics": {
+		"message": "Statistics"
+	},
+	"optionNumberOfTabs": {
+		"message": "Number of Tabs"
+	},
+	"optionNumberOfTabsValue": {
+		"message": "$1 ($2 active)"
+	},
+	"optionThumbnailCache": {
+		"message": "Thumbnail Cache"
+	},
+
+
+	"togglePanoramaView": {
+		"message": "Toggle Panorama View",
+		"description": "Toggle between the Panorama View and active tab"
+	},
+	"pvCloseGroupConfirmation": {
+		"message": "Close the $1 $1{tab, tabs} in this Group?",
+		"description": "The message shown when trying to close a group with tabs in it"
+	}
+}

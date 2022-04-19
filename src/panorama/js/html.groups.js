@@ -2,8 +2,9 @@
 'use strict';
 
 import {newElement} from '/common/html.js'
-import * as drag from './view.drag.js'
+import * as plurals from '/common/plurals.js'
 
+import * as drag from './view.drag.js'
 import {options} from './view.js'
 
 
@@ -46,7 +47,7 @@ export function create(group) {
 		var tabCount = childNodes.length-1;
 
 		if (tabCount > 0) {
-			if (window.confirm(`Closing this Tab Group will close the ${tabCount} tab${(tabCount == 1 ? '' : 's')} within it`)) {
+			if (window.confirm(plurals.parse(browser.i18n.getMessage('pvCloseGroupConfirmation', tabCount)))) {
 				browser.tabGroups.remove(group.id);
 				node.remove();
 			}

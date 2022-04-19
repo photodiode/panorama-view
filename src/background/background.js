@@ -77,7 +77,7 @@ async function init() {
 	// meny entries
 	browser.menus.create({
 		id:       'newTabGroup',
-		title:    'New Tab Group',
+		title:    browser.i18n.getMessage('newTabGroup'),
 		contexts: ['browser_action']
 	});
 
