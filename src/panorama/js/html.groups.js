@@ -68,9 +68,11 @@ export function create(group) {
 
 	// move
 	var moveFunc = function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 1, 1, 1, 1, header);
+		if (event.buttons == 1) { // only move on left click
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 1, 1, 1, 1, header);
+		}
 	};
 	header.addEventListener('mousedown', moveFunc, false);
 
@@ -198,8 +200,8 @@ function getFit(param) {
 	let h = 0;
 	let area = 0;
 
-	param.width  = param.width  - param.marginX;
-	param.height = param.height - param.marginY;
+	param.width  = param.width  + 1;
+	param.height = param.height + 1;
 
 	for(let x = param.amount; x >= 1; x--) {
 
@@ -224,7 +226,7 @@ function getFit(param) {
 			pitch = x;
 		}
 	}
-	
+
 	let fits = true;
 	if (w < param.min || h < param.min) {
 		fits = false;
