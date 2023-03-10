@@ -3,6 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 
+		<link rel="icon" type="image/x-icon" href="" id="favicon">
+
 		<link rel="stylesheet" type="text/css" href="options.css">
 		<link rel="stylesheet" type="text/css" href="dark.css">
 
@@ -10,17 +12,17 @@
 	</head>
 	<body>
 		<section>
-			<h3>Keyboard Shortcuts</h3>
+			<h3 data-i18n-message-name="optionKeyboardShortcuts"></h3>
 			<div id="keyboardShortcuts"></div>
-			<p>To change shortcuts please go to the Gear Icon in the top right and choose "Manage Extension Shortcuts"</p>
+			<p data-i18n-message-name="optionKeyboardShortcutsDirections"></p>
 		</section>
 		<section>
-			<h3>General</h3>
+			<h3 data-i18n-message-name="optionGeneral"></h3>
 			<div>
 				<div>
-					<label>Theme Override</label>
+					<label>Theme</label>
 					<select id="themeSelect">
-						<option value="false">None</option>
+						<option value="false">Auto</option>
 						<option value="light">Light</option>
 						<option value="dark">Dark</option>
 					</select>

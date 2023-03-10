@@ -5,7 +5,7 @@ import '/common/tabGroups-polyfill.js'
 
 import {html}  from './html.js'
 
-import * as theme  from './view.theme.js'
+import * as theme  from '/common/theme.js'
 import * as events from './view.events.js'
 import * as drag   from './view.drag.js'
 
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 
 	viewWindowId = (await browser.windows.getCurrent()).id;
 	viewTabId    = (await browser.tabs.getCurrent()).id;
-	
+
 	// get options
 	const storage = await browser.storage.local.get();
 	if (storage.hasOwnProperty('themeOverride')) {
@@ -32,14 +32,14 @@ document.addEventListener('DOMContentLoaded', async() => {
 		options.listView = storage.listView;
 	}
 	// ----
-	
-	theme.set();
+
+	theme.set(options.themeOverride);
 
 	await initializeTabGroupNodes();
 	await initializeTabNodes();
-	
+
 	captureThumbnails();
-	
+
 	// view events
 	document.getElementById('groups').addEventListener('dblclick', (event) => {
 		if (event.target == document.getElementById('groups')) {
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 			browser.tabGroups.create();
 		}
 	}, false);
-	
+
 	document.addEventListener('visibilitychange', async() => {
 		if (document.hidden) {
 			browser.tabs.onUpdated.removeListener(captureThumbnail);
@@ -66,18 +66,18 @@ document.addEventListener('DOMContentLoaded', async() => {
 	window.addEventListener('resize', () => {
 		html.groups.fitTabs();
 	});
-	
+
 	browser.theme.onUpdated.addListener(({newTheme, windowId}) => {
-		theme.set(newTheme);
+		theme.set(options.themeOverride, newTheme);
 	});
 	// ----
-	
+
 	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		switch (message.event) {
 			case 'addon.options.onUpdated': {
 				if (message.data.hasOwnProperty('themeOverride')) {
 					options.themeOverride = message.data.themeOverride;
-					theme.set();
+					theme.set(options.themeOverride);
 				}
 				if (message.data.hasOwnProperty('listView')) {
 					options.listView = message.data.listView;
@@ -89,12 +89,12 @@ document.addEventListener('DOMContentLoaded', async() => {
 				break;
 		}
 	});
-	
+
 	// tab group events
 	browser.tabGroups.onCreated.addListener(events.groupCreated);
 	browser.tabGroups.onRemoved.addListener(events.groupRemoved);
 	// ----
-	
+
 	// tab events
 	browser.tabs.onCreated.addListener(events.tabCreated);
 	browser.tabs.onRemoved.addListener(events.tabRemoved);
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 	browser.tabs.onAttached.addListener(events.tabAttached);
 	browser.tabs.onDetached.addListener(events.tabDetached);
 	// ----
-	
+
 	// drag events
 	document.addEventListener('click', drag.clearTabSelection, true);
 
@@ -124,9 +124,9 @@ async function initializeTabGroupNodes() {
 	for (let group of groups) {
 
 		let tabGroupNode = html.groups.create(group);
-		
+
 		let rect = await browser.sessions.getGroupValue(group.id, 'rect');
-		
+
 		if (!rect) {
 			rect = {x: 0, y: 0, w: 0.5, h: 0.5};
 			await browser.sessions.setGroupValue(group.id, 'rect', rect);
@@ -134,7 +134,7 @@ async function initializeTabGroupNodes() {
 
 		html.groups.resize(tabGroupNode, rect);
 		html.groups.stack(tabGroupNode);
-		
+
 		document.getElementById('groups').appendChild(tabGroupNode);
 
 		html.groups.resizeTitle(tabGroupNode);
@@ -145,7 +145,7 @@ async function initializeTabGroupNodes() {
 async function initializeTabNodes() {
 
 	let tabs = await browser.tabs.query({currentWindow: true});
-	
+
 	var fragments = {};
 
 	for (let tab of tabs) {
@@ -153,16 +153,16 @@ async function initializeTabNodes() {
 		let tabNode = html.tabs.create(tab);
 		html.tabs.update(tabNode, tab);
 		html.tabs.updateThumbnail(tabNode, tab.id);
-		
+
 		html.tabs.updateFavicon(tabNode, tab);
-		
+
 		if (!fragments[tab.groupId]) {
 			fragments[tab.groupId] = document.createDocumentFragment();
 		}
 
 		fragments[tab.groupId].appendChild(tabNode);
 	}
-	
+
 	for (const tabGroupId in fragments) {
 		let tabGroupNode = html.groups.get(tabGroupId);
 		if (tabGroupNode) {
@@ -177,7 +177,7 @@ async function initializeTabNodes() {
 
 
 export async function captureThumbnail(tabId, changeInfo, tab) {
-	const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 70, scale: 0.25});
+	const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 80, scale: 0.25});
 	html.tabs.updateThumbnail(html.tabs.get(tabId), tabId, thumbnail);
 	browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
 }

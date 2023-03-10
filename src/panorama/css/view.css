@@ -1,16 +1,17 @@
 
 :root {
-	--color-background: #ededf0;
+	--color-background: #fafafa;
 	--color-text: #0c0c0d;
-	--color-shadow: rgba(12, 12, 13, 0.1);
+	--color-shadow: rgba(0, 0, 0, 0.1);
 
-	--color-group-background: #f7f7f9;
-	--color-group-text: rgba(12, 12, 13, 0.5);
+	--color-group-background: #f2f2f2;
+	--color-group-text: rgba(0, 0, 0, 0.5);
 	--color-group-border: rgba(255, 255, 255, 0.9);
 
 	--color-tab: #ffffff;
-	--color-tab-border: rgba(12, 12, 13, 0.15);
-	--color-tab-overlay: rgba(255, 255, 255, 0.9);
+	--color-tab-border: rgba(0, 0, 0, 0.15);
+	--color-tab-overlay: rgba(255, 255, 255, 0.8);
+	--color-tab-text: rgba(0, 0, 0, 0.8);
 }
 
 body {

@@ -3,8 +3,8 @@
 
 import * as html    from '/common/html.js'
 import * as plurals from '/common/plurals.js'
+import * as theme   from '/common/theme.js'
 
-import * as theme   from './theme.js'
 import * as backup  from './backup.js'
 
 
@@ -69,12 +69,6 @@ async function getStatistics() {
 
 document.addEventListener('DOMContentLoaded', async() => {
 
-	theme.set();
-
-	browser.theme.onUpdated.addListener(({newTheme, windowId}) => {
-		theme.set(newTheme);
-	});
-	
 	document.querySelectorAll("[data-i18n-message-name]").forEach(element => {
 		element.textContent = browser.i18n.getMessage(element.dataset.i18nMessageName);
 	});
@@ -91,19 +85,25 @@ document.addEventListener('DOMContentLoaded', async() => {
 		themeSelect.value = storage.themeOverride;
 	}
 
+	theme.set(storage.themeOverride);
+
+	browser.theme.onUpdated.addListener(({newTheme, windowId}) => {
+		theme.set(storage.themeOverride, newTheme);
+	});
+
 	themeSelect.addEventListener('input', async(e) => {
 
-		let themeOverride = false;
+		storage.themeOverride = false;
 
 		switch(e.target.value) {
 			case 'light': {
-				themeOverride = 'light';
-				await browser.storage.local.set({themeOverride: themeOverride});
+				storage.themeOverride = 'light';
+				await browser.storage.local.set({themeOverride: storage.themeOverride});
 				break;
 			}
 			case 'dark': {
-				themeOverride = 'dark';
-				await browser.storage.local.set({themeOverride: themeOverride});
+				storage.themeOverride = 'dark';
+				await browser.storage.local.set({themeOverride: storage.themeOverride});
 				break;
 			}
 			default: {
@@ -111,8 +111,8 @@ document.addEventListener('DOMContentLoaded', async() => {
 				break;
 			}
 		}
-		browser.runtime.sendMessage({event: 'addon.options.onUpdated', data: {themeOverride: themeOverride}});
-		theme.set();
+		browser.runtime.sendMessage({event: 'addon.options.onUpdated', data: {themeOverride: storage.themeOverride}});
+		theme.set(storage.themeOverride);
 	});
 	// ----
 	
