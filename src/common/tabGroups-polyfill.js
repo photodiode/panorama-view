@@ -79,7 +79,7 @@ if (!browser.hasOwnProperty('tabGroups')) {
 		onUpdated: tabGroups_onUpdated.functions
 	}
 	// ----
-	
+
 	// browser.tabs hijack
 	let tabs_onCreated = new listenerObject();
 	let tabs_onUpdated = new listenerObject();
@@ -117,7 +117,7 @@ if (!browser.hasOwnProperty('tabGroups')) {
 	browser.tabs.onCreated = tabs_onCreated.functions;
 	browser.tabs.onUpdated = tabs_onUpdated.functions;
 	// ----
-	
+
 	// browser.sessions additions
 	browser.sessions.setGroupValue = (groupId, key, value) => {
 		return browser.runtime.sendMessage({

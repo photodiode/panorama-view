@@ -196,7 +196,7 @@ export async function update(groupId, info = {}) {
 
 
 export async function setGroupValue(groupId, key, value, appId) {
-	
+
 	value = JSON.stringify(value);
 
 	let group = groups.find(group => group.id == groupId);
@@ -226,7 +226,7 @@ export async function getGroupValue(groupId, key, appId) {
 	if (group.hasOwnProperty('sessionStorage')     &&
 	    group.sessionStorage.hasOwnProperty(appId) &&
 	    group.sessionStorage[appId].hasOwnProperty(key)) {
-		
+
 		let value;
 		try {
 			value = JSON.parse(group.sessionStorage[appId][key]);

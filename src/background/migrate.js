@@ -3,11 +3,13 @@
 
 // migrate to transformable groups
 export async function migrate() {
-	
+
 	// remove old panorama view tabs
 	let extensionTabs = await browser.tabs.query({url: browser.runtime.getURL('view.html')});
-	for (let tab of extensionTabs) {
-		browser.tabs.remove(tab.id);
+	if (extensionTabs) {
+		for (let tab of extensionTabs) {
+			browser.tabs.remove(tab.id);
+		}
 	}
 	// ----
 

@@ -90,8 +90,10 @@ async function init() {
 
 	// remove any panorama views there might be, we need a fresh connection to handle messages
 	let extensionTabs = await browser.tabs.query({url: browser.runtime.getURL('panorama/view.html')});
-	for (let tab of extensionTabs) {
-		browser.tabs.remove(tab.id);
+	if (extensionTabs) {
+		for (let tab of extensionTabs) {
+			browser.tabs.remove(tab.id);
+		}
 	}
 	// ----
 

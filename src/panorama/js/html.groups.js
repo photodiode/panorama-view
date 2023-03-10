@@ -323,7 +323,7 @@ export function fitTabsInGroup(tabGroupNode) {
 	}
 
 	let index = 0;
-	
+
 
 	let w = fit.width;
 	let h = w * fit.ratio;
@@ -382,7 +382,7 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 
 	var groupsRect = document.getElementById('groups').getBoundingClientRect();
 	var nodeRect = node.getBoundingClientRect();
-	
+
 	group.rect = await browser.sessions.getGroupValue(group.id, 'rect');
 
 	var minw = 120 / groupsRect.width;
@@ -430,7 +430,7 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 		for (let tabGroupNode of document.getElementById('groups').childNodes) {
 
 			if(node != tabGroupNode) {
-				
+
 				let _rect = {
 					x: parseFloat(tabGroupNode.style.left)   / 100,
 					y: parseFloat(tabGroupNode.style.top)    / 100,
@@ -466,7 +466,6 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 					rect_i = snapValue(rect_i, _rect.x + _rect.w, snap_dstx);
 				}
 			}
-			
 		}
 		// ----
 
@@ -502,12 +501,12 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 		resize(node, rect);
 		fitTabs(node);
 	}
-	
+
 	const onmouseup = () => {
 		if(rect.x !== undefined) {
 			browser.sessions.setGroupValue(group.id, 'rect', rect);
 		}
-		
+
 		document.body.removeAttribute('style');
 
 		document.removeEventListener('mousemove', onmousemove);

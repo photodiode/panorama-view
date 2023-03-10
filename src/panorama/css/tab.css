@@ -118,11 +118,11 @@
 
 .tab .title {
 	position: absolute;
-	bottom: -1px;
+	bottom: -2px;
 	left: 2px;
 	right: 2px;
 
-	font-size: 10px;
+	font-size: 11px;
 	text-align: center;
 	white-space: nowrap;
 
@@ -206,7 +206,7 @@
 .small .tab .title span {
 	padding: 0 5px;
 
-	font-size: 9.5px;
+	font-size: 10px;
 	text-overflow: "";
 }
 
