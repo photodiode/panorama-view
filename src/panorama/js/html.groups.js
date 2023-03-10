@@ -104,7 +104,7 @@ export function create(group) {
 
 	input.addEventListener('blur', function(event) {
 		input.setSelectionRange(0, 0);
-		
+
 		browser.tabGroups.update(group.id, {title: input.value});
 
 		header.addEventListener('mousedown', moveFunc, false);
@@ -112,59 +112,75 @@ export function create(group) {
 		editing = false;
 	}, false);
 	// ----
-	
+
 	tabs.addEventListener('dragover', drag.groupDragOver, false);
 	tabs.addEventListener('drop', drag.groupDrop, false);
 
 	// resize
 	top.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 1, 0, 0, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 1, 0, 0, 0, this);
+		}
 	}, false);
 
 	right.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 1, 0, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 1, 0, 0, this);
+		}
 	}, false);
 
 	bottom.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 0, 1, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 0, 1, 0, this);
+		}
 	}, false);
 
 	left.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 0, 0, 1, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 0, 0, 1, this);
+		}
 	}, false);
 
 	top_right.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 1, 1, 0, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 1, 1, 0, 0, this);
+		}
 	}, false);
 
 	bottom_right.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 1, 1, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 1, 1, 0, this);
+		}
 	}, false);
 
 	bottom_left.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 0, 1, 1, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 0, 1, 1, this);
+		}
 	}, false);
 
 	top_left.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 1, 0, 0, 1, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 1, 0, 0, 1, this);
+		}
 	}, false);
-	
+
 	return node;
 }
 
