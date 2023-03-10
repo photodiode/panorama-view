@@ -5,6 +5,8 @@ import * as tabGroups from './addon.tabGroups.js';
 import * as tabs      from './addon.tabs.js';
 import * as tabEvents from './addon.tabs.events.js'
 
+import * as backup from './backup.js'
+
 export let addon = {
 	tabGroups: tabGroups,
 	tabs:      tabs,
@@ -74,6 +76,24 @@ function handleActions(message, sender, sendResponse) {
 			response = addon.tabGroups.removeGroupValue(message.groupId, message.key, sender.id);
 			break;
 		}
+
+		case 'addon.backup.create': {
+			response = backup.create(sender.id);
+			break;
+		}
+		case 'addon.backup.getInterval': {
+			response = backup.getInterval();
+			break;
+		}
+		case 'addon.backup.setInterval': {
+			response = backup.setInterval(message.interval);
+			break;
+		}
+		case 'addon.backup.getBackups': {
+			response = backup.getBackups();
+			break;
+		}
+
 		default:
 			console.log(`Unknown action (${message.action})`);
 	}

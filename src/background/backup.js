@@ -2,11 +2,10 @@
 'use strict';
 
 import {addon} from './addon.js';
-import * as core from './core.js';
 
 
-export async function create() {
-	
+export async function create(appId) {
+
 	let makeTabData = (tab) => {
 		return {
 			url:           tab.url,
@@ -34,7 +33,7 @@ export async function create() {
 
 		let pinnedTabs = [];
 		let tabGroups  = [];
-		
+
 		for (let tab of window.tabs) {
 			tab.groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
@@ -44,13 +43,15 @@ export async function create() {
 		}
 
 		for (const group of groups) {
-			
+
+			let rect = await addon.tabGroups.getGroupValue(group.id, 'rect', browser.runtime.id);
+
 			let tabGroup = {
 				title: group.title,
-				rect:  {x: group.rect.x, y: group.rect.y, w: group.rect.w, h: group.rect.h},
+				rect:  {x: rect.x, y: rect.y, w: rect.w, h: rect.h},
 				tabs:  []
 			}
-			
+
 			for (const tab of window.tabs) {
 				if (tab.groupId == group.id) {
 					tabGroup.tabs.push(makeTabData(tab));
@@ -68,6 +69,11 @@ export async function create() {
 
 	return backup;
 }
+
+
+/*import {addon} from './addon.js';
+import * as core from './core.js';
+
 
 export let opening = false;
 
@@ -92,7 +98,7 @@ export async function open(backup) {
 		if (tabFailed) return;
 
 		await addon.tabs.setGroupId(tab.id, tabGroupId);
-		
+
 		if (tabGroupId == -1) {
 			await browser.tabs.update({pinned: true}); // it gets unpinned somehow
 		}
@@ -132,7 +138,7 @@ export async function open(backup) {
 	}
 
 	opening = false;
-}
+}*/
 
 
 // auto backup
@@ -159,29 +165,31 @@ export async function getInterval() {
 	return (await browser.storage.local.get('autoBackupInterval')).autoBackupInterval || 0;
 }
 
-export async function get() {
+export async function getBackups() {
 	return (await browser.storage.local.get('autoBackup')).autoBackup || [];
 }
 
 async function autoBackup() {
 
 	let storage = await browser.storage.local.get('autoBackup');
-	
+
 	if (!storage.autoBackup) {
 		storage.autoBackup = [];
 	}
-	
+
 	let backup = {
 		time: (new Date).getTime(),
 		data: await create()
 	}
-	
+
 	storage.autoBackup.unshift(backup);
-	
+
 	if (storage.autoBackup.length > 3) {
 		storage.autoBackup.pop();
 	}
 
 	browser.storage.local.set(storage);
+
+	console.log(`Auto backup saved: ${backup.time}`);
 }
 

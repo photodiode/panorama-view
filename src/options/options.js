@@ -5,7 +5,7 @@ import * as html    from '/common/html.js'
 import * as plurals from '/common/plurals.js'
 import * as theme   from '/common/theme.js'
 
-import * as backup  from './backup.js'
+import * as backup  from './options.backup.js'
 
 
 // commands
@@ -15,7 +15,7 @@ async function getCommands() {
 	let fragment = document.createDocumentFragment();
 
 	for (let command of commands) {
-	
+
 		let platformInfo = await browser.runtime.getPlatformInfo();
 		let shortcut = command.shortcut || 'Not set';
 
@@ -24,9 +24,9 @@ async function getCommands() {
 			shortcut = shortcut.replace('MacCtrl', 'Ctrl');
 			shortcut = shortcut.replace('Alt', 'Option');
 		}
-		
+
 		shortcut = shortcut.replaceAll('+', ' + ');
-		
+
 		let span  = html.newElement('span', {content: shortcut});
 		let label = html.newElement('label', {content: command.description});
 
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 		theme.set(storage.themeOverride);
 	});
 	// ----
-	
+
 	// list view
 	const listView = document.getElementById('listView');
 

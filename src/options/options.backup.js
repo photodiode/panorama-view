@@ -4,8 +4,6 @@
 import * as html    from '/common/html.js'
 import * as plurals from '/common/plurals.js'
 
-import * as backups from '/background/backup.js'
-
 
 function getDateString(date) {
 
@@ -16,7 +14,7 @@ function getDateString(date) {
 	    dateString = dateString.replaceAll('T', '-');
 	    dateString = dateString.replaceAll(':', '');
 	    dateString = dateString.replace(/\..*/, '');
-	    
+
 	return dateString;
 }
 
@@ -24,7 +22,9 @@ function getDateString(date) {
 // backup
 async function saveBackup() {
 
-	const backup = await backups.create();
+	const backup = await browser.runtime.sendMessage({
+		action: 'addon.backup.create'
+	});
 
 	const blob     = new Blob([JSON.stringify(backup, null, '\t')], {type : 'application/json'});
 	const dataUrl  = window.URL.createObjectURL(blob);
@@ -49,16 +49,16 @@ async function saveBackup() {
 
 let autoBackups = [];
 
-async function loadBackup() {
-	
+/*async function loadBackup() {
+
 	const selectBackup = document.getElementById('selectBackup');
-	
+
 	if (selectBackup.value == 'false') {
 		return;
 	} else if (selectBackup.value == 'file') {
-		
+
 		const file = document.getElementById('backupFileInput').files[0];
-	
+
 		if (!file) return;
 
 		if (file.type != 'application/json') {
@@ -73,32 +73,32 @@ async function loadBackup() {
 
 			if ((backup.version && backup.version[0] == 'tabGroups' || backup.version && backup.version[0] == 'sessionrestore') && backup.version[1] == 1) {
 				// convert from old tab groups backup to version 1 (legacy)
-				backup = convertTG(backup);
-			}
-			
-			if (backup.file && backup.file.type == 'panoramaView' && backup.file.version == 1) {
-				// convert from panormama view backup version 1
-				backup = convertV1(backup);
+				backup = backups.convertTG(backup);
 			}
 
-			backups.open(backup);
+			if (backup.file && backup.file.type == 'panoramaView' && backup.file.version == 1) {
+				// convert from panormama view backup version 1
+				backup = backups.convertV1(backup);
+			}
+
+			//backups.open(backup);
 		};
 
 		reader.readAsText(file);
-		
+
 	} else {
-		
+
 		const i = Number(selectBackup.value);
-		
+
 		if (i < 0 || i > 3) {
 			return;
 		}
-		
-		backups.open(autoBackups[i].data);
-	}
-}
 
-function convertV1(data) {
+		//backups.open(autoBackups[i].data);
+	}
+}*/
+
+export function convertV1(data) {
 
 	let makeTabData = (tab) => {
 		return {
@@ -115,12 +115,12 @@ function convertV1(data) {
 		},
 		windows: []
 	};
-	
+
 	for (const window of data.windows) {
 
 		let pinnedTabs = [];
 		let tabGroups  = [];
-		
+
 		for (let tab of window.tabs) {
 			if (tab.pinned) {
 				pinnedTabs.push(makeTabData(tab));
@@ -128,13 +128,13 @@ function convertV1(data) {
 		}
 
 		for (const group of window.groups) {
-			
+
 			let tabGroup = {
 				title: group.name,
 				rect:  {x: group.rect.x, y: group.rect.y, w: group.rect.w, h: group.rect.h},
 				tabs:  []
 			}
-			
+
 			for (const tab of window.tabs) {
 				if (tab.groupId == group.id) {
 					tabGroup.tabs.push(makeTabData(tab));
@@ -153,7 +153,7 @@ function convertV1(data) {
 	return backup;
 }
 
-function convertTG(tgData) {
+export function convertTG(tgData) {
 	var data = {
 		file: {
 			type: 'panoramaView',
@@ -193,17 +193,16 @@ function convertTG(tgData) {
 
 	return data;
 }
-// ----
 
 
 function fillBackupSelection(autoBackups) {
-	
+
 	const elements = document.getElementById('selectBackup').querySelectorAll('.auto');
 
 	for (const element of elements) {
 		element.remove();
 	}
-	
+
 	for (let i in autoBackups) {
 		const time = new Date(autoBackups[i].time);
 		selectBackup.appendChild(html.newElement('option', {content: `Auto Backup ${time.toLocaleString()}`, value: i, class: 'auto'}));
@@ -217,7 +216,7 @@ export async function createUI() {
 
 	// load backup list
 	document.getElementById('loadBackup').addEventListener('click', loadBackup);
-	
+
 	const backupFileInput = document.getElementById('backupFileInput');
 	const selectBackup    = document.getElementById('selectBackup');
 
@@ -227,31 +226,35 @@ export async function createUI() {
 		selectBackup.appendChild(file);
 		selectBackup.value = 'file';
 	});
-	
+
 	selectBackup.addEventListener('input', (e) => {
 		if (e.target.value == 'browse') {
 			backupFileInput.click();
 		}
 	});
 
-	selectBackup.addEventListener('mousedown', async(e) => {
-		autoBackups = await backups.get();
+	selectBackup.addEventListener('focus', async(e) => {
+		autoBackups = await browser.runtime.sendMessage({
+			action: 'addon.backup.getBackups'
+		});
 		fillBackupSelection(autoBackups);
 
 		const file = e.target.querySelector('[value="file"]')
 		if (file) file.remove();
 		backupFileInput.value = null;
-	});
+	}, false);
 	// ----
-	
+
 	// Auto-Backup
 	const autoBackup         = document.getElementById('autoBackup');
 	const autoBackupInterval = document.getElementById('autoBackupInterval');
 
-	autoBackup.value = await backups.getInterval();
-	
+	autoBackup.value = await browser.runtime.sendMessage({
+		action: 'addon.backup.getInterval'
+	});
+
 	const formatTime = (value) => {
-		const hours   = Math.floor(value / 60);          
+		const hours   = Math.floor(value / 60);
 		const minutes = value % 60;
 		if (hours == 0 && minutes == 0) {
 			return browser.i18n.getMessage('optionAutomaticBackupIntervalNever');
@@ -264,10 +267,10 @@ export async function createUI() {
 
 	autoBackup.addEventListener('input', function() {
 		autoBackupInterval.textContent = formatTime(autoBackup.value);
-	});
-
-	autoBackup.addEventListener('mouseup', function() {
-		backups.setInterval(autoBackup.value);
+		browser.runtime.sendMessage({
+			action: 'addon.backup.setInterval',
+			interval: autoBackup.value
+		});
 	});
 	// ----
 }
