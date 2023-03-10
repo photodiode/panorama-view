@@ -18,6 +18,32 @@
 	},
 
 
+	"optionKeyboardShortcuts": {
+		"message": "Keyboard　Shortcuts"
+	},
+	"optionKeyboardShortcutsDirections": {
+		"message": "To change shortcuts please go to the Gear Icon in the top right and choose \"Manage Extension Shortcuts\""
+	},
+
+	"optionGeneral": {
+		"message": "General"
+	},
+	"optionTheme": {
+		"message": "Theme"
+	},
+	"optionThemeAuto": {
+		"message": "Auto"
+	},
+	"optionThemeLight": {
+		"message": "Light"
+	},
+	"optionThemeDark": {
+		"message": "Dark"
+	},
+	"optionListView": {
+		"message": "List view for tiny tabs"
+	},
+
 	"optionBackup": {
 		"message": "Backup"
 	},
