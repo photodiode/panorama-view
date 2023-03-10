@@ -71,10 +71,6 @@ export async function create(appId) {
 }
 
 
-/*import {addon} from './addon.js';
-import * as core from './core.js';
-
-
 export let opening = false;
 
 export async function open(backup) {
@@ -138,7 +134,7 @@ export async function open(backup) {
 	}
 
 	opening = false;
-}*/
+}
 
 
 // auto backup

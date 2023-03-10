@@ -49,7 +49,7 @@ async function saveBackup() {
 
 let autoBackups = [];
 
-/*async function loadBackup() {
+async function loadBackup() {
 
 	const selectBackup = document.getElementById('selectBackup');
 
@@ -81,7 +81,10 @@ let autoBackups = [];
 				backup = backups.convertV1(backup);
 			}
 
-			//backups.open(backup);
+			browser.runtime.sendMessage({
+				action: 'addon.backup.open',
+				data: backup
+			});
 		};
 
 		reader.readAsText(file);
@@ -94,9 +97,12 @@ let autoBackups = [];
 			return;
 		}
 
-		//backups.open(autoBackups[i].data);
+		browser.runtime.sendMessage({
+			action: 'addon.backup.open',
+			data: autoBackups[i].data
+		});
 	}
-}*/
+}
 
 export function convertV1(data) {
 
@@ -220,6 +226,11 @@ export async function createUI() {
 	const backupFileInput = document.getElementById('backupFileInput');
 	const selectBackup    = document.getElementById('selectBackup');
 
+	autoBackups = await browser.runtime.sendMessage({
+		action: 'addon.backup.getBackups'
+	});
+	fillBackupSelection(autoBackups);
+
 	backupFileInput.addEventListener('change', (e) => {
 		const filename = e.target.value.split(/(\\|\/)/g).pop();
 		const file = html.newElement('option', {content: filename, value: 'file'});
@@ -233,12 +244,7 @@ export async function createUI() {
 		}
 	});
 
-	selectBackup.addEventListener('focus', async(e) => {
-		autoBackups = await browser.runtime.sendMessage({
-			action: 'addon.backup.getBackups'
-		});
-		fillBackupSelection(autoBackups);
-
+	selectBackup.addEventListener('change', async(e) => {
 		const file = e.target.querySelector('[value="file"]')
 		if (file) file.remove();
 		backupFileInput.value = null;

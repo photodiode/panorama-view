@@ -81,6 +81,10 @@ function handleActions(message, sender, sendResponse) {
 			response = backup.create(sender.id);
 			break;
 		}
+		case 'addon.backup.open': {
+			response = backup.open(message.data);
+			break;
+		}
 		case 'addon.backup.getInterval': {
 			response = backup.getInterval();
 			break;
