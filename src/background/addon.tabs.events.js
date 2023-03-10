@@ -37,7 +37,7 @@ async function created(tab) {
 		// check if group exists
 		const groups = await addon.tabGroups.query({windowId: tab.windowId});
 		const groupsExists = groups.find(group => group.id == tab.groupId);
-		
+
 		if (!groupsExists) {
 			tab.groupId = undefined;
 			while (tab.groupId == undefined) {
@@ -45,7 +45,7 @@ async function created(tab) {
 			}
 		}
 	}
-	
+
 	addon.tabs.setGroupId(tab.id, tab.groupId);
 
 	const sending = browser.runtime.sendMessage({event: 'browser.tabs.onCreated', tab: tab});
@@ -54,13 +54,13 @@ async function created(tab) {
 
 
 async function attached(tabId, attachInfo) {
-	
+
 	const panoramaViewTab = await core.getPanoramaViewTab();
 
 	if (panoramaViewTab && panoramaViewTab.active) {
 		browser.tabs.hide(tabId);
 	}
-	
+
 	const tabGroupId = await addon.tabs.getGroupId(tabId);
 
 	if (tabGroupId == undefined) {
@@ -78,7 +78,7 @@ async function attached(tabId, attachInfo) {
 async function updated(tabId, changeInfo, tab) {
 
 	tab.groupId = undefined;
-	
+
 	if (changeInfo.hasOwnProperty('pinned')) {
 		if (changeInfo.pinned == true) {
 			tab.groupId = -1;
@@ -86,7 +86,7 @@ async function updated(tabId, changeInfo, tab) {
 		} else {
 			const activeGroupId = await addon.tabGroups.getActiveId(tab.windowId);
 			addon.tabs.setGroupId(tabId, activeGroupId);
-			
+
 			const panoramaViewTab = await core.getPanoramaViewTab();
 
 			if (panoramaViewTab && panoramaViewTab.active) {
@@ -94,7 +94,7 @@ async function updated(tabId, changeInfo, tab) {
 			}
 		}
 	}
-	
+
 	if (tab.groupId == undefined) {
 		const start = (new Date).getTime();
 		while (tab.groupId == undefined) {
@@ -114,7 +114,7 @@ async function activated(activeInfo) {
 	const tab = await browser.tabs.get(activeInfo.tabId);
 
 	if (!tab.pinned) {
-		
+
 		// Set the window's active group to the new active tab's group
 		let tabGroupId = await addon.tabs.getGroupIdTimeout(activeInfo.tabId, 100); // random timeout
 
@@ -122,7 +122,7 @@ async function activated(activeInfo) {
 			// check if group exists
 			const groups = await addon.tabGroups.query({windowId: activeInfo.windowId});
 			const groupsExists = groups.find(group => group.id == tabGroupId);
-			
+
 			if (!groupsExists) {
 				tabGroupId = undefined;
 				while (tabGroupId == undefined) {

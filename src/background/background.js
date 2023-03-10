@@ -57,14 +57,14 @@ async function init() {
 
 	// tab groups ----
 	await migrate(); // keep until everyone's on 0.9.0
-	
+
 	await addon.initialize();
 
 	browser.commands.onCommand.addListener(handleCommands);
 
 	await setupWindows();
 	await salvageGrouplessTabs();
-	
+
 	await salvageGrouplessTabs();
 
 	// auto bakup

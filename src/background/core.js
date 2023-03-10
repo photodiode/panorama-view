@@ -60,7 +60,7 @@ export async function toggleVisibleTabs(windowId, activeGroupId, noTabSelected) 
 
 
 export async function toggleView() {
-	
+
 	const panoramaViewTab = await getPanoramaViewTab();
 
 	if (panoramaViewTab) {

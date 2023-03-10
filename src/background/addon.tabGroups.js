@@ -54,6 +54,8 @@ export async function initialize() {
 	for (const window of windows) {
 		let windowGroups = await browser.sessions.getWindowValue(window.id, 'groups');
 
+		if (!windowGroups) continue;
+
 		for (let group of windowGroups) {
 			group.windowId = window.id;
 
@@ -92,7 +94,7 @@ export async function create(info = {}, currentWindowId) {
 	await saveGroups();
 
 	await setActiveId(group.windowId, group.id);
-	
+
 	if (info.hasOwnProperty('populate') && info.populate == true) {
 		addon_tabs.create({groupId: group.id, windowId: group.windowId});
 	}

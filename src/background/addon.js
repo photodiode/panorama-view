@@ -18,7 +18,7 @@ export let addon = {
 };
 
 function handleActions(message, sender, sendResponse) {
-	
+
 	if (!message.action) return;
 
 	let response;
@@ -61,7 +61,7 @@ function handleActions(message, sender, sendResponse) {
 			response = addon.tabs.query(message.info);
 			break;
 		}
-		
+
 		case 'browser.sessions.setGroupValue': {
 			response = addon.tabGroups.setGroupValue(message.groupId, message.key, message.value, sender.id);
 			break;

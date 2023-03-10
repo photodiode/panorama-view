@@ -19,7 +19,7 @@ export function create(tab) {
 	node.addEventListener('click', function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		
+
 		if (event.ctrlKey) {
 			drag.selectTab(tab.id);
 		} else {
@@ -44,7 +44,7 @@ export function create(tab) {
 	node.addEventListener('dragstart', drag.tabDragStart, false);
 	node.addEventListener('drop', drag.tabDrop, false);
 	node.addEventListener('dragend', drag.tabDragEnd, false);
-	
+
 	return node;
 }
 
@@ -87,11 +87,11 @@ export async function updateThumbnail(tabNode, tabId, thumbnail) {
 export async function setActive() {
 
 	let tabs = await browser.tabs.query({currentWindow: true});
-	
+
 	tabs.sort((tabA, tabB) => {
 		return tabB.lastAccessed - tabA.lastAccessed;
 	});
-	
+
 	const activeTabId = (tabs[0].url == browser.runtime.getURL('panorama/view.html')) ? tabs[1].id : tabs[0].id ;
 
 	const tabNode    = get(activeTabId);
@@ -111,11 +111,11 @@ export async function insert(tabNode, tab) {
 	for (let _tab of tabs) {
 
 		if (_tab.groupId != tab.groupId) continue;
-		
+
 		if (_tab.id == tab.id) {
-			
+
 			const tabGroupTabsNode = tabGroupNode.querySelector('.tabs');
-			
+
 			if (tabGroupTabsNode.children.length == 1) {
 				tabGroupTabsNode.insertAdjacentElement('afterbegin', tabNode);
 			} else {
