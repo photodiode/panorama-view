@@ -121,8 +121,7 @@ async function initializeTabGroupNodes() {
 
 	let groups = await browser.tabGroups.query({windowId: viewWindowId});
 
-	for (let group of groups) {
-
+	await groups.forEach(async group => {
 		let tabGroupNode = html.groups.create(group);
 
 		let rect = await browser.sessions.getGroupValue(group.id, 'rect');
@@ -138,7 +137,7 @@ async function initializeTabGroupNodes() {
 		document.getElementById('groups').appendChild(tabGroupNode);
 
 		html.groups.resizeTitle(tabGroupNode);
-	}
+	});
 }
 
 
