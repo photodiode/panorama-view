@@ -2,7 +2,7 @@
 body.dark {
 	--color-background: #1e1e1e;
 	--color-text: #f0f0f0;
-	--color-shadow: rgba(0, 0, 0, 0.1);
+	--color-shadow: rgba(255, 255, 255, 0.15);
 
 	--color-group-background: #303030;
 	--color-group-border: #454545;

@@ -2,7 +2,7 @@
 body.light {
 	--color-background: #ebebeb;
 	--color-text: #111111;
-	--color-shadow: rgba(0, 0, 0, 0.1);
+	--color-shadow: rgba(0, 0, 0, 0.15);
 
 	--color-group-background: #fbfbfb;
 	--color-group-border: #dddddd;

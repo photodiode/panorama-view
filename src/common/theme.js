@@ -44,8 +44,14 @@ async function setAll(theme) {
 
 	if (theme && theme.colors) {
 
+		let color_shadow = colors.toRGBA(theme.colors.toolbar_field_text);
+		    color_shadow[3] = 0.15;
+
 		let color_tab_overlay = colors.toRGBA(theme.colors.toolbar_field);
 		    color_tab_overlay[3] = 0.8;
+
+		let color_tab_hover = colors.toRGBA(theme.colors.toolbar_field_text);
+		    color_tab_hover[3] = 0.3;
 
 		let frame = colors.toRGBA(theme.colors.frame);
 		let toolbar = colors.toRGBA(theme.colors.toolbar);
@@ -54,6 +60,7 @@ async function setAll(theme) {
 		const style = [
 			`--color-background: ${theme.colors.frame}`,
 			`--color-text: ${theme.colors.toolbar_field_text}`,
+			`--color-shadow: rgba(${color_shadow})`,
 
 			`--color-group-background: rgba(${color_group_background.join(',')})`,
 			`--color-group-border: ${theme.colors.toolbar_bottom_separator ? theme.colors.toolbar_bottom_separator : 'rgba(0, 0, 0, 0.3)'}`,
@@ -61,7 +68,7 @@ async function setAll(theme) {
 
 			`--color-tab: ${theme.colors.toolbar_field}`,
 			`--color-tab-overlay: rgba(${color_tab_overlay.join(',')})`,
-			`--color-tab-hover: rgba(255, 255, 255, 0.3)`,
+			`--color-tab-hover: rgba(${color_tab_hover.join(',')})`,
 			`--color-tab-active: ${(theme.colors.appmenu_info_icon_color) ? theme.colors.appmenu_info_icon_color : theme.colors.tab_line}` //appmenu_info_icon_color
 		];
 
