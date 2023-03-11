@@ -11,19 +11,7 @@ export async function set(themeType, theme) {
 
 	if (!themeType) {
 		if (!theme) theme = await browser.theme.getCurrent();
-		console.log(theme);
 		if (theme && theme.colors) {
-
-			/*const color = colors.toRGBA(theme.colors.frame);
-			//console.log("Theme selection color:", color, colors.toGray(color));
-			if (color) {
-				if (colors.toGray(color) < 0.5) {
-					themeType = 'dark';
-				} else {
-					themeType = 'light';
-				}
-			}*/
-
 			setAll(theme);
 			themeType = 'custom';
 		}
@@ -59,11 +47,15 @@ async function setAll(theme) {
 		let color_tab_overlay = colors.toRGBA(theme.colors.toolbar_field);
 		    color_tab_overlay[3] = 0.8;
 
+		let frame = colors.toRGBA(theme.colors.frame);
+		let toolbar = colors.toRGBA(theme.colors.toolbar);
+		let color_group_background = colors.mix(frame, toolbar);
+
 		const style = [
 			`--color-background: ${theme.colors.frame}`,
 			`--color-text: ${theme.colors.toolbar_field_text}`,
 
-			`--color-group-background: ${theme.colors.toolbar}`,
+			`--color-group-background: rgba(${color_group_background.join(',')})`,
 			`--color-group-border: ${theme.colors.toolbar_bottom_separator ? theme.colors.toolbar_bottom_separator : 'rgba(0, 0, 0, 0.3)'}`,
 			`--color-group-count-background: ${theme.colors.toolbar_field}`,
 
@@ -75,7 +67,6 @@ async function setAll(theme) {
 
 		var stylesheet = new CSSStyleSheet();
 		stylesheet.insertRule(`.custom { ${style.join(';')} }`);
-		console.log(stylesheet);
 		document.adoptedStyleSheets = [stylesheet];
 	}
 }

@@ -32,3 +32,15 @@ export function toRGBA(input) {
 export function toGray(color) {
 	return (0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2]) / 255;
 }
+
+export function mix(a, b) {
+	const lerp = function(a, b, t){
+		return a * (1 - t) + b * t;
+	}
+	return [
+		lerp(a[0], b[0], b[3]),
+		lerp(a[1], b[1], b[3]),
+		lerp(a[2], b[2], b[3]),
+		Math.max(a[3], b[3]),
+	];
+}
