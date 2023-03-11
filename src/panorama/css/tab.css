@@ -71,7 +71,7 @@
 	height: 16px;
 	object-fit: cover;
 
-	margin: 3px;
+	margin: 2px;
 	padding: 2px;
 
 	position: absolute;
@@ -103,6 +103,7 @@
 
 	mask: url(../gfx/close.svg) no-repeat center / 10px;
 	backdrop-filter: blur(1px) invert(1) grayscale(1);
+	_backdrop-filter: invert(1);
 
 	border-radius: 4px;
 
@@ -116,13 +117,14 @@
 }
 
 .tab .title {
+	margin: 2px;
+
 	position: absolute;
-	bottom: -2px;
-	left: 2px;
-	right: 2px;
+	bottom: 0;
+	left: 0;
+	right: 0;
 
 	font-size: 11px;
-	text-align: center;
 	white-space: nowrap;
 
 	z-index: 10;
@@ -130,10 +132,12 @@
 
 .tab .title span {
 	max-width: 100%;
+	width: fit-content;
 
+	margin: 0 auto;
 	padding: 2px 6px;
 
-	display: inline-block;
+	display: block;
 	box-sizing: border-box;
 
 	border-radius: 3px;
