@@ -47,7 +47,7 @@ body {
 	background-color: var(--color-text);
 
 	mask: no-repeat center / 16px;
-	mask-image: url(../gfx/plus.svg);
+	mask-image: url(../gfx/add.svg);
 
 	opacity: 0.2;
 }

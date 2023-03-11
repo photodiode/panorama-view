@@ -101,18 +101,17 @@
 	right: 0;
 	top: 0;
 
-	background: url(../gfx/tab_close.svg) no-repeat center / 10px;
+	mask: url(../gfx/close.svg) no-repeat center / 10px;
+	backdrop-filter: blur(1px) invert(1) grayscale(1);
 
 	border-radius: 4px;
 
 	z-index: 10;
 
-	opacity: 0.5;
+	opacity: 0.6;
 }
 
 .tab .close:hover {
-	background-color: rgba(12, 12, 13, 0.15);
-
 	opacity: 1;
 }
 
@@ -185,7 +184,7 @@
 	background-color: var(--color-text);
 
 	mask: no-repeat center / cover;
-	mask-image: url(../gfx/plus.svg);
+	mask-image: url(../gfx/add.svg);
 }
 
 .small .tab .favicon[src] + .thumbnail, .tiny .tab .favicon[src] + .thumbnail {

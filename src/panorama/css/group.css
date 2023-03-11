@@ -96,7 +96,7 @@
 
 	background-color: var(--color-text);
 
-	mask: url(../gfx/group_close.svg) no-repeat center / 10px;
+	mask: url(../gfx/close.svg) no-repeat center / 10px;
 
 	opacity: 0.5;
 }
