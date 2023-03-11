@@ -71,7 +71,7 @@ export async function move(tabIds, info) {
 		delete info.groupId;
 	}
 
-	if (groupId) {
+	if (groupId != undefined) {
 		if (Array.isArray(tabIds)) {
 			await Promise.all(tabIds.map(async(tabId) => {
 				await setGroupId(tabId, groupId);
@@ -88,7 +88,7 @@ export async function move(tabIds, info) {
 		throw Error(error);
 	}
 
-	if (groupId) {
+	if (groupId != undefined) {
 		for (let tab of tabs) {
 			tab.groupId = groupId;
 		}
