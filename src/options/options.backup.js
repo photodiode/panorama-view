@@ -211,7 +211,7 @@ function fillBackupSelection(autoBackups) {
 
 	for (let i in autoBackups) {
 		const time = new Date(autoBackups[i].time);
-		selectBackup.appendChild(html.newElement('option', {content: `Auto Backup ${time.toLocaleString()}`, value: i, class: 'auto'}));
+		selectBackup.appendChild(html.newElement('option', {content: `${browser.i18n.getMessage('optionAutoBackup')} ${time.toLocaleString()}`, value: i, class: 'auto'}));
 	}
 }
 

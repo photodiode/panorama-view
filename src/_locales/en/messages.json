@@ -68,6 +68,9 @@
 	"optionLoadError": {
 		"message": "Invalid file type"
 	},
+	"optionAutoBackup": {
+		"message": "Auto Backup"
+	},
 	"optionAutomaticBackupInterval": {
 		"message": "Automatic Backup interval"
 	},
