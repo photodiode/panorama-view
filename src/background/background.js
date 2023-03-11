@@ -56,7 +56,7 @@ async function salvageGrouplessTabs() {
 async function init() {
 
 	// tab groups ----
-	await migrate(); // keep until everyone's on 0.9.0
+	await migrate(); // keep until everyone's on 0.9.4
 
 	await addon.initialize();
 
