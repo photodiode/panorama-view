@@ -1,7 +1,7 @@
 
-:root {
+body.light {
 	--color-background: #ffffff;
-	--color-text: #0c0c0d;
+	--color-text: #111111;
 }
 
 body {

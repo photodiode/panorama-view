@@ -19,7 +19,7 @@
 
 
 	"optionKeyboardShortcuts": {
-		"message": "Keyboard　Shortcuts"
+		"message": "Keyboard Shortcuts"
 	},
 	"optionKeyboardShortcutsDirections": {
 		"message": "To change shortcuts please go to the Gear Icon in the top right and choose \"Manage Extension Shortcuts\""

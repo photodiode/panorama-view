@@ -185,7 +185,5 @@ async function autoBackup() {
 	}
 
 	browser.storage.local.set(storage);
-
-	console.log(`Auto backup saved: ${backup.time}`);
 }
 
