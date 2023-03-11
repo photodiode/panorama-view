@@ -11,10 +11,10 @@ export async function set(themeType, theme) {
 
 	if (!themeType) {
 		if (!theme) theme = await browser.theme.getCurrent();
-		//console.log(theme);
+		console.log(theme);
 		if (theme && theme.colors) {
 
-			const color = colors.toRGBA(theme.colors.frame);
+			/*const color = colors.toRGBA(theme.colors.frame);
 			//console.log("Theme selection color:", color, colors.toGray(color));
 			if (color) {
 				if (colors.toGray(color) < 0.5) {
@@ -22,7 +22,10 @@ export async function set(themeType, theme) {
 				} else {
 					themeType = 'light';
 				}
-			}
+			}*/
+
+			setAll(theme);
+			themeType = 'custom';
 		}
 	}
 
@@ -44,30 +47,35 @@ function darkToggle(dark) {
 }
 
 function update(themeType) {
-	if (themeType == 'dark') {
-		document.body.classList.add('dark');
-		document.getElementById('favicon').href = '../gfx/icon_light.svg';
-	} else {
-		document.body.classList.remove('dark');
-		document.getElementById('favicon').href = '../gfx/icon_dark.svg';
-	}
+	document.body.className = themeType;
 }
 
-/*export async function setAll(theme) {
+async function setAll(theme) {
 
 	if (!theme) theme = await browser.theme.getCurrent();
 
-	console.log(theme.colors);
-
 	if (theme && theme.colors) {
 
-		const colors = [
-			`--color-background: ${theme.colors.sidebar}`,
-			`--color-text: ${theme.colors.sidebar_text}`
+		let color_tab_overlay = colors.toRGBA(theme.colors.toolbar_field);
+		    color_tab_overlay[3] = 0.8;
+
+		const style = [
+			`--color-background: ${theme.colors.frame}`,
+			`--color-text: ${theme.colors.toolbar_field_text}`,
+
+			`--color-group-background: ${theme.colors.toolbar}`,
+			`--color-group-border: ${theme.colors.toolbar_bottom_separator ? theme.colors.toolbar_bottom_separator : 'rgba(0, 0, 0, 0.3)'}`,
+			`--color-group-count-background: ${theme.colors.toolbar_field}`,
+
+			`--color-tab: ${theme.colors.toolbar_field}`,
+			`--color-tab-overlay: rgba(${color_tab_overlay.join(',')})`,
+			`--color-tab-hover: rgba(255, 255, 255, 0.3)`,
+			`--color-tab-active: ${(theme.colors.appmenu_info_icon_color) ? theme.colors.appmenu_info_icon_color : theme.colors.tab_line}` //appmenu_info_icon_color
 		];
-		document.body.setAttribute('style', colors.join(';'));
-		
-		
-		
+
+		var stylesheet = new CSSStyleSheet();
+		stylesheet.insertRule(`.custom { ${style.join(';')} }`);
+		console.log(stylesheet);
+		document.adoptedStyleSheets = [stylesheet];
 	}
-}*/
+}

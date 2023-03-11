@@ -21,14 +21,14 @@ export function toRGBA(input) {
 	if (color.length == 3) color.push(1);
 	if (color.length != 4) return undefined;
 
-	return {
-		r: Number(color[0]),
-		g: Number(color[1]),
-		b: Number(color[2]),
-		a: Number(color[3])
-	};
+	return [
+		Number(color[0]),
+		Number(color[1]),
+		Number(color[2]),
+		Number(color[3])
+	];
 }
 
 export function toGray(color) {
-	return (0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b) / 255;
+	return (0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2]) / 255;
 }
