@@ -34,6 +34,10 @@ function handleActions(message, sender, sendResponse) {
 			response = addon.tabGroups.get(message.groupId);
 			break;
 		}
+		/*case 'browser.tabGroups.move': {
+			response = addon.tabGroups.move(message.groupId, message.info);
+			break;
+		}*/
 		case 'browser.tabGroups.query': {
 			response = addon.tabGroups.query(message.info, sender.tab.windowId);
 			break;
