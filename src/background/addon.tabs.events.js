@@ -46,7 +46,7 @@ async function created(tab) {
 		}
 	}
 
-	addon.tabs.setGroupId(tab.id, tab.groupId);
+	await addon.tabs.setGroupId(tab.id, tab.groupId);
 
 	const sending = browser.runtime.sendMessage({event: 'browser.tabs.onCreated', tab: tab});
 	      sending.catch(error => {});
@@ -70,7 +70,7 @@ async function attached(tabId, attachInfo) {
 		while (activeGroup == undefined) {
 			activeGroup = await addon.tabGroups.getActiveId(attachInfo.newWindowId);
 		}
-		addon.tabs.setGroupId(tabId, activeGroup);
+		await addon.tabs.setGroupId(tabId, activeGroup);
 	}
 }
 

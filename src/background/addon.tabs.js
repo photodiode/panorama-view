@@ -71,6 +71,13 @@ export async function move(tabIds, info) {
 		delete info.groupId;
 	}
 
+	let tabs;
+	try {
+		tabs = await browser.tabs.move(tabIds, info);
+	} catch (error) {
+		throw Error(error);
+	}
+
 	if (groupId != undefined) {
 		if (Array.isArray(tabIds)) {
 			await Promise.all(tabIds.map(async(tabId) => {
@@ -79,13 +86,6 @@ export async function move(tabIds, info) {
 		} else {
 			await setGroupId(tabIds, groupId);
 		}
-	}
-
-	let tabs;
-	try {
-		tabs = await browser.tabs.move(tabIds, info);
-	} catch (error) {
-		throw Error(error);
 	}
 
 	if (groupId != undefined) {
@@ -97,6 +97,8 @@ export async function move(tabIds, info) {
 			tab.groupId = await getGroupId(tab.id);
 		}));
 	}
+
+	console.log(structuredClone(tabs[0]).groupId);
 
 	return tabs;
 }

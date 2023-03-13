@@ -9,7 +9,7 @@ export async function groupCreated(group) {
 	if (core.viewWindowId == group.windowId){
 
 		let tabGroupNode = html.groups.create(group);
-		
+
 		const rect = {x: 0.3, y: 0.3, w: 0.4, h: 0.4};
 		browser.sessions.setGroupValue(group.id, 'rect', rect);
 
@@ -44,9 +44,10 @@ export async function tabCreated(tab) {
 
 		const tabNode = html.tabs.create(tab);
 		html.tabs.update(tabNode, tab);
+		html.tabs.updateThumbnail(tabNode, tab.id);
 
 		await html.tabs.insert(tabNode, tab);
-		
+
 		html.tabs.updateFavicon(tabNode, tab);
 		html.groups.fitTabs(tabGroupNode);
 	}
@@ -61,7 +62,7 @@ export async function tabRemoved(tabId, removeInfo) {
 }
 
 export async function tabUpdated(tabId, changeInfo, tab) {
-	
+
 	const tabNode = html.tabs.get(tabId);
 
 	if (core.viewWindowId == tab.windowId){
@@ -87,24 +88,28 @@ export async function tabActivated(activeInfo) {
 }
 
 export async function tabMoved(tabId, moveInfo) {
+	if (core.viewWindowId == moveInfo.windowId) {
 
-	let tab = await browser.tabs.get(tabId);
+		let tab = await browser.tabs.get(tabId);
 
-	let tabNode = html.tabs.get(tabId);
+		let tabNode = html.tabs.get(tabId);
 
-	await html.tabs.insert(tabNode, tab);
+		await html.tabs.insert(tabNode, tab);
 
-	html.groups.fitTabs();
+		html.groups.fitTabs();
+	}
 }
 
 export async function tabAttached(tabId, attachInfo) {
-	if (core.viewWindowId == attachInfo.newWindowId){
+	if (core.viewWindowId == attachInfo.newWindowId) {
 		var tab = await browser.tabs.get(tabId);
 		await tabCreated(tab);
-		core.captureThumbnail(tabId);
+		core.captureThumbnail(tab.id);
 	}
 }
 
 export function tabDetached(tabId, detachInfo) {
-	tabRemoved(tabId, {windowId: detachInfo.oldWindowId});
+	if (core.viewWindowId == detachInfo.oldWindowId) {
+		tabRemoved(tabId, {windowId: detachInfo.oldWindowId});
+	}
 }
