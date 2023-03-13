@@ -33,7 +33,7 @@
 }
 
 .tab:hover, .tab.inactive:hover, .tab.selected {
-	outline: 2px solid var(--color-tab-hover);
+	outline: 2px solid var(--color-tab-hover) !important;
 }
 
 .tab.active {
@@ -234,22 +234,23 @@
 
 .list .tab, .list .newtab {
 	width: calc(100% - 8px) !important;
-	height: 24px !important;
+	height: 20px !important;
 
 	position: relative;
 	top: 0px !important;
 	left: 0px !important;
+
+	outline: none;
+
+	background-color: transparent;
 }
 
 .list .tab .favicon {
 	margin: 2px;
 	padding: 0;
 
-	border-radius: 0px;
-
 	background-color: transparent;
-
-	box-shadow: none;
+	backdrop-filter: none;
 }
 
 .list .tab .close {
@@ -261,22 +262,20 @@
 }
 
 .list .tab .title {
-	top: 2px;
-	bottom: 2px;
-	left: 24px;
-	right: 24px;
-
-	text-align: left;
+	left: 20px;
+	right: 20px;
 }
 
 .list .tab .title span {
+	margin: 0;
 	padding: 0;
 
 	border-radius: 0;
 
 	background-color: transparent;
+	backdrop-filter: none;
 
-	box-shadow: none;
+	outline: none;
 }
 
 .list .newtab .border::after {
