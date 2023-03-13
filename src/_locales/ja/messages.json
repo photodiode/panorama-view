@@ -1,0 +1,101 @@
+{
+	"defaultGroupName": {
+		"message": "無名グループ"
+	},
+
+	"togglePanoramaView": {
+		"message": "Panorama Viewを切り替える"
+	},
+
+	"newTabGroup": {
+		"message": "新しいグループ"
+	},
+	"nextTabGroup": {
+		"message": "次のグループへ"
+	},
+	"previousTabGroup": {
+		"message": "前のグループへ"
+	},
+
+
+	"optionKeyboardShortcuts": {
+		"message": "ショートカットキー"
+	},
+	"optionKeyboardShortcutsDirections": {
+		"message": "ショートカットキーを変更する場合は右上の「アドオンツール」に入ってる「拡張機能のショートカットキーの管理」を使ってください。"
+	},
+
+	"optionGeneral": {
+		"message": "一般"
+	},
+	"optionTheme": {
+		"message": "テーマ"
+	},
+	"optionThemeAuto": {
+		"message": "自動"
+	},
+	"optionThemeLight": {
+		"message": "ライトモード（明るい）"
+	},
+	"optionThemeDark": {
+		"message": "ダークモード（暗い）"
+	},
+	"optionListView": {
+		"message": "小さなタブの一覧表示"
+	},
+
+	"optionBackup": {
+		"message": "バックアップ"
+	},
+	"optionSaveBackup": {
+		"message": "新しいバックアップを保存"
+	},
+	"optionSaveBackupButton": {
+		"message": "名前を付けて保存..."
+	},
+	"optionLoadBackup": {
+		"message": "バックアップを読み込む"
+	},
+	"optionLoadBackupSelect": {
+		"message": "バックアップを選択"
+	},
+	"optionLoadBackupBrowse": {
+		"message": "参照..."
+	},
+	"optionLoadBackupButton": {
+		"message": "開く"
+	},
+	"optionLoadError": {
+		"message": "無効なファイルタイプ"
+	},
+	"optionAutoBackup": {
+		"message": "自動バックアップ"
+	},
+	"optionAutomaticBackupInterval": {
+		"message": "自動バックアップの頻度"
+	},
+	"optionAutomaticBackupIntervalNever": {
+		"message": "しない"
+	},
+	"optionAutomaticBackupIntervalValue": {
+		"message": "$1時間$2分"
+	},
+
+	"optionStatistics": {
+		"message": "情報"
+	},
+	"optionNumberOfTabs": {
+		"message": "タブの数"
+	},
+	"optionNumberOfTabsValue": {
+		"message": "$1（有効状態、$2つ）"
+	},
+	"optionThumbnailCache": {
+		"message": " サムネイルのキャッシュ"
+	},
+
+
+	"pvCloseGroupConfirmation": {
+		"message": "グループの$1タブを閉じる?"
+	}
+}
