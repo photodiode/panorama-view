@@ -121,7 +121,7 @@ async function initializeTabGroupNodes() {
 
 	let groups = await browser.tabGroups.query({windowId: viewWindowId});
 
-	await groups.forEach(async group => {
+	await Promise.all(groups.map(async(group) => {
 		let tabGroupNode = html.groups.create(group);
 
 		let rect = await browser.sessions.getGroupValue(group.id, 'rect');
@@ -137,7 +137,7 @@ async function initializeTabGroupNodes() {
 		document.getElementById('groups').appendChild(tabGroupNode);
 
 		html.groups.resizeTitle(tabGroupNode);
-	});
+	}));
 }
 
 
@@ -155,7 +155,7 @@ async function initializeTabNodes() {
 
 		html.tabs.updateFavicon(tabNode, tab);
 
-		if (!fragments[tab.groupId]) {
+		if (!fragments.hasOwnProperty(tab.groupId)) {
 			fragments[tab.groupId] = document.createDocumentFragment();
 		}
 
