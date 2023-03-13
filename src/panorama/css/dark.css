@@ -1,16 +1,16 @@
 
 body.dark {
-	--color-background: #0c0c0d;
-	--color-text: #ededf0;
-	--color-shadow: rgba(0, 0, 0, 0.5);
+	--color-background: #1e1e1e;
+	--color-text: #f0f0f0;
+	--color-shadow: rgba(255, 255, 255, 0.15);
 
-	--color-group-background: #2a2a2e;
-	--color-group-text: rgba(249, 249, 250, 0.5);
-	--color-group-border: rgba(249, 249, 250, 0.1);
+	--color-group-background: #303030;
+	--color-group-border: #454545;
 
-	--color-tab: #4a4a4f;
-	--color-tab-border: rgba(0, 0, 0, 0.9);
-	--color-tab-overlay: rgba(12, 12, 13, 0.8);
+	--color-tab: #1e1e1e;
+	--color-tab-overlay: rgba(0, 0, 0, 0.8);
+	--color-tab-hover: rgba(255, 255, 255, 0.3);
+	--color-tab-active: #45a1ff;
 }
 
 .dark .tab .thumbnail {

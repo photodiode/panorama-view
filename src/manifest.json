@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
 	"name": "Panorama View",
-	"description": "Tab Groups with Panorama View",
-	"version": "0.9.3",
+	"description": "Easily group and organize tabs visually",
+	"version": "0.9.4",
 	"icons": {
 		"16": "gfx/logo/logo-16.png",
 		"24": "gfx/logo/logo-24.png",
@@ -16,6 +16,7 @@
 			"id": "{60e27487-c779-464c-8698-ad481b718d5f}"
 		}
 	},
+	"default_locale": "en",
 
 	"commands": {
 		"toggle_panorama_view": {
@@ -23,28 +24,28 @@
 				"default": "Ctrl+Alt+F",
 				"mac": "MacCtrl+Alt+F"
 			},
-			"description": "Toggle Panorama View"
+			"description": "__MSG_togglePanoramaView__"
 		},
 		"new_tab_group": {
 			"suggested_key": {
 				"default": "Ctrl+Alt+G",
 				"mac": "MacCtrl+Alt+G"
 			},
-			"description": "New Tab Group"
+			"description": "__MSG_newTabGroup__"
 		},
 		"next_group": {
 			"suggested_key": {
 				"default": "Ctrl+Alt+W",
 				"mac": "MacCtrl+Alt+W"
 			},
-			"description": "Go to the next Tab Group"
+			"description": "__MSG_nextTabGroup__"
 		},
 		"previous_group": {
 			"suggested_key": {
 				"default": "Ctrl+Alt+Q",
 				"mac": "MacCtrl+Alt+Q"
 			},
-			"description": "Go to the previous Tab Group"
+			"description": "__MSG_previousTabGroup__"
 		}
 	},
 
@@ -56,13 +57,13 @@
 		"browser_style": true,
 		"default_icon": "gfx/icon.svg",
 		"theme_icons": [{
-			"light": "gfx/icon_light.svg",
-			"dark": "gfx/icon_dark.svg",
+			"light": "gfx/icon.svg",
+			"dark": "gfx/icon.svg",
 			"size": 16
 		},
 		{
-			"light": "gfx/icon_light.svg",
-			"dark": "gfx/icon_dark.svg",
+			"light": "gfx/icon.svg",
+			"dark": "gfx/icon.svg",
 			"size": 32
 		}]
 	},

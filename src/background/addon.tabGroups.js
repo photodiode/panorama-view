@@ -1,194 +1,268 @@
 
 'use strict';
 
-import * as addon_tabs from './addon.tabs.js';
-import * as core from './core.js';
+import * as core from './core.js'
+import * as addon_tabs from './addon.tabs.js'
 
 // internal
-async function newTabGroupId(windowId) {
-	let groupIndex = await browser.sessions.getWindowValue(windowId, 'groupIndex');
-	let tabGroupId = groupIndex || 0;
-	await browser.sessions.setWindowValue(windowId, 'groupIndex', tabGroupId + 1);
+let groupUuid = 0;
+let groups    = []; // cache
 
-	return tabGroupId;
+function newGroupId() {
+	return groupUuid += 1;
 }
 
-async function getTabGroups(windowId) {
-	let groups = await browser.sessions.getWindowValue(windowId, 'groups');
-	if (groups == undefined) {
-		groups = [];
+async function saveGroups() {
+	const windows = await browser.windows.getAll({});
+
+	await Promise.all(windows.map(async(window) => {
+		let windowGroups = [];
+		for (let group of groups) {
+			if (group.windowId == window.id) {
+				windowGroups.push(group);
+			}
+		}
+		await browser.sessions.setWindowValue(window.id, 'groups', windowGroups);
+	}));
+}
+
+function sanitizeGroup(group) {
+	return {
+		cookieStoreId: group.cookieStoreId,
+		id:            group.id,
+		title:         group.title,
+		windowId:      group.windowId,
+
+		lastAccessed:  group.lastAccessed, // temporary
 	}
-	return groups;
-}
-
-async function setTabGroups(windowId, tabGroups) {
-	await browser.sessions.setWindowValue(windowId, 'groups', tabGroups);
 }
 // ----
+
+export async function setActiveId(windowId, groupId) {
+	if(!groups.find(group => group.id == groupId)) return undefined;
+	return browser.sessions.setWindowValue(windowId, 'activeGroup', groupId);
+}
 
 export async function getActiveId(windowId) {
 	return browser.sessions.getWindowValue(windowId, 'activeGroup');
 }
 
-export async function setActiveId(windowId, tabGroupId) {
 
-	let tabGroups = await getTabGroups(windowId);
+export async function initialize() {
+	const windows = await browser.windows.getAll({});
 
-	const i = tabGroups.findIndex((tabGroup) => { return tabGroup.id == tabGroupId; });
-	if (i != -1) tabGroups[i].lastAccessed = (new Date).getTime();
+	for (const window of windows) {
+		let windowGroups = await browser.sessions.getWindowValue(window.id, 'groups');
 
-	await setTabGroups(windowId, tabGroups);
+		if (!windowGroups) continue;
 
-	return browser.sessions.setWindowValue(windowId, 'activeGroup', tabGroupId);
-}
+		for (let group of windowGroups) {
+			group.windowId = window.id;
 
+			if (group.id > groupUuid) {
+				groupUuid = group.id;
+			}
+		}
 
-export async function create(createInfo = {}) {
-
-	createInfo.windowId = createInfo.windowId || (await browser.windows.getCurrent()).id;
-	createInfo.rect = createInfo.rect || {x: 0.3, y: 0.3, w: 0.4, h: 0.4};
-	
-	const tabGroupId = await newTabGroupId(createInfo.windowId);
-
-	const tabGroup = {
-		id:           tabGroupId,
-		title:        createInfo.title       || 'Untitled',
-		containerId:  createInfo.containerId || 'firefox-default',
-
-		lastAccessed: (new Date).getTime(),
-		rect:         createInfo.rect // temporary
-	};
-
-	// update tab groups in window
-	let tabGroups = await getTabGroups(createInfo.windowId);
-	tabGroups.push(tabGroup);
-	await setTabGroups(createInfo.windowId, tabGroups);
-	// ----
-
-	// update active tab group in window
-	await setActiveId(createInfo.windowId, tabGroup.id);
-	// ----
-
-	const panoramaViewTab = await core.getPanoramaViewTab();
-	if ((!panoramaViewTab || !panoramaViewTab.active) && !createInfo.empty) {
-		browser.tabs.create({});
+		if (windowGroups) {
+			groups = groups.concat(windowGroups);
+		}
 	}
 
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onCreated', windowId: createInfo.windowId, data: tabGroup});
-
-	return tabGroup;
+	browser.windows.onCreated.addListener(window => create({}, window.id));
+	browser.windows.onRemoved.addListener(windowId => {
+		groups = groups.filter(group => group.windowId != windowId);
+	});
 }
 
 
-export async function remove(tabGroupId) {
-	
+export async function create(info = {}, currentWindowId) {
+
+	info.windowId = info.windowId || currentWindowId;
+
+	const group = {
+		cookieStoreId:  info.cookieStoreId || 'firefox-default',
+		id:             newGroupId(),
+		sessionStorage: {},
+		title:          info.title || browser.i18n.getMessage('defaultGroupName'),
+		windowId:       info.windowId,
+
+		lastAccessed: (new Date).getTime(), // temporary
+	};
+
+	groups.push(group);
+	await saveGroups();
+
+	await setActiveId(group.windowId, group.id);
+
+	if (info.hasOwnProperty('populate') && info.populate == true) {
+		addon_tabs.create({groupId: group.id, windowId: group.windowId});
+	}
+
+	const sending = browser.runtime.sendMessage({event: 'browser.tabGroups.onCreated', group: sanitizeGroup(group)});
+	      sending.catch(error => {});
+
+	return sanitizeGroup(group);
+}
+
+export async function get(groupId) {
+	const group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
+	return sanitizeGroup(group);
+}
+
+
+export async function query(info = {}, currentWindowId) {
+
+	if (info.currentWindow == true) {
+		info.windowId = currentWindowId;
+	}
+
+	let matchingGroups = groups;
+
+	if (info.hasOwnProperty('windowId')) {
+		matchingGroups = matchingGroups.filter(group => group.windowId == info.windowId);
+	}
+
+	if (info.hasOwnProperty('id')) {
+		matchingGroups = matchingGroups.filter(group => group.id == info.id);
+	}
+
+	if (info.hasOwnProperty('title')) {
+		matchingGroups = matchingGroups.filter(group => group.title == info.title);
+	}
+
+	return matchingGroups.map(group => sanitizeGroup(group));
+}
+
+
+export async function remove(groupId) {
+
+	const group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
+
 	// remove tabs in group
 	const tabs = await browser.tabs.query({currentWindow: true});
-	
 	let tabsToRemove = [];
-	
-	for (let tab of tabs) {
-		tab.groupId = await addon_tabs.getGroupId(tab.id);
-		if (tab.groupId == tabGroupId) {
+
+	for (const tab of tabs) {
+		tab.groupId = await browser.sessions.getTabValue(tab.id, 'groupId');
+		if (tab.groupId == groupId) {
 			tabsToRemove.push(tab.id);
 		}
 	}
-	browser.tabs.remove(tabsToRemove); //!\ check for error and don't remove group if all tabs are not closed
-	// ----
+	await browser.tabs.remove(tabsToRemove);
 
-	const windowId = (await browser.windows.getCurrent()).id
-	let tabGroups = await getTabGroups(windowId);
-
-	const i = tabGroups.findIndex((tabGroup) => { return tabGroup.id == tabGroupId; });
-	if (i != -1) tabGroups.splice(i, 1);
-
-	await setTabGroups(windowId, tabGroups);
-	
-	// set new active group
-	let activeGroup = await getActiveId(windowId);
-	if (activeGroup == tabGroupId) {
-		tabGroups.sort((a, b) => {
-			return a.lastAccessed - b.lastAccessed;
-		});
-		await setActiveId(windowId, tabGroups[0].id);
+	// check if tabs were removed and abort if not (beforeunload was called or something)
+	for (const tabId of tabsToRemove) {
+		try {
+			let tab = await browser.tabs.get(tabId);
+			return undefined;
+		} catch (error) {
+			// all good, tab got removed
+		}
 	}
 	// ----
 
-	if (tabGroups.length == 0) {
-		await create({windowId: windowId, empty: false});
-	}
-
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onRemoved', windowId: windowId, data: tabGroupId});
-
-	return tabGroupId;
-}
-
-
-export async function query(queryInfo) {
-
-	queryInfo = queryInfo || {};
-
-	let matchingTabGroups = [];
-	
-	if (queryInfo.windowId) {
-		matchingTabGroups = matchingTabGroups.concat(await getTabGroups(queryInfo.windowId));
-	} else if (queryInfo.currentWindow) {
-		const currentWindowId = (await browser.windows.getCurrent()).id;
-		matchingTabGroups = matchingTabGroups.concat(await getTabGroups(currentWindowId));
+	groups = groups.filter(_group => _group.id != group.id);
+	if ((await query({currentWindow: true}, group.windowId)).length == 0) {
+		await create({windowId: group.windowId});
 	} else {
-		const windows = await browser.windows.getAll({windowTypes: ['normal']});
-		for(const window of windows) {
-			matchingTabGroups = matchingTabGroups.concat(await getTabGroups(window.id));
-		}
-	}
-	
-	if (queryInfo.id) {
-		for (let tabGroup of matchingTabGroups) {
-			if (queryInfo.id == tabGroup.id) {
-				matchingTabGroups = tabGroup;
-			}
-		}
-	}
-	
-	if (queryInfo.populate) {
-		// get tabs in group
+		await saveGroups();
 	}
 
-	return matchingTabGroups;
+	const sending = browser.runtime.sendMessage({event: 'browser.tabGroups.onRemoved', groupId: groupId, removeInfo: {windowId: group.windowId}});
+	      sending.catch(error => {});
+
+	return groupId;
 }
 
 
-export async function update(tabGroupId, updateInfo) {
+export async function update(groupId, info = {}) {
 
-	updateInfo = updateInfo || {};
-	
-	let updatedTabGroup = undefined;
+	let group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
 
-	const windowId = (await browser.windows.getCurrent()).id
-	let tabGroups = await getTabGroups(windowId);
+	if (info.hasOwnProperty('title')) {
+		group.title = info.title;
+	}
 
-	for (let tabGroup of tabGroups) {
-		if (tabGroup.id == tabGroupId) {
+	if (info.hasOwnProperty('rect')) {
+		group.rect = info.rect;
+	}
 
-			for (const key in updateInfo) {
-				if (tabGroup[key]) {
-					tabGroup[key] = updateInfo[key];
-				}
-			}
-			
-			updatedTabGroup = tabGroup;
+	group.lastAccessed = (new Date).getTime();
 
-			break;
+	await saveGroups();
+
+	const sending = browser.runtime.sendMessage({event: 'browser.tabGroups.onUpdated', group: sanitizeGroup(group)});
+	      sending.catch(error => {});
+
+	return sanitizeGroup(group);
+}
+
+
+export async function setGroupValue(groupId, key, value, appId) {
+
+	value = JSON.stringify(value);
+
+	let group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
+
+	if (!group.hasOwnProperty('sessionStorage')) {
+		group.sessionStorage = {};
+	}
+
+	if (!group.sessionStorage.hasOwnProperty(appId)) {
+		group.sessionStorage[appId] = {};
+	}
+
+	group.sessionStorage[appId][key] = value;
+
+	await saveGroups();
+
+	return;
+}
+
+
+export async function getGroupValue(groupId, key, appId) {
+
+	let group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
+
+	if (group.hasOwnProperty('sessionStorage')     &&
+	    group.sessionStorage.hasOwnProperty(appId) &&
+	    group.sessionStorage[appId].hasOwnProperty(key)) {
+
+		let value;
+		try {
+			value = JSON.parse(group.sessionStorage[appId][key]);
+		} catch (error) {
+			value = undefined;
 		}
-	}
-	
-	if (updatedTabGroup) {
-		updatedTabGroup.lastAccessed = (new Date).getTime();
-	}
-	
-	await setTabGroups(windowId, tabGroups);
 
-	browser.runtime.sendMessage({event: 'browser.tabGroups.onUpdated', windowId: windowId, data: updatedTabGroup});
+		return value;
+	}
 
-	return updatedTabGroup;
+	return undefined;
+}
+
+
+export async function removeGroupValue(groupId, key, appId) {
+
+	let group = groups.find(group => group.id == groupId);
+	if (!group) throw Error(`Invalid group ID: ${groupId}`);
+
+	if (group.hasOwnProperty('sessionStorage')     &&
+	    group.sessionStorage.hasOwnProperty(appId) &&
+	    group.sessionStorage[appId].hasOwnProperty(key)) {
+
+		delete group.sessionStorage[appId][key];
+
+		await saveGroups();
+
+		return;
+	}
+
+	throw Error(`Invalid key: ${key}`);
 }

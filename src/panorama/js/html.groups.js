@@ -1,11 +1,11 @@
 
 'use strict';
 
-import {newElement} from '../../common/html.js';
-import {addon} from './addon.js';
-import * as drag from './view.drag.js';
+import {newElement} from '/common/html.js'
+import * as plurals from '/common/plurals.js'
 
-import {options} from './view.js';
+import * as drag from './view.drag.js'
+import {options} from './view.js'
 
 
 export function create(group) {
@@ -35,10 +35,7 @@ export function create(group) {
 	var newtab = newElement('div', {class: 'newtab'}, [newElement('div', {class: 'border'})]);
 
 	// group
-	var tabs = newElement('div', {class: 'tabs transition'}, [newtab]);
-	//    tabs.addEventListener('dragover', groupDragOver, false);
-	//    tabs.addEventListener('drop', groupDrop, false);
-
+	var tabs   = newElement('div', {class: 'tabs transition'}, [newtab]);
 	var resize = newElement('div', {class: 'resize'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left]);
 	var node   = newElement('div', {class: 'group', id: 'tabGroup'+group.id}, [resize, header, tabs]);
 	// ----
@@ -49,14 +46,21 @@ export function create(group) {
 		var childNodes = tabs.childNodes;
 		var tabCount = childNodes.length-1;
 
+		let closing = false;
+
 		if (tabCount > 0) {
-			if (window.confirm(`Closing this Tab Group will close the ${tabCount} tab${(tabCount == 1 ? '' : 's')} within it`)) {
-				addon.tabGroups.remove(group.id);
-				node.remove();
+			if (window.confirm(plurals.parse(browser.i18n.getMessage('pvCloseGroupConfirmation', tabCount)))) {
+				closing = true;
 			}
 		} else {
-			addon.tabGroups.remove(group.id);
-			node.remove();
+			closing = true;
+		}
+
+		if (closing) {
+			browser.tabGroups.remove(group.id).then((removedId) => {
+				console.log(removedId);
+				if (removedId != undefined) node.remove();
+			});
 		}
 	}, false);
 
@@ -66,15 +70,16 @@ export function create(group) {
 
 	newtab.addEventListener('click', async function(event) {
 		event.stopPropagation();
-		await addon.tabGroups.setActiveGroupId(group.windowId, group.id);
-		await browser.tabs.create({active: true});
+		await browser.tabs.create({active: true, groupId: group.id});
 	}, false);
 
 	// move
 	var moveFunc = function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 1, 1, 1, 1, header);
+		if (event.buttons == 1) { // only move on left click
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 1, 1, 1, 1, header);
+		}
 	};
 	header.addEventListener('mousedown', moveFunc, false);
 
@@ -106,67 +111,83 @@ export function create(group) {
 
 	input.addEventListener('blur', function(event) {
 		input.setSelectionRange(0, 0);
-		
-		addon.tabGroups.update(group.id, {title: this.value});
+
+		browser.tabGroups.update(group.id, {title: input.value});
 
 		header.addEventListener('mousedown', moveFunc, false);
 
 		editing = false;
 	}, false);
 	// ----
-	
+
 	tabs.addEventListener('dragover', drag.groupDragOver, false);
 	tabs.addEventListener('drop', drag.groupDrop, false);
 
 	// resize
 	top.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 1, 0, 0, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 1, 0, 0, 0, this);
+		}
 	}, false);
 
 	right.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 1, 0, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 1, 0, 0, this);
+		}
 	}, false);
 
 	bottom.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 0, 1, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 0, 1, 0, this);
+		}
 	}, false);
 
 	left.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 0, 0, 1, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 0, 0, 1, this);
+		}
 	}, false);
 
 	top_right.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 1, 1, 0, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 1, 1, 0, 0, this);
+		}
 	}, false);
 
 	bottom_right.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 1, 1, 0, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 1, 1, 0, this);
+		}
 	}, false);
 
 	bottom_left.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 0, 0, 1, 1, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 0, 0, 1, 1, this);
+		}
 	}, false);
 
 	top_left.addEventListener('mousedown', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		groupTransform(group, node, 1, 0, 0, 1, this);
+		if (event.buttons == 1) {
+			event.preventDefault();
+			event.stopPropagation();
+			groupTransform(group, node, 1, 0, 0, 1, this);
+		}
 	}, false);
-	
+
 	return node;
 }
 
@@ -182,7 +203,10 @@ export async function resize(node, rect) {
 }
 
 export async function stack(node, tabGroup) {
-	tabGroup = tabGroup || await addon.tabGroups.get(parseInt(node.id.substr(8)));
+	const tabGroupId = parseInt(node.id.substr(8));
+
+	tabGroup = tabGroup || await browser.tabGroups.get(tabGroupId);
+
 	node.style.zIndex = Math.floor(tabGroup.lastAccessed / 100).toString().substr(-9);
 }
 
@@ -199,8 +223,8 @@ function getFit(param) {
 	let h = 0;
 	let area = 0;
 
-	param.width  = param.width  - param.marginX;
-	param.height = param.height - param.marginY;
+	param.width  = param.width  + 1;
+	param.height = param.height + 1;
 
 	for(let x = param.amount; x >= 1; x--) {
 
@@ -225,7 +249,7 @@ function getFit(param) {
 			pitch = x;
 		}
 	}
-	
+
 	let fits = true;
 	if (w < param.min || h < param.min) {
 		fits = false;
@@ -258,8 +282,8 @@ export function fitTabsInGroup(tabGroupNode) {
 		width: rect.width,
 		height: rect.height,
 
-		marginX: 3,
-		marginY: 3,
+		marginX: 4,
+		marginY: 4,
 
 		min: 80,
 		max: 375,
@@ -275,8 +299,8 @@ export function fitTabsInGroup(tabGroupNode) {
 			width: rect.width,
 			height: rect.height,
 
-			marginX: 3,
-			marginY: 3,
+			marginX: 4,
+			marginY: 4,
 
 			min: 60,
 			max: 160,
@@ -293,8 +317,8 @@ export function fitTabsInGroup(tabGroupNode) {
 			width: rect.width,
 			height: rect.height,
 
-			marginX: 3,
-			marginY: 3,
+			marginX: 4,
+			marginY: 4,
 
 			min: 20,
 			max: 100,
@@ -306,7 +330,7 @@ export function fitTabsInGroup(tabGroupNode) {
 	}
 
 	let index = 0;
-	
+
 
 	let w = fit.width;
 	let h = w * fit.ratio;
@@ -341,8 +365,8 @@ export function fitTabsInGroup(tabGroupNode) {
 		childNodes[i].style.height = h + 'px';
 
 		// only needed if the tabs use absolute positioning
-		childNodes[i].style.left = ((w+6) * (index % Math.floor(fit.pitch))) + 'px';
-		childNodes[i].style.top  = ((h+6) * Math.floor(index / Math.floor(fit.pitch))) + 'px';
+		childNodes[i].style.left = ((w+8) * (index % Math.floor(fit.pitch))) + 'px';
+		childNodes[i].style.top  = ((h+8) * Math.floor(index / Math.floor(fit.pitch))) + 'px';
 
 		childNodes[i].style.zIndex = index;
 
@@ -351,7 +375,7 @@ export function fitTabsInGroup(tabGroupNode) {
 }
 
 
-function groupTransform(group, node, top, right, bottom, left, elem) {
+async function groupTransform(group, node, top, right, bottom, left, elem) {
 
 	let snapValue = function(a, b, dst) {
 		if (a >= b - dst && a <= b + dst){
@@ -365,6 +389,8 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 
 	var groupsRect = document.getElementById('groups').getBoundingClientRect();
 	var nodeRect = node.getBoundingClientRect();
+
+	group.rect = await browser.sessions.getGroupValue(group.id, 'rect');
 
 	var minw = 120 / groupsRect.width;
 	var minh = 120 / groupsRect.height;
@@ -390,9 +416,8 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 			lx = x;
 			ly = y;
 			first = false;
-			addon.tabGroups.update(group.id, {rect: group.rect}).then(tabGroup => {
-				stack(node, tabGroup);
-			});
+			browser.sessions.setGroupValue(group.id, 'rect', group.rect);
+			browser.tabGroups.update(group.id, {}).then(group => stack(node, group));
 		}
 
 		rect.x = group.rect.x;
@@ -412,7 +437,7 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 		for (let tabGroupNode of document.getElementById('groups').childNodes) {
 
 			if(node != tabGroupNode) {
-				
+
 				let _rect = {
 					x: parseFloat(tabGroupNode.style.left)   / 100,
 					y: parseFloat(tabGroupNode.style.top)    / 100,
@@ -448,7 +473,6 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 					rect_i = snapValue(rect_i, _rect.x + _rect.w, snap_dstx);
 				}
 			}
-			
 		}
 		// ----
 
@@ -484,13 +508,12 @@ function groupTransform(group, node, top, right, bottom, left, elem) {
 		resize(node, rect);
 		fitTabs(node);
 	}
-	
+
 	const onmouseup = () => {
 		if(rect.x !== undefined) {
-			group.rect = rect;
-			addon.tabGroups.update(group.id, {rect: rect});
+			browser.sessions.setGroupValue(group.id, 'rect', rect);
 		}
-		
+
 		document.body.removeAttribute('style');
 
 		document.removeEventListener('mousemove', onmousemove);

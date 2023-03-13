@@ -1,12 +1,13 @@
 
 'use strict';
 
-import {addon} from './addon.js';
-import {html}  from './html.js';
+import '/common/tabGroups-polyfill.js'
 
-import * as theme  from './view.theme.js';
-import * as events from './view.events.js';
-import * as drag   from './view.drag.js';
+import {html}  from './html.js'
+
+import * as theme  from '/common/theme.js'
+import * as events from './view.events.js'
+import * as drag   from './view.drag.js'
 
 
 export let viewWindowId = undefined;
@@ -17,23 +18,11 @@ export let options = {
 	listView:      false
 };
 
-
-/*if (browser.tabGroups == undefined) {
-	browser.tabGroups = {
-		get: () => {
-			return 32;
-		}
-	};
-	
-	console.log(browser.tabGroups.get());
-}*/
-
-
 document.addEventListener('DOMContentLoaded', async() => {
-	
+
 	viewWindowId = (await browser.windows.getCurrent()).id;
 	viewTabId    = (await browser.tabs.getCurrent()).id;
-	
+
 	// get options
 	const storage = await browser.storage.local.get();
 	if (storage.hasOwnProperty('themeOverride')) {
@@ -43,64 +32,52 @@ document.addEventListener('DOMContentLoaded', async() => {
 		options.listView = storage.listView;
 	}
 	// ----
-	
-	theme.set();
+
+	theme.set(options.themeOverride);
 
 	await initializeTabGroupNodes();
 	await initializeTabNodes();
-	
+
 	captureThumbnails();
-	
+
 	// view events
 	document.getElementById('groups').addEventListener('dblclick', (event) => {
 		if (event.target == document.getElementById('groups')) {
-			addon.tabGroups.create();
+			browser.tabGroups.create();
 		}
 	}, false);
 
 	document.getElementById('groups').addEventListener('auxclick', (event) => {
 		if (event.target == document.getElementById('groups') && event.button == 1) {
-			addon.tabGroups.create();
+			browser.tabGroups.create();
 		}
 	}, false);
-	
+
 	document.addEventListener('visibilitychange', async() => {
 		if (document.hidden) {
 			browser.tabs.onUpdated.removeListener(captureThumbnail);
 			viewLastAccessed = (new Date).getTime();
 		} else {
 			await captureThumbnails();
-			browser.tabs.onUpdated.addListener(captureThumbnail);
+			browser.tabs.onUpdated.addListener(captureThumbnail, {properties: ['url', 'status']});
 		}
 	}, false);
 
 	window.addEventListener('resize', () => {
 		html.groups.fitTabs();
 	});
-	
+
 	browser.theme.onUpdated.addListener(({newTheme, windowId}) => {
-		theme.set(newTheme);
+		theme.set(options.themeOverride, newTheme);
 	});
 	// ----
-	
-	// tab group events
+
 	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		switch (message.event) {
-			case 'browser.tabGroups.onCreated': {
-				if (message.windowId != viewWindowId) return;
-				events.groupCreated(message.data);
-				break;
-			}
-			case 'browser.tabGroups.onRemoved': {
-				if (message.windowId != viewWindowId) return;
-				events.groupRemoved(message.data);
-				break;
-			}
-
 			case 'addon.options.onUpdated': {
 				if (message.data.hasOwnProperty('themeOverride')) {
 					options.themeOverride = message.data.themeOverride;
-					theme.set();
+					theme.set(options.themeOverride);
 				}
 				if (message.data.hasOwnProperty('listView')) {
 					options.listView = message.data.listView;
@@ -112,12 +89,16 @@ document.addEventListener('DOMContentLoaded', async() => {
 				break;
 		}
 	});
+
+	// tab group events
+	browser.tabGroups.onCreated.addListener(events.groupCreated);
+	browser.tabGroups.onRemoved.addListener(events.groupRemoved);
 	// ----
-	
+
 	// tab events
 	browser.tabs.onCreated.addListener(events.tabCreated);
 	browser.tabs.onRemoved.addListener(events.tabRemoved);
-	browser.tabs.onUpdated.addListener(events.tabUpdated);
+	browser.tabs.onUpdated.addListener(events.tabUpdated), {properties: ['favIconUrl', 'pinned', 'title', 'url', 'discarded', 'status']};
 
 	browser.tabs.onActivated.addListener(events.tabActivated);
 
@@ -126,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 	browser.tabs.onAttached.addListener(events.tabAttached);
 	browser.tabs.onDetached.addListener(events.tabDetached);
 	// ----
-	
+
 	// drag events
 	document.addEventListener('click', drag.clearTabSelection, true);
 
@@ -138,47 +119,49 @@ document.addEventListener('DOMContentLoaded', async() => {
 
 async function initializeTabGroupNodes() {
 
-	let tabGroups = await addon.tabGroups.query({windowId: viewWindowId});
+	let groups = await browser.tabGroups.query({windowId: viewWindowId});
 
-	for (let tabGroup of tabGroups) {
+	await Promise.all(groups.map(async(group) => {
+		let tabGroupNode = html.groups.create(group);
 
-		let tabGroupNode = html.groups.create(tabGroup);
+		let rect = await browser.sessions.getGroupValue(group.id, 'rect');
 
-		html.groups.resize(tabGroupNode, tabGroup.rect);
+		if (!rect) {
+			rect = {x: 0, y: 0, w: 0.5, h: 0.5};
+			await browser.sessions.setGroupValue(group.id, 'rect', rect);
+		}
+
+		html.groups.resize(tabGroupNode, rect);
 		html.groups.stack(tabGroupNode);
-		
+
 		document.getElementById('groups').appendChild(tabGroupNode);
 
 		html.groups.resizeTitle(tabGroupNode);
-	}
+	}));
 }
 
 
 async function initializeTabNodes() {
 
 	let tabs = await browser.tabs.query({currentWindow: true});
-	
+
 	var fragments = {};
-	
-	await Promise.all(tabs.map(async(tab) => {
-		tab.groupId = await addon.tabs.getGroupId(tab.id);
-	}));
 
 	for (let tab of tabs) {
 
 		let tabNode = html.tabs.create(tab);
 		html.tabs.update(tabNode, tab);
 		html.tabs.updateThumbnail(tabNode, tab.id);
-		
+
 		html.tabs.updateFavicon(tabNode, tab);
-		
-		if (!fragments[tab.groupId]) {
+
+		if (!fragments.hasOwnProperty(tab.groupId)) {
 			fragments[tab.groupId] = document.createDocumentFragment();
 		}
 
 		fragments[tab.groupId].appendChild(tabNode);
 	}
-	
+
 	for (const tabGroupId in fragments) {
 		let tabGroupNode = html.groups.get(tabGroupId);
 		if (tabGroupNode) {
@@ -193,7 +176,7 @@ async function initializeTabNodes() {
 
 
 export async function captureThumbnail(tabId, changeInfo, tab) {
-	const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 70, scale: 0.25});
+	const thumbnail = await browser.tabs.captureTab(tabId, {format: 'jpeg', quality: 80, scale: 0.25});
 	html.tabs.updateThumbnail(html.tabs.get(tabId), tabId, thumbnail);
 	browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
 }

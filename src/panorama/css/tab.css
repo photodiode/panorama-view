@@ -1,6 +1,6 @@
 
 .tab, .newtab {
-	margin: 4px;
+	margin: 3px;
 
 	box-sizing: border-box;
 
@@ -8,11 +8,12 @@
 }
 
 .tab {
-	border: 2px solid var(--color-tab);
+	background-color: var(--color-tab);
+
 	border-radius: 5px;
 
-	box-shadow: 0 1px 4px var(--color-shadow), 0 0 0 1px var(--color-tab-border);
-	
+	outline: 1px solid var(--color-shadow);
+
 	overflow: hidden;
 
 	transition: opacity 400ms cubic-bezier(.08,.82,.17,1), transform 400ms cubic-bezier(.08,.82,.17,1);
@@ -27,21 +28,21 @@
 	right: 0;
 	bottom: 0;
 	left: 0;
-	
+
 	z-index: 5;
 }
 
 .tab:hover, .tab.inactive:hover, .tab.selected {
-	box-shadow: 0 1px 4px var(--color-shadow), 0 0 0 3px var(--color-tab-border);
+	outline: 2px solid var(--color-tab-hover) !important;
 }
 
 .tab.active {
-	outline: 2px solid #45a1ff;
+	outline: 2px solid var(--color-tab-active);
 }
 
 .tab.inactive {
-	opacity: 0.65;
-	filter: saturate(0.8);
+	opacity: 0.7;
+	filter: saturate(0.6);
 }
 
 .tab.selected {
@@ -54,8 +55,8 @@
 }
 
 .tab .thumbnail {
-	width: 100%;
-	height: 100%;
+	width: 100.5%;
+	height: 100.5%;
 	object-fit: cover;
 	object-position: top center;
 }
@@ -69,17 +70,16 @@
 	height: 16px;
 	object-fit: cover;
 
-	margin: 3px;
+	margin: 2px;
 	padding: 2px;
 
 	position: absolute;
 
-	border-radius: 2px;
+	border-radius: 3px;
 
 	background-color: var(--color-tab-overlay);
+	backdrop-filter: blur(2px) saturate(2);
 
-	box-shadow: 0 0 0 1px var(--color-shadow);
-	
 	z-index: 1;
 }
 
@@ -97,49 +97,54 @@
 	position: absolute;
 	right: 0;
 	top: 0;
-	
-	background: url(../gfx/tab_close.svg) no-repeat center / 10px;
-	
-	border-radius: 2px;
+
+	mask: url(../gfx/close.svg) no-repeat center / 10px;
+	backdrop-filter: blur(2px) invert(1) grayscale(1);
+	_backdrop-filter: invert(1);
+
+	border-radius: 4px;
 
 	z-index: 10;
 
-	opacity: 0.5;
+	opacity: 0.6;
 }
 
 .tab .close:hover {
-	background-color: rgba(12, 12, 13, 0.15);
-
 	opacity: 1;
 }
 
 .tab .title {
-	position: absolute;
-	bottom: -1px;
-	left: 3px;
-	right: 3px;
+	margin: 2px;
 
-	font-size: 11.5px;
-	text-align: center;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	font-size: 11px;
 	white-space: nowrap;
-	
+
 	z-index: 10;
 }
 
 .tab .title span {
 	max-width: 100%;
+	width: fit-content;
 
+	margin: 0 auto;
 	padding: 1px 6px;
 
-	display: inline-block;
+	display: block;
 	box-sizing: border-box;
 
-	border-radius: 2px;
+	border-radius: 3px;
 
 	background-color: var(--color-tab-overlay);
 
-	box-shadow: 0 0 0 1px var(--color-shadow);
+	outline: 1px solid var(--color-shadow);
+	backdrop-filter: blur(2px) saturate(2);
 
+	color: var(--color-text);
 	text-overflow: "..";
 
 	overflow: hidden;
@@ -147,24 +152,24 @@
 
 .newtab .border {
 	position: absolute;
-	top: 1px;
-	bottom: 1px;
-	left: 1px;
-	right: 1px;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 
-	border: var(--color-group-text) 2px dashed;
+	border: var(--color-text) 2px dashed;
 	border-radius: 5px;
 
-	opacity: 0.3;
+	opacity: 0.15;
 }
 
 .newtab .border:hover {
-	opacity: 0.5;
+	opacity: 0.3;
 }
 
 .newtab .border::after {
 	content: '';
-	
+
 	width: 70%;
 	height: 70%;
 
@@ -174,13 +179,13 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	
+
 	transform: translate(-50%, -50%);
-	
-	background-color: var(--color-group-text);
+
+	background-color: var(--color-text);
 
 	mask: no-repeat center / cover;
-	mask-image: url(../gfx/plus.svg);
+	mask-image: url(../gfx/add.svg);
 }
 
 .small .tab .favicon[src] + .thumbnail, .tiny .tab .favicon[src] + .thumbnail {
@@ -188,18 +193,31 @@
 }
 
 .small .tab .favicon, .tiny .tab .favicon {
-	width: calc(100% - 4px);
-	height: calc(100% - 4px);
+	width: 100%;
+	height: 100%;
 
 	margin: 0;
 	padding: 2px;
+	box-sizing: border-box;
+
+	border-radius: 5px;
 
 	background-color: transparent;
 	box-shadow: none;
+
+	backdrop-filter: none;
+}
+
+.small .tab .title {
+	margin: 0;
 }
 
 .small .tab .title span {
-	padding: 0 5px;
+	padding: 1px 5px 2px 5px;
+
+	border-radius: 0;
+
+	outline: none;
 
 	font-size: 10px;
 	text-overflow: "";
@@ -216,22 +234,23 @@
 
 .list .tab, .list .newtab {
 	width: calc(100% - 8px) !important;
-	height: 24px !important;
+	height: 20px !important;
 
 	position: relative;
 	top: 0px !important;
 	left: 0px !important;
+
+	outline: none;
+
+	background-color: transparent;
 }
 
 .list .tab .favicon {
 	margin: 2px;
 	padding: 0;
 
-	border-radius: 0px;
-	
 	background-color: transparent;
-
-	box-shadow: none;
+	backdrop-filter: none;
 }
 
 .list .tab .close {
@@ -243,22 +262,20 @@
 }
 
 .list .tab .title {
-	top: 2px;
-	bottom: 2px;
-	left: 24px;
-	right: 24px;
-
-	text-align: left;
+	left: 20px;
+	right: 20px;
 }
 
 .list .tab .title span {
+	margin: 0;
 	padding: 0;
 
 	border-radius: 0;
 
 	background-color: transparent;
+	backdrop-filter: none;
 
-	box-shadow: none;
+	outline: none;
 }
 
 .list .newtab .border::after {

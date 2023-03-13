@@ -1,9 +1,11 @@
 
 'use strict';
 
-import * as html   from '../common/html.js';
-import * as theme  from './theme.js';
-import * as backup from './backup.js';
+import * as html    from '/common/html.js'
+import * as plurals from '/common/plurals.js'
+import * as theme   from '/common/theme.js'
+
+import * as backup  from './options.backup.js'
 
 
 // commands
@@ -13,7 +15,7 @@ async function getCommands() {
 	let fragment = document.createDocumentFragment();
 
 	for (let command of commands) {
-	
+
 		let platformInfo = await browser.runtime.getPlatformInfo();
 		let shortcut = command.shortcut || 'Not set';
 
@@ -22,9 +24,9 @@ async function getCommands() {
 			shortcut = shortcut.replace('MacCtrl', 'Ctrl');
 			shortcut = shortcut.replace('Alt', 'Option');
 		}
-		
+
 		shortcut = shortcut.replaceAll('+', ' + ');
-		
+
 		let span  = html.newElement('span', {content: shortcut});
 		let label = html.newElement('label', {content: command.description});
 
@@ -59,18 +61,16 @@ async function getStatistics() {
 		if (!tab.discarded) numActiveTabs++;
 	}
 
+	document.getElementById('numberOfTabs').textContent = plurals.parse(browser.i18n.getMessage('optionNumberOfTabsValue', [tabs.length, numActiveTabs]));
 	document.getElementById('thumbnailCacheSize').textContent = formatByteSize(totalSize);
-	document.getElementById('numberOfTabs').textContent = `${tabs.length} (${numActiveTabs} active)`;
 }
 // ----
 
 
 document.addEventListener('DOMContentLoaded', async() => {
 
-	theme.set();
-	
-	browser.theme.onUpdated.addListener(({newTheme, windowId}) => {
-		theme.set(newTheme);
+	document.querySelectorAll("[data-i18n-message-name]").forEach(element => {
+		element.textContent = browser.i18n.getMessage(element.dataset.i18nMessageName);
 	});
 
 	getCommands();
@@ -85,19 +85,25 @@ document.addEventListener('DOMContentLoaded', async() => {
 		themeSelect.value = storage.themeOverride;
 	}
 
+	theme.set(storage.themeOverride);
+
+	browser.theme.onUpdated.addListener(({newTheme, windowId}) => {
+		theme.set(storage.themeOverride, newTheme);
+	});
+
 	themeSelect.addEventListener('input', async(e) => {
 
-		let themeOverride = false;
+		storage.themeOverride = false;
 
 		switch(e.target.value) {
 			case 'light': {
-				themeOverride = 'light';
-				await browser.storage.local.set({themeOverride: themeOverride});
+				storage.themeOverride = 'light';
+				await browser.storage.local.set({themeOverride: storage.themeOverride});
 				break;
 			}
 			case 'dark': {
-				themeOverride = 'dark';
-				await browser.storage.local.set({themeOverride: themeOverride});
+				storage.themeOverride = 'dark';
+				await browser.storage.local.set({themeOverride: storage.themeOverride});
 				break;
 			}
 			default: {
@@ -105,11 +111,11 @@ document.addEventListener('DOMContentLoaded', async() => {
 				break;
 			}
 		}
-		browser.runtime.sendMessage({event: 'addon.options.onUpdated', data: {themeOverride: themeOverride}});
-		theme.set();
+		browser.runtime.sendMessage({event: 'addon.options.onUpdated', data: {themeOverride: storage.themeOverride}});
+		theme.set(storage.themeOverride);
 	});
 	// ----
-	
+
 	// list view
 	const listView = document.getElementById('listView');
 

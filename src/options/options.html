@@ -8,62 +8,62 @@
 
 		<script type="module" src="./options.js"></script>
 	</head>
-	<body>
+	<body class="light">
 		<section>
-			<h3>Keyboard Shortcuts</h3>
+			<h3 data-i18n-message-name="optionKeyboardShortcuts"></h3>
 			<div id="keyboardShortcuts"></div>
-			<p>To change shortcuts please go to the Gear Icon in the top right and choose "Manage Extension Shortcuts"</p>
+			<p data-i18n-message-name="optionKeyboardShortcutsDirections"></p>
 		</section>
 		<section>
-			<h3>General</h3>
+			<h3 data-i18n-message-name="optionGeneral"></h3>
 			<div>
 				<div>
-					<label>Theme Override</label>
+					<label data-i18n-message-name="optionTheme"></label>
 					<select id="themeSelect">
-						<option value="false">None</option>
-						<option value="light">Light</option>
-						<option value="dark">Dark</option>
+						<option value="false" data-i18n-message-name="optionThemeAuto"></option>
+						<option value="light" data-i18n-message-name="optionThemeLight"></option>
+						<option value="dark" data-i18n-message-name="optionThemeDark"></option>
 					</select>
 				</div>
 				<div>
-					<label for="listView">List view for tiny tabs</label>
+					<label for="listView" data-i18n-message-name="optionListView"></label>
 					<input type="checkbox" id="listView">
 				</div>
 			</div>
 		</section>
 		<section>
-			<h3>Backup</h3>
+			<h3 data-i18n-message-name="optionBackup"></h3>
 			<div>
 				<div>
-					<label>Save new Backup to file</label>
-					<button id="saveBackup">Save As...</button>
+					<label data-i18n-message-name="optionSaveBackup"></label>
+					<button id="saveBackup" data-i18n-message-name="optionSaveBackupButton"></button>
 				</div>
 				<div>
-					<label>Load a Backup</label>
-					<input id="backupFileInput" name="backupFile" type="file" accept=".json" title="Imported backups will open in new windows and not overwrite anything" hidden>
+					<label data-i18n-message-name="optionLoadBackup"></label>
+					<input id="backupFileInput" name="backupFile" type="file" accept=".json" hidden>
 					<select id="selectBackup" style="min-width: 40%; max-width: 50%;">
-						<option value="false">Select Backup</option>
-						<option value="browse">Browse...</option>
+						<option value="false" data-i18n-message-name="optionLoadBackupSelect"></option>
+						<option value="browse" data-i18n-message-name="optionLoadBackupBrowse"></option>
 					</select>
-					<button id="loadBackup">Load</button>
+					<button id="loadBackup" data-i18n-message-name="optionLoadBackupButton"></button>
 				</div>
 				<div>
-					<label>Automatic Backup interval</label>
-					<input type="range" id="autoBackup" min="0" max="360" step="15" value="60">
+					<label data-i18n-message-name="optionAutomaticBackupInterval"></label>
+					<input type="range" id="autoBackup" min="0" max="360" step="15" value="0">
 					<output for="autoBackup" id="autoBackupInterval"></output>
 				</div>
 			</div>
 		</section>
 		<section>
-			<h3>Statistics</h3>
+			<h3 data-i18n-message-name="optionStatistics"></h3>
 			<div>
 				<div>
-					<label>Number of Tabs</label>
-					<span id="numberOfTabs">Calculating..</span>
+					<label data-i18n-message-name="optionNumberOfTabs"></label>
+					<span id="numberOfTabs"></span>
 				</div>
 				<div>
-					<label>Thumbnail Cache</label>
-					<span id="thumbnailCacheSize">Calculating..</span>
+					<label data-i18n-message-name="optionThumbnailCache"></label>
+					<span id="thumbnailCacheSize"></span>
 				</div>
 			</div>
 		</section>

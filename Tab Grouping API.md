@@ -8,12 +8,24 @@
   - color `color`
   - cookieStoreId `string` 
   - id `integer`
-  - lastAccessed `unix time (milliseconds)`
   - title `string`
   - windowId `integer`
 
 
 ### Methods
++ **create**  
+```javascript
+var creating = browser.tabGroups.create(
+	{
+		collapsed,
+		color,
+		cookieStoreId,
+		populate,      // boolean, whether to add a new tab to the newly created group
+		title,
+		windowId
+	}
+)
+```
 + **get**  
   Retrieves details about the specified group.
 ```javascript
@@ -26,6 +38,7 @@ var getting = browser.tabGroups.get(
   - query for tabs with groupId
   - move them to some index and window
   - update group's windowId
+  - issue tabGroups.onMoved event
 
 + **query**
 ```javascript
@@ -33,11 +46,18 @@ var querying = browser.tabGroups.query(
 	{
 		collapsed,
 		color,
-		containerId,
-		lastAccessed,
+		cookieStoreId,
+		groupId,
 		title,
 		windowId
 	}
+)
+```
++ **remove**  
+  Remove the specified group.
+```javascript
+var removing = browser.tabGroups.remove(
+	groupId,  // integer
 )
 ```
 + **update**
@@ -62,7 +82,9 @@ browser.tabGroups.onCreated.hasListener(listener)
 ```
 
 + **onMoved**  
-  Fired when a group is moved within a window. Move events are still fired for the individual tabs within the group, as well as for the group itself. This event is not fired when a group is moved between windows; instead, it will be removed from one window and created in another.
+  Fired when a group is moved within a window.  
+  Move events are still fired for the individual tabs within the group, as well as for the group itself.  
+  This event is not fired when a group is moved between windows; instead, it will be removed from one window and created in another.
 ```javascript
 browser.tabGroups.onMoved.addListener(listener)
 browser.tabGroups.onMoved.removeListener(listener)
@@ -98,25 +120,12 @@ browser.tabGroups.onUpdated.hasListener(listener)
 - **getCurrent**  
   insert groupId
 
-+ **group**  
-  Adds one or more tabs to a specified group, or if no group is specified, adds the given tabs to a newly created group.
-```javascript
-var grouping = browser.tabs.group(
-	tabIds,  // integer or integer array
-	groupId  // integer
-)
-```
+- **move**  
+  add groupId option
+
 - **query**  
   add option for groupId  
   insert groupId
-
-+ **ungroup**  
-  Removes one or more tabs from their respective groups. If any groups become empty, they are deleted.
-```javascript
-var ungrouping = browser.tabs.ungroup(
-	tabIds  // integer or integer array
-)
-```
 
 ### Events
 - **onCreated**  

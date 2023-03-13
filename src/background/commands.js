@@ -10,8 +10,9 @@ export async function handleCommands(command) {
 			core.toggleView();
 			break;
 		}
+
 		case 'new_tab_group': {
-			addon.tabGroups.create();
+			const group = await addon.tabGroups.create({populate: true}, (await browser.windows.getCurrent()).id);
 			break;
 		}
 		case 'next_group': {

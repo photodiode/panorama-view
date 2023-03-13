@@ -1,7 +1,7 @@
 
-:root {
+body.light {
 	--color-background: #ffffff;
-	--color-text: #0c0c0d;
+	--color-text: #111111;
 }
 
 body {
@@ -10,7 +10,7 @@ body {
 }
 
 label {
-	width: 40%;
+	width: 35%;
 	height: 2em;
 	
 	margin: 0.25em 0;

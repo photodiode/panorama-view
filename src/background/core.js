@@ -60,7 +60,7 @@ export async function toggleVisibleTabs(windowId, activeGroupId, noTabSelected) 
 
 
 export async function toggleView() {
-	
+
 	const panoramaViewTab = await getPanoramaViewTab();
 
 	if (panoramaViewTab) {
@@ -85,6 +85,6 @@ export async function toggleView() {
 	// if there is no Panorama View tab, make one
 	} else {
 		openingPanoramaView = true;
-		browser.tabs.create({url: '/panorama/view.html', active: true});
+		addon.tabs.create({url: '/panorama/view.html', active: true, groupId: -1});
 	}
 }
