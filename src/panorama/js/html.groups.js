@@ -46,14 +46,21 @@ export function create(group) {
 		var childNodes = tabs.childNodes;
 		var tabCount = childNodes.length-1;
 
+		let closing = false;
+
 		if (tabCount > 0) {
 			if (window.confirm(plurals.parse(browser.i18n.getMessage('pvCloseGroupConfirmation', tabCount)))) {
-				browser.tabGroups.remove(group.id);
-				node.remove();
+				closing = true;
 			}
 		} else {
-			browser.tabGroups.remove(group.id);
-			node.remove();
+			closing = true;
+		}
+
+		if (closing) {
+			browser.tabGroups.remove(group.id).then((removedId) => {
+				console.log(removedId);
+				if (removedId != undefined) node.remove();
+			});
 		}
 	}, false);
 

@@ -151,10 +151,17 @@ export async function remove(groupId) {
 			tabsToRemove.push(tab.id);
 		}
 	}
-	const removing = browser.tabs.remove(tabsToRemove); //!\ check for error and don't remove group if all tabs are not closed
-	// I might not be able to check if the tabs ACTUALLY got removed..
-	// beforeunload and such
-	// removing.then(() => { console.log('removed'); }, (error) => { console.log(error);});
+	await browser.tabs.remove(tabsToRemove);
+
+	// check if tabs were removed and abort if not (beforeunload was called or something)
+	for (const tabId of tabsToRemove) {
+		try {
+			let tab = await browser.tabs.get(tabId);
+			return undefined;
+		} catch (error) {
+			// all good, tab got removed
+		}
+	}
 	// ----
 
 	groups = groups.filter(_group => _group.id != group.id);

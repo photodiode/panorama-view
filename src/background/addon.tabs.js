@@ -98,8 +98,6 @@ export async function move(tabIds, info) {
 		}));
 	}
 
-	console.log(structuredClone(tabs[0]).groupId);
-
 	return tabs;
 }
 
