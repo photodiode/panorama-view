@@ -15,7 +15,7 @@
 	right: 4px;
 	bottom: 4px;
 
-	border-radius: 7px;
+	border-radius: 8px;
 
 	background-color: var(--color-group-background);
 
@@ -25,7 +25,7 @@
 .group .header {
 	height: 18px;
 
-	margin: 10px 10px 10px 8px;
+	margin: 10px 10px 10px 7px;
 
 	position: relative;
 
@@ -108,9 +108,9 @@
 .group .tabs {
 	position: absolute;
 	top: 32px;
-	right: 8px;
-	left: 8px;
-	bottom: 8px;
+	right: 9px;
+	left: 9px;
+	bottom: 9px;
 
 	overflow-y: auto;
 	scrollbar-width: thin;

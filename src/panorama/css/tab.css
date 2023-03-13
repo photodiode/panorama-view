@@ -1,6 +1,6 @@
 
 .tab, .newtab {
-	margin: 2px;
+	margin: 3px;
 
 	box-sizing: border-box;
 
@@ -10,7 +10,6 @@
 .tab {
 	background-color: var(--color-tab);
 
-	/*border: 2px solid var(--color-tab);*/
 	border-radius: 5px;
 
 	outline: 1px solid var(--color-shadow);
@@ -42,8 +41,8 @@
 }
 
 .tab.inactive {
-	opacity: 0.65;
-	filter: saturate(0.8);
+	opacity: 0.7;
+	filter: saturate(0.6);
 }
 
 .tab.selected {
@@ -79,9 +78,7 @@
 	border-radius: 3px;
 
 	background-color: var(--color-tab-overlay);
-	backdrop-filter: blur(3px) saturate(2);
-
-	outline: 1px solid var(--color-shadow);
+	backdrop-filter: blur(2px) saturate(2);
 
 	z-index: 1;
 }
@@ -102,7 +99,7 @@
 	top: 0;
 
 	mask: url(../gfx/close.svg) no-repeat center / 10px;
-	backdrop-filter: blur(1px) invert(1) grayscale(1);
+	backdrop-filter: blur(2px) invert(1) grayscale(1);
 	_backdrop-filter: invert(1);
 
 	border-radius: 4px;
@@ -135,7 +132,7 @@
 	width: fit-content;
 
 	margin: 0 auto;
-	padding: 2px 6px;
+	padding: 1px 6px;
 
 	display: block;
 	box-sizing: border-box;
@@ -145,7 +142,7 @@
 	background-color: var(--color-tab-overlay);
 
 	outline: 1px solid var(--color-shadow);
-	backdrop-filter: blur(3px) saturate(2);
+	backdrop-filter: blur(2px) saturate(2);
 
 	color: var(--color-text);
 	text-overflow: "..";
@@ -196,20 +193,31 @@
 }
 
 .small .tab .favicon, .tiny .tab .favicon {
-	width: calc(100% - 4px);
-	height: calc(100% - 4px);
+	width: 100%;
+	height: 100%;
 
 	margin: 0;
 	padding: 2px;
+	box-sizing: border-box;
 
 	border-radius: 5px;
 
 	background-color: transparent;
 	box-shadow: none;
+
+	backdrop-filter: none;
+}
+
+.small .tab .title {
+	margin: 0;
 }
 
 .small .tab .title span {
-	padding: 0 5px;
+	padding: 1px 5px 2px 5px;
+
+	border-radius: 0;
+
+	outline: none;
 
 	font-size: 10px;
 	text-overflow: "";

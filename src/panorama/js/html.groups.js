@@ -275,8 +275,8 @@ export function fitTabsInGroup(tabGroupNode) {
 		width: rect.width,
 		height: rect.height,
 
-		marginX: 3,
-		marginY: 3,
+		marginX: 4,
+		marginY: 4,
 
 		min: 80,
 		max: 375,
@@ -292,8 +292,8 @@ export function fitTabsInGroup(tabGroupNode) {
 			width: rect.width,
 			height: rect.height,
 
-			marginX: 3,
-			marginY: 3,
+			marginX: 4,
+			marginY: 4,
 
 			min: 60,
 			max: 160,
@@ -310,8 +310,8 @@ export function fitTabsInGroup(tabGroupNode) {
 			width: rect.width,
 			height: rect.height,
 
-			marginX: 3,
-			marginY: 3,
+			marginX: 4,
+			marginY: 4,
 
 			min: 20,
 			max: 100,
@@ -358,8 +358,8 @@ export function fitTabsInGroup(tabGroupNode) {
 		childNodes[i].style.height = h + 'px';
 
 		// only needed if the tabs use absolute positioning
-		childNodes[i].style.left = ((w+6) * (index % Math.floor(fit.pitch))) + 'px';
-		childNodes[i].style.top  = ((h+6) * Math.floor(index / Math.floor(fit.pitch))) + 'px';
+		childNodes[i].style.left = ((w+8) * (index % Math.floor(fit.pitch))) + 'px';
+		childNodes[i].style.top  = ((h+8) * Math.floor(index / Math.floor(fit.pitch))) + 'px';
 
 		childNodes[i].style.zIndex = index;
 
