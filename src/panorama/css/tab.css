@@ -41,8 +41,7 @@
 }
 
 .tab.inactive {
-	opacity: 0.7;
-	filter: saturate(0.6);
+	opacity: 0.6;
 }
 
 .tab.selected {
@@ -78,7 +77,7 @@
 	border-radius: 3px;
 
 	background-color: var(--color-tab-overlay);
-	backdrop-filter: blur(2px) saturate(2);
+	/* backdrop-filter: blur(2px) saturate(2); */
 
 	z-index: 1;
 }
@@ -99,8 +98,8 @@
 	top: 0;
 
 	mask: url(../gfx/close.svg) no-repeat center / 10px;
-	backdrop-filter: blur(2px) invert(1) grayscale(1);
-	_backdrop-filter: invert(1);
+	/* backdrop-filter: blur(2px) invert(1) grayscale(1); */
+	backdrop-filter: invert(1);
 
 	border-radius: 4px;
 
@@ -142,7 +141,7 @@
 	background-color: var(--color-tab-overlay);
 
 	outline: 1px solid var(--color-shadow);
-	backdrop-filter: blur(2px) saturate(2);
+	/* backdrop-filter: blur(2px) saturate(2); */
 
 	color: var(--color-text);
 	text-overflow: "..";
@@ -234,7 +233,7 @@
 
 .list .tab, .list .newtab {
 	width: calc(100% - 8px) !important;
-	height: 20px !important;
+	height: 22px !important;
 
 	position: relative;
 	top: 0px !important;
@@ -242,11 +241,11 @@
 
 	outline: none;
 
-	background-color: transparent;
+	_background-color: transparent;
 }
 
 .list .tab .favicon {
-	margin: 2px;
+	margin: 3px;
 	padding: 0;
 
 	background-color: transparent;
@@ -254,7 +253,7 @@
 }
 
 .list .tab .close {
-	margin: 2px;
+	margin: 3px;
 }
 
 .list .tab .thumbnail {
@@ -262,6 +261,7 @@
 }
 
 .list .tab .title {
+	margin: 4px;
 	left: 20px;
 	right: 20px;
 }
