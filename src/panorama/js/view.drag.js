@@ -39,7 +39,7 @@ export async function viewDrop(e) {
 	const tabGroup = await browser.tabGroups.create({windowId: currentWindowId});
 
 	// move the tab node
-	let groupNode = html.groups.get(tabGroup.id);
+	const groupNode = html.groups.get(tabGroup.id);
 
 	const tabIds = getTabIds(e);
 
@@ -50,7 +50,7 @@ export async function viewDrop(e) {
 		}
 	}
 
-	for (let tabGroupNode of document.getElementById('groups').childNodes) {
+	for (const tabGroupNode of document.getElementById('groups').childNodes) {
 		html.groups.fitTabs(tabGroupNode);
 	}
 	// ----
@@ -87,7 +87,7 @@ export async function groupDrop(e) {
 		}
 	}
 
-	for (let tabGroupNode of document.getElementById('groups').childNodes) {
+	for (const tabGroupNode of document.getElementById('groups').childNodes) {
 		html.groups.fitTabs(tabGroupNode);
 	}
 	// ----
@@ -117,7 +117,7 @@ export function selectTab(tabId) {
 	}
 
 	// sort by index
-	let tabNodes = document.querySelectorAll('.tab');
+	const tabNodes = document.querySelectorAll('.tab');
 	let tabIds = [];
 
 	for (const node of tabNodes) {
@@ -228,7 +228,7 @@ export async function tabDrop(e) {
 		}
 	}
 
-	for (let tabGroupNode of document.getElementById('groups').childNodes) {
+	for (const tabGroupNode of document.getElementById('groups').childNodes) {
 		html.groups.fitTabs(tabGroupNode);
 	}
 	// ----
@@ -243,7 +243,7 @@ export async function tabDrop(e) {
 	let toIndex = Number(tab.index);
 
 	const fromTabId = tabIds[0];
-	let fromIndex = (await browser.tabs.get(fromTabId)).index;
+	const fromIndex = (await browser.tabs.get(fromTabId)).index;
 
 	if (fromIndex < toIndex) {
 		if (dropBefore) {

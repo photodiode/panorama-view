@@ -13,6 +13,8 @@ import * as drag   from './view.drag.js'
 export let viewWindowId = undefined;
 export let viewTabId    = undefined;
 
+let viewLastAccessed = 0;
+
 export let options = {
 	themeOverride: false,
 	listView:      false
@@ -119,10 +121,10 @@ document.addEventListener('DOMContentLoaded', async() => {
 
 async function initializeTabGroupNodes() {
 
-	let groups = await browser.tabGroups.query({windowId: viewWindowId});
+	const groups = await browser.tabGroups.query({windowId: viewWindowId});
 
 	await Promise.all(groups.map(async(group) => {
-		let tabGroupNode = html.groups.create(group);
+		const tabGroupNode = html.groups.create(group);
 
 		let rect = await browser.sessions.getGroupValue(group.id, 'rect');
 
@@ -143,11 +145,11 @@ async function initializeTabGroupNodes() {
 
 async function initializeTabNodes() {
 
-	let tabs = await browser.tabs.query({currentWindow: true});
+	const tabs = await browser.tabs.query({currentWindow: true});
 
-	var fragments = {};
+	let fragments = {};
 
-	for (let tab of tabs) {
+	for (const tab of tabs) {
 
 		let tabNode = html.tabs.create(tab);
 		html.tabs.update(tabNode, tab);
@@ -163,7 +165,7 @@ async function initializeTabNodes() {
 	}
 
 	for (const tabGroupId in fragments) {
-		let tabGroupNode = html.groups.get(tabGroupId);
+		const tabGroupNode = html.groups.get(tabGroupId);
 		if (tabGroupNode) {
 			tabGroupNode.querySelector('.tabs').prepend(fragments[tabGroupId]);
 		}
@@ -181,10 +183,8 @@ export async function captureThumbnail(tabId, changeInfo, tab) {
 	browser.sessions.setTabValue(tabId, 'thumbnail', thumbnail);
 }
 
-let viewLastAccessed = 0;
-
 async function captureThumbnails() {
-	let tabs = browser.tabs.query({currentWindow: true, discarded: false, pinned: false, highlighted: false});
+	const tabs = browser.tabs.query({currentWindow: true, discarded: false, pinned: false, highlighted: false});
 
 	for(const tab of await tabs) {
 		if (tab.lastAccessed > viewLastAccessed) {

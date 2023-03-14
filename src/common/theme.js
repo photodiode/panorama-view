@@ -72,7 +72,7 @@ async function setAll(theme) {
 			`--color-tab-active: ${(theme.colors.appmenu_info_icon_color) ? theme.colors.appmenu_info_icon_color : theme.colors.tab_line}` //appmenu_info_icon_color
 		];
 
-		var stylesheet = new CSSStyleSheet();
+		let stylesheet = new CSSStyleSheet();
 		stylesheet.insertRule(`.custom { ${style.join(';')} }`);
 		document.adoptedStyleSheets = [stylesheet];
 	}

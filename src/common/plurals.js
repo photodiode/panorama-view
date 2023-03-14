@@ -8,7 +8,7 @@ export function parse(message) {
 
 	const plurals = message.matchAll(/[0-9]+\{[^\}]*\}/g);
 
-	for (let match of plurals) {
+	for (const match of plurals) {
 		// parse
 		const plural = match[0].replaceAll(/\s*,\s*/g, ','); // clean up whitespace around commas
 

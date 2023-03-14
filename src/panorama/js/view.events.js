@@ -8,7 +8,7 @@ import * as core from './view.js'
 export async function groupCreated(group) {
 	if (core.viewWindowId == group.windowId){
 
-		let tabGroupNode = html.groups.create(group);
+		const tabGroupNode = html.groups.create(group);
 
 		const rect = {x: 0.3, y: 0.3, w: 0.4, h: 0.4};
 		browser.sessions.setGroupValue(group.id, 'rect', rect);
@@ -26,7 +26,7 @@ export async function groupCreated(group) {
 
 export async function groupRemoved(tabGroupId, removeInfo) {
 	if (core.viewWindowId == removeInfo.windowId) {
-		let groupNode = await html.groups.get(tabGroupId);
+		const groupNode = await html.groups.get(tabGroupId);
 		if (groupNode) {
 			groupNode.remove();
 		}
@@ -34,13 +34,10 @@ export async function groupRemoved(tabGroupId, removeInfo) {
 }
 
 
-
-
-
 export async function tabCreated(tab) {
 	if (core.viewWindowId == tab.windowId) {
 
-		let tabGroupNode = html.groups.get(tab.groupId);
+		const tabGroupNode = html.groups.get(tab.groupId);
 
 		const tabNode = html.tabs.create(tab);
 		html.tabs.update(tabNode, tab);
@@ -90,9 +87,9 @@ export async function tabActivated(activeInfo) {
 export async function tabMoved(tabId, moveInfo) {
 	if (core.viewWindowId == moveInfo.windowId) {
 
-		let tab = await browser.tabs.get(tabId);
+		const tab = await browser.tabs.get(tabId);
 
-		let tabNode = html.tabs.get(tabId);
+		const tabNode = html.tabs.get(tabId);
 
 		await html.tabs.insert(tabNode, tab);
 
@@ -102,7 +99,7 @@ export async function tabMoved(tabId, moveInfo) {
 
 export async function tabAttached(tabId, attachInfo) {
 	if (core.viewWindowId == attachInfo.newWindowId) {
-		var tab = await browser.tabs.get(tabId);
+		const tab = await browser.tabs.get(tabId);
 		await tabCreated(tab);
 		core.captureThumbnail(tab.id);
 	}

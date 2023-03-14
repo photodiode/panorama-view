@@ -12,7 +12,7 @@ import {migrate} from './migrate.js'
 
 
 
-/** Make sure each window has a group */
+// make sure each window has a group
 async function setupWindows() {
 
 	const windows = browser.windows.getAll({});
@@ -25,7 +25,7 @@ async function setupWindows() {
 	}
 }
 
-/** Put any tabs that do not have a group into the active group */
+// put any tabs that do not have a group into the active group
 async function salvageGrouplessTabs() {
 
 	const windows = await browser.windows.getAll({populate: true});
@@ -55,7 +55,7 @@ async function salvageGrouplessTabs() {
 
 async function init() {
 
-	// tab groups ----
+	// tab groups
 	await migrate(); // keep until everyone's on 0.9.4
 
 	await addon.initialize();
@@ -72,7 +72,7 @@ async function init() {
 	// ----
 
 
-	// panorama view ----
+	// panorama view
 
 	// meny entries
 	browser.menus.create({
@@ -89,7 +89,7 @@ async function init() {
 	// ----
 
 	// remove any panorama views there might be, we need a fresh connection to handle messages
-	let extensionTabs = await browser.tabs.query({url: browser.runtime.getURL('panorama/view.html')});
+	const extensionTabs = await browser.tabs.query({url: browser.runtime.getURL('panorama/view.html')});
 	if (extensionTabs) {
 		for (let tab of extensionTabs) {
 			browser.tabs.remove(tab.id);

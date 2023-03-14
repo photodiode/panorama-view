@@ -8,13 +8,13 @@ import * as core from './view.js'
 
 export function create(tab) {
 
-	let thumbnail     = newElement('img', {class: 'thumbnail'});
-	let favicon       = newElement('img', {class: 'favicon'});
-	let close         = newElement('div', {class: 'close'});
-	let title         = newElement('span');
-	let nameContainer = newElement('div', {class: 'title'}, [title]);
+	const thumbnail     = newElement('img', {class: 'thumbnail'});
+	const favicon       = newElement('img', {class: 'favicon'});
+	const close         = newElement('div', {class: 'close'});
+	const title         = newElement('span');
+	const nameContainer = newElement('div', {class: 'title'}, [title]);
 
-	let node = newElement('div', {class: 'tab', draggable: 'true', id: 'tab'+tab.id, title: ''}, [favicon, thumbnail, close, nameContainer]);
+	const node = newElement('div', {class: 'tab', draggable: 'true', id: 'tab'+tab.id, title: ''}, [favicon, thumbnail, close, nameContainer]);
 
 	node.addEventListener('click', function(event) {
 		event.preventDefault();
@@ -86,7 +86,12 @@ export async function updateThumbnail(tabNode, tabId, thumbnail) {
 
 export async function setActive() {
 
-	let tabs = await browser.tabs.query({currentWindow: true});
+	let tabs;
+	try {
+		tabs = await browser.tabs.query({currentWindow: true});
+	} catch (error) {
+		return;
+	}
 
 	tabs.sort((tabA, tabB) => {
 		return tabB.lastAccessed - tabA.lastAccessed;
@@ -103,12 +108,12 @@ export async function setActive() {
 
 export async function insert(tabNode, tab) {
 
-	let tabGroupNode = document.getElementById('tabGroup'+tab.groupId);
+	const tabGroupNode = document.getElementById('tabGroup'+tab.groupId);
 
-	let tabs = await browser.tabs.query({windowId: core.viewWindowId});
+	const tabs = await browser.tabs.query({windowId: core.viewWindowId});
 
 	let lastTab = undefined;
-	for (let _tab of tabs) {
+	for (const _tab of tabs) {
 
 		if (_tab.groupId != tab.groupId) continue;
 

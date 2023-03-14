@@ -7,7 +7,7 @@ import * as tabEvents from './addon.tabs.events.js'
 
 import * as backup from './backup.js'
 
-export let addon = {
+export const addon = {
 	tabGroups: tabGroups,
 	tabs:      tabs,
 
@@ -26,6 +26,7 @@ function handleActions(message, sender, sendResponse) {
 	let response;
 
 	switch (message.action) {
+		// browser.tabGroups
 		case 'browser.tabGroups.create': {
 			response = addon.tabGroups.create(message.info, sender.tab.windowId);
 			break;
@@ -67,7 +68,9 @@ function handleActions(message, sender, sendResponse) {
 			response = addon.tabs.query(message.info);
 			break;
 		}
+		// ----
 
+		// browser.sessions
 		case 'browser.sessions.setGroupValue': {
 			response = addon.tabGroups.setGroupValue(message.groupId, message.key, message.value, sender.id);
 			break;
@@ -80,7 +83,9 @@ function handleActions(message, sender, sendResponse) {
 			response = addon.tabGroups.removeGroupValue(message.groupId, message.key, sender.id);
 			break;
 		}
+		// ----
 
+		// backup actions
 		case 'addon.backup.create': {
 			response = backup.create(sender.id);
 			break;
@@ -101,6 +106,7 @@ function handleActions(message, sender, sendResponse) {
 			response = backup.getBackups();
 			break;
 		}
+		// ----
 
 		default:
 			console.log(`Unknown action (${message.action})`);

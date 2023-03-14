@@ -11,40 +11,40 @@ import {options} from './view.js'
 export function create(group) {
 
 	// edges
-	var top    = newElement('div', {class: 'top'});
-	var right  = newElement('div', {class: 'right'});
-	var bottom = newElement('div', {class: 'bottom'});
-	var left   = newElement('div', {class: 'left'});
+	const top    = newElement('div', {class: 'top'});
+	const right  = newElement('div', {class: 'right'});
+	const bottom = newElement('div', {class: 'bottom'});
+	const left   = newElement('div', {class: 'left'});
 
 	// corners
-	var top_right    = newElement('div', {class: 'top_right'});
-	var bottom_right = newElement('div', {class: 'bottom_right'});
-	var bottom_left  = newElement('div', {class: 'bottom_left'});
-	var top_left     = newElement('div', {class: 'top_left'});
+	const top_right    = newElement('div', {class: 'top_right'});
+	const bottom_right = newElement('div', {class: 'bottom_right'});
+	const bottom_left  = newElement('div', {class: 'bottom_left'});
+	const top_left     = newElement('div', {class: 'top_left'});
 
 	// header
-	var name     = newElement('span', {class: 'name', content: group.title});
-	var input    = newElement('input', {type: 'text', value: group.title});
-	var tabCount = newElement('span', {class: 'tab_count'});
-	var close    = newElement('div', {class: 'close'});
+	const name     = newElement('span', {class: 'name', content: group.title});
+	const input    = newElement('input', {type: 'text', value: group.title});
+	const tabCount = newElement('span', {class: 'tab_count'});
+	const close    = newElement('div', {class: 'close'});
 
-	var header = newElement('div', {class: 'header'}, [name, input, tabCount, close]);
+	const header = newElement('div', {class: 'header'}, [name, input, tabCount, close]);
 	// ----
 
 	// newtab
-	var newtab = newElement('div', {class: 'newtab'}, [newElement('div', {class: 'border'})]);
+	const newtab = newElement('div', {class: 'newtab'}, [newElement('div', {class: 'border'})]);
 
 	// group
-	var tabs   = newElement('div', {class: 'tabs transition'}, [newtab]);
-	var resize = newElement('div', {class: 'resize'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left]);
-	var node   = newElement('div', {class: 'group', id: 'tabGroup'+group.id}, [resize, header, tabs]);
+	const tabs   = newElement('div', {class: 'tabs transition'}, [newtab]);
+	const resize = newElement('div', {class: 'resize'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left]);
+	const node   = newElement('div', {class: 'group', id: 'tabGroup'+group.id}, [resize, header, tabs]);
 	// ----
 
 	close.addEventListener('click', function(event) {
 		event.stopPropagation();
 
-		var childNodes = tabs.childNodes;
-		var tabCount = childNodes.length-1;
+		const childNodes = tabs.childNodes;
+		const tabCount = childNodes.length-1;
 
 		let closing = false;
 
@@ -58,7 +58,6 @@ export function create(group) {
 
 		if (closing) {
 			browser.tabGroups.remove(group.id).then((removedId) => {
-				console.log(removedId);
 				if (removedId != undefined) node.remove();
 			});
 		}
@@ -211,8 +210,8 @@ export async function stack(node, tabGroup) {
 }
 
 export function resizeTitle(node) {
-	let input = node.querySelector('input');
-	let name  = node.querySelector('.name');
+	let   input = node.querySelector('input');
+	const name  = node.querySelector('.name');
 	input.style.width = name.getBoundingClientRect().width + 'px';
 }
 
@@ -226,7 +225,7 @@ function getFit(param) {
 	param.width  = param.width  + 1;
 	param.height = param.height + 1;
 
-	for(let x = param.amount; x >= 1; x--) {
+	for (let x = param.amount; x >= 1; x--) {
 
 		let y = Math.ceil(param.amount / x)
 
@@ -270,8 +269,8 @@ export function fitTabs(tabGroupNode) {
 
 export function fitTabsInGroup(tabGroupNode) {
 
-	let tabsNode   = tabGroupNode.querySelector('.tabs');
-	let childNodes = tabsNode.childNodes;
+	const tabsNode   = tabGroupNode.querySelector('.tabs');
+	const childNodes = tabsNode.childNodes;
 
 	tabGroupNode.querySelector('.tab_count').textContent = childNodes.length - 1;
 
@@ -377,7 +376,7 @@ export function fitTabsInGroup(tabGroupNode) {
 
 async function groupTransform(group, node, top, right, bottom, left, elem) {
 
-	let snapValue = function(a, b, dst) {
+	const snapValue = function(a, b, dst) {
 		if (a >= b - dst && a <= b + dst){
 			return b;
 		} else {
@@ -387,27 +386,26 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 
 	document.body.setAttribute('style', 'cursor: ' + window.getComputedStyle(elem).cursor);
 
-	var groupsRect = document.getElementById('groups').getBoundingClientRect();
-	var nodeRect = node.getBoundingClientRect();
+	const groupsRect = document.getElementById('groups').getBoundingClientRect();
 
 	group.rect = await browser.sessions.getGroupValue(group.id, 'rect');
 
-	var minw = 120 / groupsRect.width;
-	var minh = 120 / groupsRect.height;
+	const minw = 120 / groupsRect.width;
+	const minh = 120 / groupsRect.height;
 
-	var snap_dstx = 5 / groupsRect.width;
-	var snap_dsty = 5 / groupsRect.height;
+	const snap_dstx = 5 / groupsRect.width;
+	const snap_dsty = 5 / groupsRect.height;
 
-	var clamp = function(num, min, max) {
+	const clamp = function(num, min, max) {
 		return num <= min ? min : num >= max ? max : num;
 	};
 
-	var first = true;
-	var x, y, lx, ly;
+	let first = true;
+	let x, y, lx, ly;
 
-	var rect = {};
+	let rect = {};
 
-	var onmousemove = function(event) {
+	const onmousemove = function(event) {
 		event.preventDefault();
 		x = event.pageX / groupsRect.width;
 		y = event.pageY / groupsRect.height;
@@ -434,41 +432,41 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 		if (left)   { rect.x += (x - lx); }
 
 		// snap (seems a bit over complicated, but it works for now)
-		for (let tabGroupNode of document.getElementById('groups').childNodes) {
+		for (const tabGroupNode of document.getElementById('groups').childNodes) {
 
-			if(node != tabGroupNode) {
+			if (node != tabGroupNode) {
 
-				let _rect = {
+				const _rect = {
 					x: parseFloat(tabGroupNode.style.left)   / 100,
 					y: parseFloat(tabGroupNode.style.top)    / 100,
 					w: parseFloat(tabGroupNode.style.width)  / 100,
 					h: parseFloat(tabGroupNode.style.height) / 100
 				}
 
-				if(top && bottom) {
+				if (top && bottom) {
 					rect.y = snapValue(rect.y, _rect.y, snap_dsty);
 					rect.y = snapValue(rect.y, _rect.y + _rect.h, snap_dsty);
 
 					rect.y = snapValue(rect.y + rect.h, _rect.y, snap_dsty) - rect.h;
 					rect.y = snapValue(rect.y + rect.h, _rect.y + _rect.h, snap_dsty) - rect.h;
-				}else if(top) {
+				} else if (top) {
 					rect.y = snapValue(rect.y, _rect.y, snap_dsty);
 					rect.y = snapValue(rect.y, _rect.y + _rect.h, snap_dsty);
-				}else if(bottom) {
+				} else if (bottom) {
 					rect_j = snapValue(rect_j, _rect.y, snap_dsty);
 					rect_j = snapValue(rect_j, _rect.y + _rect.h, snap_dsty);
 				}
 
-				if(left && right) {
+				if (left && right) {
 					rect.x = snapValue(rect.x, _rect.x, snap_dstx);
 					rect.x = snapValue(rect.x, _rect.x + _rect.w, snap_dstx);
 
 					rect.x = snapValue(rect.x + rect.w, _rect.x, snap_dstx) - rect.w;
 					rect.x = snapValue(rect.x + rect.w, _rect.x + _rect.w, snap_dstx) - rect.w;
-				}else if(left) {
+				} else if (left) {
 					rect.x = snapValue(rect.x, _rect.x, snap_dstx);
 					rect.x = snapValue(rect.x, _rect.x + _rect.w, snap_dstx);
-				}else if(right) {
+				} else if (right) {
 					rect_i = snapValue(rect_i, _rect.x, snap_dstx);
 					rect_i = snapValue(rect_i, _rect.x + _rect.w, snap_dstx);
 				}
@@ -476,30 +474,30 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 		}
 		// ----
 
-		if(top && right && bottom && left) {
-			if(rect.x < 0) {
+		if (top && right && bottom && left) {
+			if (rect.x < 0) {
 				rect.x = 0;
 				rect_i = rect.x + rect.w;
 			}
-			if(rect_i > 1) {
+			if (rect_i > 1) {
 				rect_i = 1;
 				rect.x = rect_i - rect.w;
 			}
 
-			if(rect.y < 0) {
+			if (rect.y < 0) {
 				rect.y = 0;
 				rect_j = rect.y + rect.h;
 			}
-			if(rect_j > 1) {
+			if (rect_j > 1) {
 				rect_j = 1;
 				rect.y = rect_j - rect.h;
 			}
-		}else{
-			if(left)   { rect.x = clamp(rect.x, 0, rect_i-minw); }
-			if(right)  { rect_i = clamp(rect_i, rect.x+minw, 1); }
+		} else {
+			if (left)   { rect.x = clamp(rect.x, 0, rect_i-minw); }
+			if (right)  { rect_i = clamp(rect_i, rect.x+minw, 1); }
 
-			if(top)    { rect.y = clamp(rect.y, 0, rect_j-minh); }
-			if(bottom) { rect_j = clamp(rect_j, rect.y+minh, 1); }
+			if (top)    { rect.y = clamp(rect.y, 0, rect_j-minh); }
+			if (bottom) { rect_j = clamp(rect_j, rect.y+minh, 1); }
 
 			rect.w = Math.max(rect_i - rect.x, minw);
 			rect.h = Math.max(rect_j - rect.y, minh);

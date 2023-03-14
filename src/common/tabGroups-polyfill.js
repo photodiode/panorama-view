@@ -13,7 +13,7 @@ if (!browser.hasOwnProperty('tabGroups')) {
 				return this.listeners.find(listener) != undefined;
 			},
 			removeListener: (listener) => {
-				for (let i in this.listeners) {
+				for (const i in this.listeners) {
 					if (listener === this.listeners[i]) {
 						this.listeners.splice(i, 1);
 						break;
@@ -29,10 +29,10 @@ if (!browser.hasOwnProperty('tabGroups')) {
 	}
 
 	// browser.tabGroups
-	let tabGroups_onCreated = new listenerObject();
-	//let tabGroups_onMoved = new listenerObject();
-	let tabGroups_onRemoved = new listenerObject();
-	let tabGroups_onUpdated = new listenerObject();
+	const tabGroups_onCreated = new listenerObject();
+	//const tabGroups_onMoved = new listenerObject();
+	const tabGroups_onRemoved = new listenerObject();
+	const tabGroups_onUpdated = new listenerObject();
 
 	browser.tabGroups = {
 		create: (createInfo) => {
@@ -81,8 +81,8 @@ if (!browser.hasOwnProperty('tabGroups')) {
 	// ----
 
 	// browser.tabs hijack
-	let tabs_onCreated = new listenerObject();
-	let tabs_onUpdated = new listenerObject();
+	const tabs_onCreated = new listenerObject();
+	const tabs_onUpdated = new listenerObject();
 
 	browser.tabs.create = (createInfo) => {
 		return browser.runtime.sendMessage({
