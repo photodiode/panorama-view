@@ -75,7 +75,7 @@ export let opening = false;
 
 export async function open(backup) {
 
-	let createTab = async(_tab, windowId, tabGroupId) => {
+	const createTab = async(_tab, windowId, tabGroupId) => {
 
 		let tabFailed = false;
 
@@ -119,9 +119,9 @@ export async function open(backup) {
 			const tabGroup = await addon.tabGroups.create({
 				windowId:     window.id,
 				title:        _tabGroup.title,
-				rect:         _tabGroup.rect,
 				lastAccessed: z
 			});
+			await addon.tabGroups.setGroupValue(tabGroup.id, 'rect', _tabGroup.rect, browser.runtime.id);
 
 			z++;
 

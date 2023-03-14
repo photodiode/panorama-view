@@ -68,7 +68,7 @@ export async function tabUpdated(tabId, changeInfo, tab) {
 
 	if (changeInfo.pinned != undefined) {
 		if (changeInfo.pinned) {
-			tabNode.remove();
+			if (tabNode) tabNode.remove();
 			html.groups.fitTabs();
 			html.tabs.setActive();
 		} else {

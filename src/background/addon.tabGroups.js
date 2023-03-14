@@ -3,6 +3,7 @@
 
 import * as core from './core.js'
 import * as addon_tabs from './addon.tabs.js'
+import * as backup from './backup.js'
 
 // internal
 let groupUuid = 0;
@@ -69,10 +70,17 @@ export async function initialize() {
 		}
 	}
 
-	browser.windows.onCreated.addListener(window => create({}, window.id));
+	browser.windows.onCreated.addListener(windowCreated);
 	browser.windows.onRemoved.addListener(windowId => {
 		groups = groups.filter(group => group.windowId != windowId);
 	});
+}
+
+
+function windowCreated(window) {
+	if (!backup.opening) {
+		create({}, window.id);
+	}
 }
 
 
