@@ -51,7 +51,7 @@
 		"message": "新しいバックアップを保存"
 	},
 	"optionSaveBackupButton": {
-		"message": "名前を付けて保存..."
+		"message": "保存..."
 	},
 	"optionLoadBackup": {
 		"message": "バックアップを読み込む"
