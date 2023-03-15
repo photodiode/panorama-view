@@ -1,4 +1,9 @@
 
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
 body.light {
 	--color-background: #ebebeb;
 	--color-text: #111111;
@@ -14,21 +19,57 @@ body.light {
 }
 
 body {
+	margin: 0;
+
 	background-color: var(--color-background);
 
 	color: var(--color-text);
 	font-family: sans-serif;
 	-moz-user-select: none;
+
+	display: grid;
+	grid-template-rows: [top] min-content [toolbar] auto [bottom];
+}
+
+#search {
+	margin: 0 7px
+}
+
+#search input {
+	width: 100%;
+	max-width: 40ch;
+	height: 28px;
+
+	margin: 8px auto 3px;
+	padding: 0 8px;
+
+	display: block;
+
+	border-radius: 6px;
+	border: none;
+
+	background-color: var(--color-group-background);
+
+	color: var(--color-text);
+
+	transition: height 300ms ease-in-out, margin 300ms ease-in-out, opacity 300ms ease-in-out;
+}
+
+#search.hidden input {
+	height: 0px;
+
+	margin: 0px auto 0px;
+
+	opacity: 0;
 }
 
 #groups {
-	position: absolute;
-	top: 4px;
-	right: 4px;
-	bottom: 4px;
-	left: 4px;
+	margin: 3px;
 
-	overflow: hidden;
+	position: relative;
+
+	grid-row: toolbar / bottom;
+	justify-self: stretch;
 }
 
 /* phantom new group button to lure people into double or middle clicking the background */
