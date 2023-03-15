@@ -65,10 +65,6 @@ document.addEventListener('DOMContentLoaded', async() => {
 		}
 	}, false);
 
-	window.addEventListener('resize', () => {
-		html.groups.fitTabs();
-	});
-
 	browser.theme.onUpdated.addListener(({newTheme, windowId}) => {
 		theme.set(options.themeOverride, newTheme);
 	});
@@ -116,6 +112,12 @@ document.addEventListener('DOMContentLoaded', async() => {
 	document.getElementById('groups').addEventListener('dragover', drag.viewDragOver, false);
 	document.getElementById('groups').addEventListener('drop', drag.viewDrop, false);
 	// ----
+
+	const groupResize = function () {
+		html.groups.fitTabs();
+	}
+
+	new ResizeObserver(groupResize).observe(document.getElementById('groups'));
 });
 
 
@@ -137,8 +139,6 @@ async function initializeTabGroupNodes() {
 		html.groups.stack(tabGroupNode);
 
 		document.getElementById('groups').appendChild(tabGroupNode);
-
-		html.groups.resizeTitle(tabGroupNode);
 	}));
 }
 

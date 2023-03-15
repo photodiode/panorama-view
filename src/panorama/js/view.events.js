@@ -18,7 +18,6 @@ export async function groupCreated(group) {
 
 		document.getElementById('groups').appendChild(tabGroupNode);
 
-		html.groups.resizeTitle(tabGroupNode);
 		html.groups.fitTabs(tabGroupNode);
 	}
 }
@@ -52,7 +51,10 @@ export async function tabCreated(tab) {
 
 export async function tabRemoved(tabId, removeInfo) {
 	if (core.viewWindowId == removeInfo.windowId && core.viewTabId != tabId){
-		html.tabs.get(tabId).remove();
+		let tabNode = html.tabs.get(tabId);
+
+		tabNode.remove();
+
 		html.tabs.setActive();
 		html.groups.fitTabs();
 	}

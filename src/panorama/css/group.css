@@ -1,7 +1,7 @@
 
 .group {
-	min-width: 120px;
-	min-height: 120px;
+	min-width: 100px;
+	min-height: 80px;
 
 	position: absolute;
 }
@@ -107,13 +107,18 @@
 
 .group .tabs {
 	position: absolute;
-	top: 32px;
-	right: 9px;
-	left: 9px;
-	bottom: 9px;
+	top: 30px;
+	right: 8px;
+	left: 8px;
+	bottom: 8px;
 
 	overflow-y: auto;
 	scrollbar-width: thin;
+
+	display: flex;
+	flex-wrap: wrap;
+	align-content: flex-start;
+	_gap: 2px;
 }
 
 /* resize */

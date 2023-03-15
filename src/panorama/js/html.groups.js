@@ -99,7 +99,6 @@ export function create(group) {
 
 	input.addEventListener('input', function(event) {
 		name.textContent = this.value;
-		input.style.width = name.getBoundingClientRect().width + 'px';
 	}, false);
 
 	input.addEventListener('keydown', function(event) {
@@ -117,6 +116,12 @@ export function create(group) {
 
 		editing = false;
 	}, false);
+
+	const titleResize = function () {
+		input.style.width = name.getBoundingClientRect().width + 'px';
+	}
+
+	new ResizeObserver(titleResize).observe(name);
 	// ----
 
 	tabs.addEventListener('dragover', drag.groupDragOver, false);
@@ -209,21 +214,11 @@ export async function stack(node, tabGroup) {
 	node.style.zIndex = Math.floor(tabGroup.lastAccessed / 100).toString().substr(-9);
 }
 
-export function resizeTitle(node) {
-	let   input = node.querySelector('input');
-	const name  = node.querySelector('.name');
-	input.style.width = name.getBoundingClientRect().width + 'px';
-}
-
 function getFit(param) {
 
-	let pitch = 0;
 	let w = 0;
 	let h = 0;
 	let area = 0;
-
-	param.width  = param.width  + 1;
-	param.height = param.height + 1;
 
 	for (let x = param.amount; x >= 1; x--) {
 
@@ -245,7 +240,6 @@ function getFit(param) {
 			area = tmp_area;
 			w = a;
 			h = b;
-			pitch = x;
 		}
 	}
 
@@ -254,14 +248,14 @@ function getFit(param) {
 		fits = false;
 	}
 
-	return {fits: fits, pitch: pitch, width: w, ratio: param.ratio};
+	return {fits: fits, width: w - 0.01, ratio: param.ratio};
 }
 
 export function fitTabs(tabGroupNode) {
 	if (tabGroupNode == undefined) {
-		for (let tabGroupNode of document.getElementById('groups').childNodes) {
+		document.getElementById('groups').childNodes.forEach(async(tabGroupNode) => {
 			fitTabsInGroup(tabGroupNode);
-		}
+		});
 	} else {
 		fitTabsInGroup(tabGroupNode);
 	}
@@ -270,9 +264,9 @@ export function fitTabs(tabGroupNode) {
 export function fitTabsInGroup(tabGroupNode) {
 
 	const tabsNode   = tabGroupNode.querySelector('.tabs');
-	const childNodes = tabsNode.childNodes;
+	const tabNodes = tabsNode.childNodes;
 
-	tabGroupNode.querySelector('.tab_count').textContent = childNodes.length - 1;
+	tabGroupNode.querySelector('.tab_count').textContent = tabNodes.length - 1;
 
 	// fit
 	let rect = tabsNode.getBoundingClientRect();
@@ -289,7 +283,7 @@ export function fitTabsInGroup(tabGroupNode) {
 
 		ratio: window.innerHeight / window.innerWidth,
 
-		amount: childNodes.length,
+		amount: tabNodes.length,
 	});
 
 	// squished view
@@ -306,7 +300,7 @@ export function fitTabsInGroup(tabGroupNode) {
 
 			ratio: (1 + fit.ratio + fit.ratio) / 3,
 
-			amount: childNodes.length,
+			amount: tabNodes.length,
 		});
 	}
 
@@ -324,11 +318,9 @@ export function fitTabsInGroup(tabGroupNode) {
 
 			ratio: 1,
 
-			amount: childNodes.length,
+			amount: tabNodes.length,
 		});
 	}
-
-	let index = 0;
 
 
 	let w = fit.width;
@@ -359,18 +351,10 @@ export function fitTabsInGroup(tabGroupNode) {
 		tabsNode.classList.add('list');
 	}
 
-	for (let i = 0; i < childNodes.length; i++) {
-		childNodes[i].style.width  = w + 'px';
-		childNodes[i].style.height = h + 'px';
-
-		// only needed if the tabs use absolute positioning
-		childNodes[i].style.left = ((w+8) * (index % Math.floor(fit.pitch))) + 'px';
-		childNodes[i].style.top  = ((h+8) * Math.floor(index / Math.floor(fit.pitch))) + 'px';
-
-		childNodes[i].style.zIndex = index;
-
-		index++;
-	}
+	tabNodes.forEach(async(tabNode, index) => {
+		tabNode.style.width  = w + 'px';
+		tabNode.style.height = h + 'px';
+	});
 }
 
 
@@ -390,8 +374,8 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 
 	group.rect = await browser.sessions.getGroupValue(group.id, 'rect');
 
-	const minw = 120 / groupsRect.width;
-	const minh = 120 / groupsRect.height;
+	const minw = node.style.minWidth / groupsRect.width;
+	const minh = node.style.minHeight / groupsRect.height;
 
 	const snap_dstx = 5 / groupsRect.width;
 	const snap_dsty = 5 / groupsRect.height;
