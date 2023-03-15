@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 	});
 	// ----
 
+	// theme update
 	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		switch (message.event) {
 			case 'addon.options.onUpdated': {
@@ -87,6 +88,36 @@ document.addEventListener('DOMContentLoaded', async() => {
 				break;
 		}
 	});
+	// ----
+
+	// search
+	/*const search = document.querySelector('#search input');
+	let searchIndex = {};
+
+	search.addEventListener('focus', async function(event) {
+		const tabNodes = document.querySelectorAll('.tab');
+
+		await tabNodes.forEach(async(tabNode) => {
+			searchIndex[tabNode.id.substr(3)] = tabNode.querySelector('.title span').textContent.toLowerCase();
+		});
+	}, false);
+
+	search.addEventListener('input', async function(event) {
+		let hits = [];
+		for (const [id, title] of Object.entries(searchIndex)) {
+			if (title.includes(this.value.toLowerCase())) {
+				hits.push(id);
+			}
+		}
+		console.log(hits);
+	}, false);
+
+	search.addEventListener('keydown', function(event) {
+		if(event.keyCode == 13) {
+			search.blur();
+		}
+	}, false);*/
+	// ----
 
 	// tab group events
 	browser.tabGroups.onCreated.addListener(events.groupCreated);

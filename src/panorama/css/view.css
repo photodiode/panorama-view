@@ -31,7 +31,7 @@ body {
 	grid-template-rows: [top] min-content [toolbar] auto [bottom];
 }
 
-#search {
+/*#search {
 	margin: 0 7px
 }
 
@@ -61,7 +61,7 @@ body {
 	margin: 0px auto 0px;
 
 	opacity: 0;
-}
+}*/
 
 #groups {
 	margin: 3px;
