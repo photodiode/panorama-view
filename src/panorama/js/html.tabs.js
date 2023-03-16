@@ -17,12 +17,13 @@ export function create(tab) {
 	const node = newElement('div', {class: 'tab', draggable: 'true', 'data-id': tab.id, title: ''}, [favicon, thumbnail, close, nameContainer]);
 
 	node.addEventListener('click', (event) => {
+		event.preventDefault();
 		if (event.ctrlKey) {
 			drag.selectTab(tab.id);
 		} else {
 			browser.tabs.update(tab.id, {active: true});
 		}
-	}, { capture: true });
+	}, false);
 
 	// showDefaults not yet working for tabs :C
 	/*node.addEventListener('contextmenu', () => {
@@ -36,15 +37,16 @@ export function create(tab) {
 		if (event.button == 1) { // middle mouse
 			browser.tabs.remove(tab.id);
 		}
-	}, { capture: true });
+	}, false);
 
 	close.addEventListener('click', (event) => {
+		event.stopPropagation();
 		browser.tabs.remove(tab.id);
-	}, { capture: true });
+	}, false);
 
-	node.addEventListener('dragstart', drag.tabDragStart, { capture: true });
-	node.addEventListener('drop', drag.tabDrop, { capture: true });
-	node.addEventListener('dragend', drag.tabDragEnd, { capture: true });
+	node.addEventListener('dragstart', drag.tabDragStart, false);
+	node.addEventListener('drop', drag.tabDrop, false);
+	node.addEventListener('dragend', drag.tabDragEnd, false);
 
 	return node;
 }
