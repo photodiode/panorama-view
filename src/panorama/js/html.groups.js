@@ -37,7 +37,7 @@ export function create(group) {
 	// group
 	const tabs   = newElement('div', {class: 'tabs transition'}, [newtab]);
 	const resize = newElement('div', {class: 'resize'}, [top, right, bottom, left, top_right, bottom_right, bottom_left, top_left]);
-	const node   = newElement('div', {class: 'group', id: 'tabGroup'+group.id}, [resize, header, tabs]);
+	const node   = newElement('div', {class: 'group', 'data-id': group.id}, [resize, header, tabs]);
 	// ----
 
 	close.addEventListener('click', function(event) {
@@ -196,7 +196,7 @@ export function create(group) {
 }
 
 export function get(tabGroupId) {
-	return document.getElementById('tabGroup'+tabGroupId);
+	return document.querySelector(`.group[data-id="${tabGroupId}"]`);
 }
 
 export async function resize(node, rect) {
@@ -207,7 +207,7 @@ export async function resize(node, rect) {
 }
 
 export async function stack(node, tabGroup) {
-	const tabGroupId = parseInt(node.id.substr(8));
+	const tabGroupId = parseInt(node.dataset.id);
 
 	tabGroup = tabGroup || await browser.tabGroups.get(tabGroupId);
 

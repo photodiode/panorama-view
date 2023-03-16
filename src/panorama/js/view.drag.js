@@ -14,14 +14,7 @@ async function moveTabs(tabIds, windowId, tabGroupId, index) {
 
 
 function getTabIds(e) {
-	let tabIds = [];
-	for (const tabIdData of e.dataTransfer.items) {
-		if (tabIdData.type.includes('text/panorama-view-tab-id-')) {
-			const tabId = Number(e.dataTransfer.getData(tabIdData.type));
-			tabIds.push(tabId);
-		}
-	}
-	return tabIds;
+	return JSON.parse(e.dataTransfer.getData('application/json'));
 }
 
 
@@ -33,6 +26,7 @@ export function viewDragOver(e) {
 }
 
 export async function viewDrop(e) {
+	e.preventDefault();
 	e.stopPropagation();
 
 	const currentWindowId = (await browser.windows.getCurrent()).id;
@@ -50,9 +44,7 @@ export async function viewDrop(e) {
 		}
 	}
 
-	for (const tabGroupNode of document.getElementById('groups').childNodes) {
-		html.groups.fitTabs(tabGroupNode);
-	}
+	html.groups.fitTabs();
 	// ----
 
 	moveTabs(tabIds, currentWindowId, tabGroup.id, -1);
@@ -71,11 +63,7 @@ export function groupDragOver(e) {
 export async function groupDrop(e) {
 	e.stopPropagation();
 
-	let groupNode = e.target;
-	while (!groupNode.classList.contains('group')) {
-		if (groupNode.classList.contains('tab')) return false;
-		groupNode = groupNode.parentNode;
-	}
+	let groupNode = e.target.closest('.group');
 
 	// move the tab node
 	const tabIds = getTabIds(e);
@@ -87,12 +75,10 @@ export async function groupDrop(e) {
 		}
 	}
 
-	for (const tabGroupNode of document.getElementById('groups').childNodes) {
-		html.groups.fitTabs(tabGroupNode);
-	}
+	html.groups.fitTabs();
 	// ----
 
-	const tabGroupId = Number(groupNode.id.substr(8));
+	const tabGroupId = parseInt(groupNode.dataset.id);
 	const currentWindowId = (await browser.windows.getCurrent()).id;
 
 	moveTabs(tabIds, currentWindowId, tabGroupId, -1);
@@ -121,7 +107,7 @@ export function selectTab(tabId) {
 	let tabIds = [];
 
 	for (const node of tabNodes) {
-		const id = Number(node.id.substr(3));
+		const id = parseInt(node.dataset.id);
 		if (selectedTabs.includes(id)) {
 			tabIds.push(id);
 		}
@@ -148,7 +134,7 @@ export function tabDragStart(e) {
 
 	e.dataTransfer.effectAllowed = 'move';
 
-	const tabId = Number(this.id.substr(3));
+	const tabId = parseInt(this.dataset.id);
 	if (!selectedTabs.includes(tabId)) {
 		clearTabSelection(e);
 	}
@@ -159,11 +145,10 @@ export function tabDragStart(e) {
 
 	for (const i in selectedTabs) {
 		const tabNode = html.tabs.get(selectedTabs[i]);
-
-		e.dataTransfer.setData(`text/panorama-view-tab-id-${i}`, selectedTabs[i]);
-
-		tabNode.classList.add('drag');
+		      tabNode.classList.add('drag');
 	}
+
+	e.dataTransfer.setData('application/json', JSON.stringify(selectedTabs));
 
 	const rect = this.getBoundingClientRect();
 
@@ -178,25 +163,20 @@ export async function tabDrop(e) {
 	e.stopPropagation();
 
 	// get target tab
-	let tabNode = e.target;
-	while (!tabNode.classList.contains('tab')) {
-		tabNode = tabNode.parentNode;
-	}
+	const tabNode = e.target.closest('.tab');
+	if (!tabNode) return false;
+
+	const tab = await browser.tabs.get(parseInt(tabNode.dataset.id));
 	// ----
 
 	const tabIds = getTabIds(e);
 
 	// abort if you drop over moved tab
-	for (const tabId of tabIds) {
-		if (html.tabs.get(tabId) == tabNode) return false; 
-	}
+	if (tabIds.includes(tab.id)) return false;
 	// ----
 
 	// get taget tab group ID
-	let groupNode = e.target;
-	while (!groupNode.classList.contains('group')) {
-		groupNode = groupNode.parentNode;
-	}
+	const groupNode = e.target.closest('.group');
 	const tabGroupId = Number(groupNode.id.substr(8));
 	// ----
 
@@ -204,7 +184,7 @@ export async function tabDrop(e) {
 	const rect = tabNode.getBoundingClientRect();
 	let dropBefore = true;
 
-	if (groupNode.querySelector('.tabs').classList.contains('list')) {
+	if (groupNode.querySelector('.tabs.list')) {
 		if (e.clientY > rect.top+(rect.height/2)) {
 			dropBefore = false;
 		}
@@ -217,8 +197,8 @@ export async function tabDrop(e) {
 
 	// move the tab node
 	for (const tabId of tabIds) {
+		if (tabId == tab.id) return false; // abort if you drop over moved tab
 		const _tabNode = html.tabs.get(tabId);
-		if (_tabNode == tabNode) return false; // abort if you drop over moved tab
 		if (_tabNode) {
 			if (dropBefore) {
 				tabNode.insertAdjacentElement('beforebegin', _tabNode);
@@ -228,19 +208,13 @@ export async function tabDrop(e) {
 		}
 	}
 
-	for (const tabGroupNode of document.getElementById('groups').childNodes) {
-		html.groups.fitTabs(tabGroupNode);
-	}
+	html.groups.fitTabs();
 	// ----
-
-
-	const tabId = Number(tabNode.id.substr(3));
-	const tab = await browser.tabs.get(tabId);
 
 	const currentWindowId = (await browser.windows.getCurrent()).id;
 
 	// find new index
-	let toIndex = Number(tab.index);
+	let toIndex = parseInt(tab.index);
 
 	const fromTabId = tabIds[0];
 	const fromIndex = (await browser.tabs.get(fromTabId)).index;
@@ -262,8 +236,8 @@ export async function tabDrop(e) {
 }
 
 export function tabDragEnd(e) {
-	for (const tabIdData of e.dataTransfer.items) {
-		const tabId = Number(e.dataTransfer.getData(tabIdData.type));
+	const tabIds = getTabIds(e);
+	for (const tabId of tabIds) {
 		const tabNode = html.tabs.get(tabId);
 		if (tabNode) {
 			tabNode.classList.remove('drag');

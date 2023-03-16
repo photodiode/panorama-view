@@ -14,42 +14,43 @@ export function create(tab) {
 	const title         = newElement('span');
 	const nameContainer = newElement('div', {class: 'title'}, [title]);
 
-	const node = newElement('div', {class: 'tab', draggable: 'true', id: 'tab'+tab.id, title: ''}, [favicon, thumbnail, close, nameContainer]);
+	const node = newElement('div', {class: 'tab', draggable: 'true', 'data-id': tab.id, title: ''}, [favicon, thumbnail, close, nameContainer]);
 
-	node.addEventListener('click', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-
+	node.addEventListener('click', (event) => {
 		if (event.ctrlKey) {
 			drag.selectTab(tab.id);
 		} else {
 			browser.tabs.update(tab.id, {active: true});
 		}
-	}, false);
+	}, { capture: true });
 
-	node.addEventListener('auxclick', function(event) {
-		event.preventDefault();
-		event.stopPropagation();
+	// showDefaults not yet working for tabs :C
+	/*node.addEventListener('contextmenu', () => {
+		browser.menus.overrideContext({
+			context: 'tab',
+			tabId: tab.id
+		});
+	}, { capture: true });*/
 
+	node.addEventListener('auxclick', (event) => {
 		if (event.button == 1) { // middle mouse
 			browser.tabs.remove(tab.id);
 		}
-	}, false);
+	}, { capture: true });
 
-	close.addEventListener('click', function(event) {
-		event.stopPropagation();
+	close.addEventListener('click', (event) => {
 		browser.tabs.remove(tab.id);
-	}, false);
+	}, { capture: true });
 
-	node.addEventListener('dragstart', drag.tabDragStart, false);
-	node.addEventListener('drop', drag.tabDrop, false);
-	node.addEventListener('dragend', drag.tabDragEnd, false);
+	node.addEventListener('dragstart', drag.tabDragStart, { capture: true });
+	node.addEventListener('drop', drag.tabDrop, { capture: true });
+	node.addEventListener('dragend', drag.tabDragEnd, { capture: true });
 
 	return node;
 }
 
 export function get(tabId) {
-	return document.getElementById('tab'+tabId);
+	return document.querySelector(`.tab[data-id="${tabId}"]`);
 }
 
 export async function update(tabNode, tab) {
@@ -108,7 +109,7 @@ export async function setActive() {
 
 export async function insert(tabNode, tab) {
 
-	const tabGroupNode = document.getElementById('tabGroup'+tab.groupId);
+	const tabGroupNode = document.querySelector(`.group[data-id="${tab.groupId}"]`);
 
 	const tabs = await browser.tabs.query({windowId: core.viewWindowId});
 
