@@ -18,7 +18,7 @@ async function saveGroups() {
 
 	await Promise.all(windows.map(async(window) => {
 		let windowGroups = [];
-		for (let group of groups) {
+		for (const group of groups) {
 			if (group.windowId == window.id) {
 				windowGroups.push(group);
 			}
@@ -40,7 +40,7 @@ function sanitizeGroup(group) {
 // ----
 
 export async function setActiveId(windowId, groupId) {
-	if(!groups.find(group => group.id == groupId)) return undefined;
+	if (!groups.find(group => group.id == groupId)) return undefined;
 	return browser.sessions.setWindowValue(windowId, 'activeGroup', groupId);
 }
 

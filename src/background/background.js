@@ -74,7 +74,7 @@ async function init() {
 
 	// panorama view
 
-	// meny entries
+	// new group menu entry
 	browser.menus.create({
 		id:       'newTabGroup',
 		title:    browser.i18n.getMessage('newTabGroup'),
@@ -88,10 +88,57 @@ async function init() {
 	});
 	// ----
 
+	// move tab to group menu
+	/*browser.menus.create({
+		id:       'moveTabToGroup',
+		title:    browser.i18n.getMessage('moveTabToGroup'),
+		contexts: ['tab']
+	});
+
+	let groupList = [];
+
+	browser.menus.onShown.addListener(async(info, clickedTab) => {
+		if (info.menuIds.includes('moveTabToGroup')) {
+			let groups = await addon.tabGroups.query();
+
+			groups = groups.sort((a, b) => a.title.localeCompare(b.title));
+
+			groups.forEach((group, i) => {
+				browser.menus.create({
+					parentId: 'moveTabToGroup',
+					id:       `group ${i}`,
+					title:    group.title,
+					onclick:  async() => {
+						const tabs = await addon.tabs.query({highlighted: true});
+						let tabIds = [];
+						tabs.forEach((tab) => {
+							tabIds.push(tab.id);
+						});
+						if (tabIds.length == 1 && tabIds[0] != clickedTab.id) tabIds[0] = clickedTab.id;
+						if (!tabIds.includes(clickedTab.id)) tabIds.push(clickedTab.id);
+						await addon.tabs.move(tabIds, {index: -1, windowId: group.windowId, groupId: group.id});
+						browser.tabs.hide(tabIds);
+					}
+				});
+				groupList.push(`group ${i}`);
+			});
+
+			browser.menus.refresh()
+		}
+	});
+
+	browser.menus.onHidden.addListener(() => {
+		groupList.forEach((groupId, i) => {
+			browser.menus.remove(groupId);
+		});
+		groupList = [];
+	});*/
+	// ----
+
 	// remove any panorama views there might be, we need a fresh connection to handle messages
 	const extensionTabs = await browser.tabs.query({url: browser.runtime.getURL('panorama/view.html')});
 	if (extensionTabs) {
-		for (let tab of extensionTabs) {
+		for (const tab of extensionTabs) {
 			browser.tabs.remove(tab.id);
 		}
 	}

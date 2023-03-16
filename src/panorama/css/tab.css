@@ -33,7 +33,7 @@
 }
 
 .tab:hover, .tab.inactive:hover, .tab.selected {
-	outline: 2px solid var(--color-tab-hover) !important;
+	outline: 2px solid var(--color-tab-active) !important;
 }
 
 .tab.active {
