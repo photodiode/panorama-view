@@ -118,7 +118,6 @@
 	display: flex;
 	flex-wrap: wrap;
 	align-content: flex-start;
-	_gap: 2px;
 }
 
 /* resize */

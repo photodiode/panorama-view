@@ -14,7 +14,8 @@ export function create(tab) {
 	const title         = newElement('span');
 	const nameContainer = newElement('div', {class: 'title'}, [title]);
 
-	const node = newElement('a', {href: '', class: 'tab', draggable: 'true', 'data-id': tab.id, title: '', tabindex: 0}, [favicon, thumbnail, close, nameContainer]);
+	const content = newElement('div', {}, [favicon, thumbnail, close, nameContainer]);
+	const node = newElement('a', {href: '', class: 'tab', draggable: 'true', 'data-id': tab.id, title: '', tabindex: 0}, [content]);
 
 	node.addEventListener('click', (event) => {
 		event.preventDefault();
