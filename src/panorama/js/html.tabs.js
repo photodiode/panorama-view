@@ -14,12 +14,13 @@ export function create(tab) {
 	const title         = newElement('span');
 	const nameContainer = newElement('div', {class: 'title'}, [title]);
 
-	const node = newElement('div', {class: 'tab', draggable: 'true', 'data-id': tab.id, title: ''}, [favicon, thumbnail, close, nameContainer]);
+	const node = newElement('a', {href: '', class: 'tab', draggable: 'true', 'data-id': tab.id, title: '', tabindex: 0}, [favicon, thumbnail, close, nameContainer]);
 
 	node.addEventListener('click', (event) => {
 		event.preventDefault();
 		if (event.ctrlKey) {
 			drag.selectTab(tab.id);
+
 		} else {
 			browser.tabs.update(tab.id, {active: true});
 		}
@@ -34,7 +35,15 @@ export function create(tab) {
 	}, { capture: true });*/
 
 	node.addEventListener('auxclick', (event) => {
+		event.preventDefault();
 		if (event.button == 1) { // middle mouse
+			browser.tabs.remove(tab.id);
+		}
+	}, false);
+
+	node.addEventListener('keyup', (event) => {
+		event.preventDefault();
+		if (event.ctrlKey && event.key == 'Delete') {
 			browser.tabs.remove(tab.id);
 		}
 	}, false);
@@ -60,6 +69,7 @@ export async function update(tabNode, tab) {
 		tabNode.querySelector('.title span').textContent = tab.title;
 
 		tabNode.title = tab.title + ((tab.url.substr(0, 5) != 'data:') ? ' - ' + decodeURI(tab.url) : '');
+		tabNode.href = tab.url;
 
 		if (tab.discarded) {
 			tabNode.classList.add('inactive');
@@ -106,7 +116,10 @@ export async function setActive() {
 	const activeNode = document.querySelector('.tab.active');
 
 	if (activeNode) activeNode.classList.remove('active');
-	if (tabNode)    tabNode.classList.add('active');
+	if (tabNode) {
+		tabNode.classList.add('active');
+		tabNode.focus();
+	}
 }
 
 export async function insert(tabNode, tab) {

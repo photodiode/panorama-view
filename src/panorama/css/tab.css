@@ -16,7 +16,7 @@
 
 	overflow: hidden;
 
-	transition: opacity 400ms cubic-bezier(.08,.82,.17,1), transform 400ms cubic-bezier(.08,.82,.17,1);
+	cursor: default;
 }
 
 /* drag protection */
@@ -32,8 +32,16 @@
 	z-index: 5;
 }
 
-.tab:hover, .tab.inactive:hover, .tab.selected {
-	outline: 2px solid var(--color-tab-active) !important;
+.tab.selected {
+	outline: 2px dashed var(--color-tab-active) !important;
+}
+
+.tab:focus {
+	outline: 2px solid var(--color-tab-active);
+}
+
+.tab:hover, .tab.inactive:hover {
+	outline: 2px solid var(--color-tab-hover);
 }
 
 .tab.active {
@@ -44,13 +52,8 @@
 	opacity: 0.6;
 }
 
-.tab.selected {
-	transform: scale(0.95);
-}
-
 .tab.drag {
 	opacity: 0.5;
-	transform: scale(0.9);
 }
 
 .tab .thumbnail {

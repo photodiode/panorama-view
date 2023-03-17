@@ -278,7 +278,7 @@ export function fitTabsInGroup(tabGroupNode) {
 		marginX: 4,
 		marginY: 4,
 
-		min: 60,
+		min: 70,
 		max: 375,
 
 		ratio: window.innerHeight / window.innerWidth,
@@ -287,7 +287,7 @@ export function fitTabsInGroup(tabGroupNode) {
 	});
 
 	// squished view
-	/*if (!fit.fits){
+	if (!fit.fits){
 		fit = getFit({
 			width: rect.width,
 			height: rect.height,
@@ -302,7 +302,7 @@ export function fitTabsInGroup(tabGroupNode) {
 
 			amount: tabNodes.length,
 		});
-	}*/
+	}
 
 	// square view
 	if (!fit.fits){
