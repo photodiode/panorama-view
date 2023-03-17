@@ -34,40 +34,42 @@ if (!browser.hasOwnProperty('tabGroups')) {
 	const tabGroups_onRemoved = new listenerObject();
 	const tabGroups_onUpdated = new listenerObject();
 
+	const panoramaViewId = '{60e27487-c779-464c-8698-ad481b718d5f}';
+
 	browser.tabGroups = {
 		create: (createInfo) => {
-			return browser.runtime.sendMessage({
+			return browser.runtime.sendMessage(panoramaViewId, {
 				action: 'browser.tabGroups.create',
 				info:    createInfo
 			});
 		},
 		get: (groupId) => {
-			return browser.runtime.sendMessage({
+			return browser.runtime.sendMessage(panoramaViewId, {
 				action:  'browser.tabGroups.get',
 				groupId:  groupId
 			});
 		},
 		/*move: (queryInfo) => {
-			return browser.runtime.sendMessage({
+			return browser.runtime.sendMessage(panoramaViewId, {
 				action: 'browser.tabGroups.move',
 				groupId: groupId,
 				info:    moveInfo
 			});
 		},*/
 		query: (queryInfo) => {
-			return browser.runtime.sendMessage({
+			return browser.runtime.sendMessage(panoramaViewId, {
 				action: 'browser.tabGroups.query',
 				info:    queryInfo
 			});
 		},
 		remove: (groupId) => {
-			return browser.runtime.sendMessage({
+			return browser.runtime.sendMessage(panoramaViewId, {
 				action: 'browser.tabGroups.remove',
 				groupId: groupId
 			});
 		},
 		update: (groupId, updateInfo) => {
-			return browser.runtime.sendMessage({
+			return browser.runtime.sendMessage(panoramaViewId, {
 				action: 'browser.tabGroups.update',
 				groupId: groupId,
 				info:    updateInfo
@@ -85,13 +87,13 @@ if (!browser.hasOwnProperty('tabGroups')) {
 	const tabs_onUpdated = new listenerObject();
 
 	browser.tabs.create = (createInfo) => {
-		return browser.runtime.sendMessage({
+		return browser.runtime.sendMessage(panoramaViewId, {
 			action: 'browser.tabs.create',
 			info:   createInfo
 		});
 	}
 	browser.tabs.get = (tabId) => {
-		return browser.runtime.sendMessage({
+		return browser.runtime.sendMessage(panoramaViewId, {
 			action: 'browser.tabs.get',
 			tabId:   tabId
 		});
@@ -101,14 +103,14 @@ if (!browser.hasOwnProperty('tabGroups')) {
 		return browser_tabs_getCurrent().then(tab => browser.tabs.get(tab.id));
 	}
 	browser.tabs.move = (tabIds, moveInfo) => {
-		return browser.runtime.sendMessage({
+		return browser.runtime.sendMessage(panoramaViewId, {
 			action: 'browser.tabs.move',
 			tabIds:  tabIds,
 			info:    moveInfo
 		});
 	}
 	browser.tabs.query = (queryInfo) => {
-		return browser.runtime.sendMessage({
+		return browser.runtime.sendMessage(panoramaViewId, {
 			action: 'browser.tabs.query',
 			info:   queryInfo
 		});
@@ -120,7 +122,7 @@ if (!browser.hasOwnProperty('tabGroups')) {
 
 	// browser.sessions additions
 	browser.sessions.setGroupValue = (groupId, key, value) => {
-		return browser.runtime.sendMessage({
+		return browser.runtime.sendMessage(panoramaViewId, {
 			action: 'browser.sessions.setGroupValue',
 			groupId: groupId,
 			key:     key,
@@ -128,14 +130,14 @@ if (!browser.hasOwnProperty('tabGroups')) {
 		});
 	}
 	browser.sessions.getGroupValue = (groupId, key) => {
-		return browser.runtime.sendMessage({
+		return browser.runtime.sendMessage(panoramaViewId, {
 			action: 'browser.sessions.getGroupValue',
 			groupId: groupId,
 			key:     key
 		});
 	}
 	browser.sessions.removeGroupValue = (groupId, key) => {
-		return browser.runtime.sendMessage({
+		return browser.runtime.sendMessage(panoramaViewId, {
 			action: 'browser.sessions.removeGroupValue',
 			groupId: groupId,
 			key:     key
@@ -145,6 +147,7 @@ if (!browser.hasOwnProperty('tabGroups')) {
 
 	// event listeners
 	browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		if (sender.id != panoramaViewId) return;
 		switch (message.event) {
 			case 'browser.tabGroups.onCreated': {
 				tabGroups_onCreated.call(message.group);
