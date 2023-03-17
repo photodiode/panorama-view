@@ -178,7 +178,14 @@ async function initializeTabNodes() {
 
 	const tabs = await browser.tabs.query({currentWindow: true});
 
-	let fragments = {};
+	let nodes = {
+		'pinned': document.getElementById('pinned'),
+		'groupless': document.getElementById('groupless')
+	};
+
+	for (const groupNode of document.getElementById('groups').children) {
+		nodes[groupNode.dataset.id] = groupNode.querySelector('.newtab');
+	}
 
 	for (const tab of tabs) {
 
@@ -188,22 +195,18 @@ async function initializeTabNodes() {
 
 		html.tabs.updateFavicon(tabNode, tab);
 
-		if (!fragments.hasOwnProperty(tab.groupId)) {
-			fragments[tab.groupId] = document.createDocumentFragment();
-		}
+		if (tab.pinned == true) {
+			nodes['pinned'].appendChild(tabNode);
 
-		fragments[tab.groupId].appendChild(tabNode);
-	}
+		} else if (nodes.hasOwnProperty(tab.groupId)) {
+			nodes[tab.groupId].insertAdjacentElement('beforebegin', tabNode);
 
-	for (const tabGroupId in fragments) {
-		const tabGroupNode = html.groups.get(tabGroupId);
-		if (tabGroupNode) {
-			tabGroupNode.querySelector('.tabs').prepend(fragments[tabGroupId]);
+		} else {
+			nodes['groupless'].appendChild(tabNode);
 		}
 	}
 
 	html.groups.fitTabs();
-
 	html.tabs.setActive();
 }
 

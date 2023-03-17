@@ -70,12 +70,12 @@ export async function tabUpdated(tabId, changeInfo, tab) {
 
 	if (changeInfo.pinned != undefined) {
 		if (changeInfo.pinned) {
-			if (tabNode) tabNode.remove();
+			document.getElementById('pinned').appendChild(tabNode);
 			html.groups.fitTabs();
 			html.tabs.setActive();
 		} else {
-			await tabCreated(tab);
-			html.tabs.updateFavicon(tabNode, tab);
+			await html.tabs.insert(tabNode, tab);
+			html.groups.fitTabs();
 		}
 	} else {
 		html.tabs.updateFavicon(tabNode, tab);
