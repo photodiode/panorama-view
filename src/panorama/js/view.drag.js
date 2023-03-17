@@ -177,7 +177,7 @@ export async function tabDrop(e) {
 
 	// get taget tab group ID
 	const groupNode = e.target.closest('.group');
-	const tabGroupId = Number(groupNode.id.substr(8));
+	const tabGroupId = parseInt(groupNode.dataset.id);
 	// ----
 
 
