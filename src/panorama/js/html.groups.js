@@ -374,8 +374,8 @@ async function groupTransform(group, node, top, right, bottom, left, elem) {
 
 	group.rect = await browser.sessions.getGroupValue(group.id, 'rect');
 
-	const minw = node.style.minWidth / groupsRect.width;
-	const minh = node.style.minHeight / groupsRect.height;
+	const minw = 100 / groupsRect.width;
+	const minh = 80 / groupsRect.height;
 
 	const snap_dstx = 5 / groupsRect.width;
 	const snap_dsty = 5 / groupsRect.height;
