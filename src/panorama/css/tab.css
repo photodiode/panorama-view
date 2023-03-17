@@ -64,7 +64,7 @@
 }
 
 .tab .thumbnail:not([src]) {
-	visibility: hidden;
+	display: none;
 }
 
 .tab .favicon {
@@ -86,7 +86,7 @@
 }
 
 .tab .favicon:not([src]) {
-	visibility: hidden;
+	display: none;
 }
 
 .tab .close {
@@ -191,7 +191,7 @@
 }
 
 .small .tab .favicon[src] + .thumbnail, .tiny .tab .favicon[src] + .thumbnail {
-	visibility: hidden;
+	display: none;
 }
 
 .small .tab .favicon, .tiny .tab .favicon {
