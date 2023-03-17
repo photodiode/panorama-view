@@ -27,6 +27,7 @@ export function viewDragOver(e) {
 
 export async function viewDrop(e) {
 	e.preventDefault();
+	const tabIds = getTabIds(e);
 	e.stopPropagation();
 
 	const currentWindowId = (await browser.windows.getCurrent()).id;
@@ -34,8 +35,6 @@ export async function viewDrop(e) {
 
 	// move the tab node
 	const groupNode = html.groups.get(tabGroup.id);
-
-	const tabIds = getTabIds(e);
 
 	for (const tabId of tabIds) {
 		const tabNode = html.tabs.get(tabId);
@@ -61,13 +60,13 @@ export function groupDragOver(e) {
 }
 
 export async function groupDrop(e) {
+	e.preventDefault();
+	const tabIds = getTabIds(e);
 	e.stopPropagation();
 
 	let groupNode = e.target.closest('.group');
 
 	// move the tab node
-	const tabIds = getTabIds(e);
-
 	for (const tabId of tabIds) {
 		const tabNode = html.tabs.get(tabId);
 		if (tabNode) {
@@ -160,6 +159,8 @@ export function tabDragStart(e) {
 }
 
 export async function tabDrop(e) {
+	e.preventDefault();
+	const tabIds = getTabIds(e);
 	e.stopPropagation();
 
 	// get target tab
@@ -168,8 +169,6 @@ export async function tabDrop(e) {
 
 	const tab = await browser.tabs.get(parseInt(tabNode.dataset.id));
 	// ----
-
-	const tabIds = getTabIds(e);
 
 	// abort if you drop over moved tab
 	if (tabIds.includes(tab.id)) return false;
