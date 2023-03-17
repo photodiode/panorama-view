@@ -68,8 +68,16 @@ export async function update(tabNode, tab) {
 	if (tabNode) {
 		tabNode.querySelector('.title span').textContent = tab.title;
 
+		if (tab.cookieStoreId != 'firefox-default') {
+			const context = await browser.contextualIdentities.get(tab.cookieStoreId);
+
+			const container = newElement('span', {content: '◉ ', title: context.name})
+			container.style.color = context.colorCode;
+
+			tabNode.querySelector('.title span').prepend(container);
+		}
+
 		tabNode.title = tab.title + ((tab.url.substr(0, 5) != 'data:') ? ' - ' + decodeURI(tab.url) : '');
-		tabNode.href = tab.url;
 
 		if (tab.discarded) {
 			tabNode.classList.add('inactive');
@@ -110,7 +118,7 @@ export async function setActive() {
 		return tabB.lastAccessed - tabA.lastAccessed;
 	});
 
-	const activeTabId = (tabs[0].url == browser.runtime.getURL('panorama/view.html')) ? tabs[1].id : tabs[0].id ;
+	const activeTabId = (tabs[0].url.includes(browser.runtime.getURL('panorama/view.html'))) ? tabs[1].id : tabs[0].id ;
 
 	const tabNode    = get(activeTabId);
 	const activeNode = document.querySelector('.tab.active');
