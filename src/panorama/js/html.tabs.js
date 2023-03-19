@@ -8,14 +8,16 @@ import * as core from './view.js'
 
 export function create(tab) {
 
-	const thumbnail     = newElement('img', {class: 'thumbnail'});
-	const favicon       = newElement('img', {class: 'favicon'});
-	const close         = newElement('div', {class: 'close'});
-	const title         = newElement('span');
-	const nameContainer = newElement('div', {class: 'title'}, [title]);
+	const thumbnail = newElement('img', {class: 'thumbnail'});
+	const favicon   = newElement('img', {class: 'favicon'});
+	const close     = newElement('div', {class: 'close'});
+	const title     = newElement('span');
+	const titleSpan = newElement('div', {class: 'title'}, [title]);
+	const context   = newElement('div', {class: 'context'})
 
-	const content = newElement('div', {}, [favicon, thumbnail, close, nameContainer]);
-	const node = newElement('a', {href: '', class: 'tab', draggable: 'true', 'data-id': tab.id, title: '', tabindex: 0}, [content]);
+	const container = newElement('div', {class: 'container'}, [favicon, thumbnail, close, titleSpan]);
+
+	const node = newElement('a', {href: '', class: 'tab', draggable: 'true', 'data-id': tab.id, title: '', tabindex: 0}, [container, context]);
 
 	node.addEventListener('click', (event) => {
 		event.preventDefault();
@@ -50,6 +52,7 @@ export function create(tab) {
 	}, false);
 
 	close.addEventListener('click', (event) => {
+		event.preventDefault();
 		event.stopPropagation();
 		browser.tabs.remove(tab.id);
 	}, false);
@@ -70,12 +73,10 @@ export async function update(tabNode, tab) {
 		tabNode.querySelector('.title span').textContent = tab.title;
 
 		if (tab.cookieStoreId != 'firefox-default') {
-			const context = await browser.contextualIdentities.get(tab.cookieStoreId);
+			const contextInfo = await browser.contextualIdentities.get(tab.cookieStoreId);
 
-			const container = newElement('span', {content: '◉ ', title: context.name})
-			container.style.color = context.colorCode;
-
-			tabNode.querySelector('.title span').prepend(container);
+			tabNode.querySelector('.context').style.backgroundColor = contextInfo.colorCode;
+			tabNode.querySelector('.context').title = contextInfo.name;
 		}
 
 		tabNode.title = tab.title + ((tab.url.substr(0, 5) != 'data:') ? ' - ' + decodeURI(tab.url) : '');
