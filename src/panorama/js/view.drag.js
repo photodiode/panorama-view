@@ -213,18 +213,18 @@ export async function tabDrop(e) {
 	const currentWindowId = (await browser.windows.getCurrent()).id;
 
 	// find new index
-	let toIndex = parseInt(tab.index);
+	let toIndex = tab.index;
 
 	const fromTabId = tabIds[0];
 	const fromIndex = (await browser.tabs.get(fromTabId)).index;
 
 	if (fromIndex < toIndex) {
 		if (dropBefore) {
-			toIndex--;
+			toIndex -= 1;
 		}
 	} else {
 		if (!dropBefore) {
-			toIndex++;
+			toIndex += 1;
 		}
 	}
 	// ----

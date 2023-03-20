@@ -102,7 +102,7 @@ export function create(group) {
 	}, false);
 
 	input.addEventListener('keydown', function(event) {
-		if(event.keyCode == 13) {
+		if(event.key == 'Enter') {
 			input.blur();
 		}
 	}, false);

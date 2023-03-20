@@ -17,7 +17,7 @@ export function create(tab) {
 
 	const container = newElement('div', {class: 'container'}, [favicon, thumbnail, close, titleSpan]);
 
-	const node = newElement('a', {href: '', class: 'tab', draggable: 'true', 'data-id': tab.id, title: '', tabindex: 0}, [container, context]);
+	const node = newElement('div', {href: '', class: 'tab', draggable: 'true', 'data-id': tab.id, title: '', tabindex: 0}, [container, context]);
 
 	node.addEventListener('click', (event) => {
 		event.preventDefault();
@@ -26,6 +26,17 @@ export function create(tab) {
 
 		} else {
 			browser.tabs.update(tab.id, {active: true});
+		}
+	}, false);
+
+	node.addEventListener('keydown', (event) => {
+		if (event.key == 'Enter') {
+			if (event.ctrlKey) {
+				drag.selectTab(tab.id);
+
+			} else {
+				browser.tabs.update(tab.id, {active: true});
+			}
 		}
 	}, false);
 
