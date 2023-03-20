@@ -1,46 +1,73 @@
 
 'use strict';
 
-export function toRGBA(input) {
+export function Color(input, input_b, input_c, input_d) {
 
-	if (!input) return undefined;
+	this.r = 0;
+	this.g = 0;
+	this.b = 0;
+	this.a = 1;
 
-	// get computed color
-	const tmpElement = document.body.appendChild(document.createElement('tmpColorElement'));
-	      tmpElement.style.color = input;
+	if (typeof input == 'string') {
 
-	const computedColor = window.getComputedStyle(tmpElement).color;
+		// get computed color
+		const tmpElement = document.body.appendChild(document.createElement('tmpColorElement'));
+		      tmpElement.style.color = input;
 
-	      tmpElement.remove();
-	// ----
+		const computedColor = window.getComputedStyle(tmpElement).color;
 
-	let color = computedColor.match(/[\.\d]+/g);
+		      tmpElement.remove();
+		// ----
 
-	if (!color) return undefined;
+		let color = computedColor.match(/[\.\d]+/g);
 
-	if (color.length == 3) color.push(1);
-	if (color.length != 4) return undefined;
+		if (!color) color = [0, 0, 0, 1];
 
-	return [
-		Number(color[0]),
-		Number(color[1]),
-		Number(color[2]),
-		Number(color[3])
-	];
-}
+		if (color.length == 3) color.push(1);
+		if (color.length != 4) color = [0, 0, 0, 1];
 
-export function toGray(color) {
-	return (0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2]) / 255;
-}
+		this.r = Number(color[0]) / 255;
+		this.g = Number(color[1]) / 255;
+		this.b = Number(color[2]) / 255;
+		this.a = Number(color[3]);
 
-export function mix(a, b) {
-	const lerp = function(a, b, t){
-		return a * (1 - t) + b * t;
+	} else if (input != undefined &&
+	           input_b != undefined &&
+	           input_c != undefined &&
+	           input_d != undefined) {
+
+		this.r = input;
+		this.g = input_b;
+		this.b = input_c;
+		this.a = input_d;
 	}
-	return [
-		lerp(a[0], b[0], b[3]),
-		lerp(a[1], b[1], b[3]),
-		lerp(a[2], b[2], b[3]),
-		Math.max(a[3], b[3]),
-	];
+
+	this.toCSS = function() {
+		return `rgba(${this.r * 255}, ${this.g * 255}, ${this.b * 255}, ${this.a})`;
+	};
+
+	this.mix = function(that) {
+		const lerp = function(a, b, t){
+			return a * (1 - t) + b * t;
+		}
+		return new Color(
+			lerp(this.r, that.r, that.a),
+			lerp(this.g, that.g, that.a),
+			lerp(this.b, that.b, that.a),
+			Math.max(this.a, that.a),
+		);
+	};
+
+	this.toGrayscale = function() {
+		const gray = (0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b);
+		return new Color(gray, gray, gray, this.a);
+	};
+
+	this.distance = function(that) {
+		const r = that.r - this.r;
+		const g = that.g - this.g;
+		const b = that.b - this.b;
+		return Math.sqrt(r*r + g*g + b*b) / 1.7320508075688772;
+	}
+
 }

@@ -1,7 +1,7 @@
 
 'use strict';
 
-import * as colors from '/common/colors.js'
+import {Color} from '/common/colors.js'
 
 
 const useDark = window.matchMedia("(prefers-color-scheme: dark)");
@@ -38,42 +38,63 @@ function update(themeType) {
 	document.body.className = themeType;
 }
 
+function priority(array) {
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] != undefined) {
+			return array[i];
+		}
+	}
+}
+
 async function setAll(theme) {
 
 	if (!theme) theme = await browser.theme.getCurrent();
 
 	if (theme && theme.colors) {
 
-		let color_shadow = colors.toRGBA(theme.colors.toolbar_field_text);
-		    color_shadow[3] = 0.15;
+		let shadow = new Color(theme.colors.toolbar_field_text);
+		    shadow.a = 0.15;
 
-		let color_tab_overlay = colors.toRGBA(theme.colors.toolbar_field);
-		    color_tab_overlay[3] = 0.8;
+		let mixed_toolbar = new Color(theme.colors.frame).mix(new Color(theme.colors.toolbar));
 
-		let color_tab_hover = colors.toRGBA(theme.colors.toolbar_field_text);
-		    color_tab_hover[3] = 0.3;
+		let group_border = shadow;
+		if (new Color(theme.colors.frame).toGrayscale().r < 0.4) {
+			group_border = mixed_toolbar.mix(new Color(1, 1, 1, 0.1));
+		}
 
-		let frame = colors.toRGBA(theme.colors.frame);
-		let toolbar = colors.toRGBA(theme.colors.toolbar);
-		let color_group_background = colors.mix(frame, toolbar);
+		let tab = new Color(theme.colors.toolbar_field);
 
-		const style = [
-			`--color-background: ${theme.colors.frame}`,
-			`--color-text: ${theme.colors.toolbar_field_text}`,
-			`--color-shadow: rgba(${color_shadow})`,
+		let tab_active = new Color(theme.colors.tab_line);
 
-			`--color-group-background: rgba(${color_group_background.join(',')})`,
-			`--color-group-border: ${theme.colors.toolbar_bottom_separator ? theme.colors.toolbar_bottom_separator : 'rgba(0, 0, 0, 0.3)'}`,
-			`--color-group-count-background: ${theme.colors.toolbar_field}`,
+		if ((tab_active.distance(tab) < 0.3 &&
+		     tab_active.distance(mixed_toolbar) < 0.3) ||
+		     tab_active.a < 0.1) {
+			tab_active = new Color(priority([theme.colors.toolbar_text, theme.colors.toolbar_field_text]));
+		}
 
-			`--color-tab: ${theme.colors.toolbar_field}`,
-			`--color-tab-overlay: rgba(${color_tab_overlay.join(',')})`,
-			`--color-tab-hover: rgba(${color_tab_hover.join(',')})`,
-			`--color-tab-active: ${(theme.colors.appmenu_info_icon_color) ? theme.colors.appmenu_info_icon_color : theme.colors.tab_line}` //appmenu_info_icon_color
-		];
+		let tab_overlay = new Color(theme.colors.toolbar_field);
+		    tab_overlay.a = 0.8;
+
+		let tab_hover = new Color(theme.colors.toolbar_field_text);
+		    tab_hover.a = 0.3;
+
+		const style = `.custom {
+	--color-background: ${theme.colors.frame};
+	--color-shadow: ${shadow.toCSS()};
+
+	--color-group: ${mixed_toolbar.toCSS()};
+	--color-group-text: ${theme.colors.toolbar_text};
+	--color-group-border: ${group_border.toCSS()};
+
+	--color-tab: ${tab.toCSS()};
+	--color-tab-text: ${theme.colors.toolbar_field_text};
+	--color-tab-overlay: ${tab_overlay.toCSS()};
+	--color-tab-hover: ${tab_hover.toCSS()};
+	--color-tab-active: ${tab_active.toCSS()};
+}`;
 
 		let stylesheet = new CSSStyleSheet();
-		stylesheet.insertRule(`.custom { ${style.join(';')} }`);
+		stylesheet.insertRule(style);
 		document.adoptedStyleSheets = [stylesheet];
 	}
 }

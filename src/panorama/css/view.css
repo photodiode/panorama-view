@@ -6,13 +6,14 @@ html, body {
 
 body.light {
 	--color-background: #ebebeb;
-	--color-text: #111111;
 	--color-shadow: rgba(0, 0, 0, 0.15);
 
-	--color-group-background: #fbfbfb;
-	--color-group-border: #dddddd;
+	--color-group: #fbfbfb;
+	--color-group-text: #111111;
+	--color-group-border: rgba(0, 0, 0, 0.1);
 
 	--color-tab: #ffffff;
+	--color-tab-text: #111111;
 	--color-tab-overlay: rgba(255, 255, 255, 0.8);
 	--color-tab-hover: rgba(0, 0, 0, 0.2);
 	--color-tab-active: #45a1ff;
@@ -23,7 +24,6 @@ body {
 
 	background-color: var(--color-background);
 
-	color: var(--color-text);
 	font-family: sans-serif;
 	-moz-user-select: none;
 
