@@ -44,9 +44,9 @@ export async function migrate() {
 					//delete group['rect']; // maybe at some point
 				}
 			}
+			await browser.sessions.setWindowValue(window.id, 'groups', groups);
 		}
 
-		await browser.sessions.setWindowValue(window.id, 'groups', groups);
 	}
 	// ----
 }
