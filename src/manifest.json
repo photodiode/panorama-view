@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Panorama View",
 	"description": "Easily group and organize tabs visually",
-	"version": "0.9.4",
+	"version": "0.9.6",
 	"icons": {
 		"16": "gfx/logo/logo-16.png",
 		"24": "gfx/logo/logo-24.png",
