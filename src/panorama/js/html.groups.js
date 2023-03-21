@@ -248,7 +248,7 @@ function getFit(param) {
 		fits = false;
 	}
 
-	return {fits: fits, width: w - 0.01, ratio: param.ratio};
+	return {fits: fits, width: w - 0.1, ratio: param.ratio};
 }
 
 export function fitTabs(tabGroupNode) {
@@ -320,6 +320,12 @@ export function fitTabsInGroup(tabGroupNode) {
 
 			amount: tabNodes.length,
 		});
+	}
+
+	if (!fit.fits) {
+		tabsNode.classList.add('scroll');
+	} else {
+		tabsNode.classList.remove('scroll');
 	}
 
 
