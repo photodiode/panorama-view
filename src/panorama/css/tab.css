@@ -274,7 +274,7 @@
 }
 
 .list .tab .favicon {
-	margin: 3px;
+	margin: 1px;
 	padding: 0;
 
 	background-color: transparent;
@@ -282,7 +282,7 @@
 }
 
 .list .tab .close {
-	margin: 3px;
+	margin: 1px;
 }
 
 .list .tab .thumbnail {
@@ -290,7 +290,7 @@
 }
 
 .list .tab .title {
-	margin: 4px;
+	margin: 1px;
 	left: 20px;
 	right: 20px;
 }
