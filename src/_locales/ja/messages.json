@@ -32,7 +32,10 @@
 		"message": "テーマ"
 	},
 	"optionThemeAuto": {
-		"message": "自動"
+		"message": "システムに合わせる"
+	},
+	"optionThemeCustom": {
+		"message": "Firefoxに合わせる"
 	},
 	"optionThemeLight": {
 		"message": "ライトモード（明るい）"

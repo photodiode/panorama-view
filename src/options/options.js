@@ -96,6 +96,11 @@ document.addEventListener('DOMContentLoaded', async() => {
 		storage.themeOverride = false;
 
 		switch(e.target.value) {
+			case 'custom': {
+				storage.themeOverride = 'custom';
+				await browser.storage.local.set({themeOverride: storage.themeOverride});
+				break;
+			}
 			case 'light': {
 				storage.themeOverride = 'light';
 				await browser.storage.local.set({themeOverride: storage.themeOverride});

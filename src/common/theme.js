@@ -20,9 +20,9 @@ function isNull(array) {
 
 export async function set(themeType, theme) {
 
-	if (!themeType) {
+	if (themeType == 'custom') {
 		if (!theme) theme = await browser.theme.getCurrent();
-console.log(theme.colors);
+
 		if (theme && theme.colors && !isNull([
 			theme.colors.frame,
 			theme.colors.toolbar_field_text,
@@ -32,7 +32,8 @@ console.log(theme.colors);
 			theme.colors.tab_line
 		])) {
 			setAll(theme);
-			themeType = 'custom';
+		} else {
+			themeType = undefined;
 		}
 	}
 

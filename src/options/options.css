@@ -1,18 +1,18 @@
 
 body.light {
-	--color-background: #ffffff;
-	--color-text: #111111;
+	--color-group: #ffffff;
+	--color-group-text: #111111;
 }
 
 body {
-	background-color: var(--color-background);
-	color: var(--color-text);
+	background-color: var(--color-group);
+	color: var(--color-group-text);
 }
 
 label {
 	width: 35%;
 	height: 2em;
-	
+
 	margin: 0.25em 0;
 
 	display: inline-block;

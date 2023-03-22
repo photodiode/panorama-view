@@ -32,7 +32,10 @@
 		"message": "Theme"
 	},
 	"optionThemeAuto": {
-		"message": "Auto"
+		"message": "Match System"
+	},
+	"optionThemeCustom": {
+		"message": "Match Firefox"
 	},
 	"optionThemeLight": {
 		"message": "Light"
