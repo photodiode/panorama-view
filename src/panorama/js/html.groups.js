@@ -337,8 +337,8 @@ export function fitTabsInGroup(tabGroupNode) {
 	// icon view
 	let size = 'normal';
 
-	if (w < 60) size = 'small';
-	if (w < 40) size = 'tiny';
+	if (w < 56) size = 'small';
+	if (w < 32) size = 'tiny';
 
 	if (w < 24 && options.listView == true) {
 		size = 'list';
@@ -349,12 +349,11 @@ export function fitTabsInGroup(tabGroupNode) {
 	tabsNode.classList.remove('tiny');
 	tabsNode.classList.remove('list');
 
-	if (size == 'small') {
-		tabsNode.classList.add('small');
-	} else if (size == 'tiny') {
-		tabsNode.classList.add('tiny');
-	} else if (size == 'list') {
-		tabsNode.classList.add('list');
+	switch (size) {
+		case 'small': tabsNode.classList.add('small'); break;
+		case 'tiny':  tabsNode.classList.add('tiny');  break;
+		case 'list':  tabsNode.classList.add('list');  break;
+		default: break;
 	}
 
 	tabNodes.forEach(async(tabNode, index) => {
