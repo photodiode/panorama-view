@@ -65,8 +65,6 @@ async function init() {
 	await setupWindows();
 	await salvageGrouplessTabs();
 
-	await salvageGrouplessTabs();
-
 	// auto bakup
 	backup.start();
 	// ----
