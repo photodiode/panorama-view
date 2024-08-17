@@ -14,7 +14,7 @@ async function moveTabs(tabIds, windowId, tabGroupId, index) {
 
 
 function getTabIds(e) {
-	return JSON.parse(e.dataTransfer.getData('application/json'));
+	return JSON.parse(e.dataTransfer.getData('application/x-panorama-view-tab-list'));
 }
 
 
@@ -47,6 +47,8 @@ export async function viewDrop(e) {
 	// ----
 
 	moveTabs(tabIds, currentWindowId, tabGroup.id, -1);
+
+	clearTabDragCSS(e);
 
 	return false;
 }
@@ -81,6 +83,8 @@ export async function groupDrop(e) {
 	const currentWindowId = (await browser.windows.getCurrent()).id;
 
 	moveTabs(tabIds, currentWindowId, tabGroupId, -1);
+
+	clearTabDragCSS(e);
 
 	return false;
 }
@@ -147,7 +151,12 @@ export function tabDragStart(e) {
 		      tabNode.classList.add('drag');
 	}
 
-	e.dataTransfer.setData('application/json', JSON.stringify(selectedTabs));
+	e.dataTransfer.setData('application/x-panorama-view-tab-list', JSON.stringify(selectedTabs));
+
+	//e.dataTransfer.setData('text/x-moz-url', urlTitleList.join('\r\n'));
+	//e.dataTransfer.setData('text/uri-list',  uriList.join('\r\n'));
+	//e.dataTransfer.setData('text/plain',     uriList.join('\r\n'));
+	//e.dataTransfer.setData('text/html',      links.join('\r\n')); // <a href="url">title</a>
 
 	const rect = this.getBoundingClientRect();
 
@@ -231,10 +240,12 @@ export async function tabDrop(e) {
 
 	moveTabs(tabIds, currentWindowId, tabGroupId, toIndex);
 
+	clearTabDragCSS(e);
+
 	return false;
 }
 
-export function tabDragEnd(e) {
+function clearTabDragCSS(e) {
 	const tabIds = getTabIds(e);
 	for (const tabId of tabIds) {
 		const tabNode = html.tabs.get(tabId);
@@ -242,6 +253,9 @@ export function tabDragEnd(e) {
 			tabNode.classList.remove('drag');
 		}
 	}
+}
+
+export function tabDragEnd(e) {
 	clearTabSelection(e);
 }
 // ----
