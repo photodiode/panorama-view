@@ -1,7 +1,7 @@
 
 'use strict';
 
-if (!browser.hasOwnProperty('tabGroups')) {
+if (!browser.tabGroups) {
 
 	function listenerObject() {
 		this.listeners = [];
