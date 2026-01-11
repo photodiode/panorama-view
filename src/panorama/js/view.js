@@ -17,7 +17,9 @@ let viewLastAccessed = 0;
 
 export let options = {
 	themeOverride: false,
-	listView:      false
+	listView:      false,
+	activeTabOutlineWidth: 2,
+	activeTabOutlineColor: '#45a1ff'
 };
 
 document.addEventListener('DOMContentLoaded', async() => {
@@ -33,9 +35,20 @@ document.addEventListener('DOMContentLoaded', async() => {
 	if (storage.hasOwnProperty('listView')) {
 		options.listView = storage.listView;
 	}
+	if (storage.hasOwnProperty('activeTabOutlineWidth')) {
+		options.activeTabOutlineWidth = Math.max(1, Math.min(5, parseInt(storage.activeTabOutlineWidth) || 2));
+	}
+	if (storage.hasOwnProperty('activeTabOutlineColor')) {
+		options.activeTabOutlineColor = storage.activeTabOutlineColor;
+		// Validate hex color
+		if (!/^#[0-9A-F]{6}$/i.test(options.activeTabOutlineColor)) {
+			options.activeTabOutlineColor = '#45a1ff';
+		}
+	}
 	// ----
 
 	theme.set(options.themeOverride);
+	applyOutlineStyles();
 
 	await initializeTabGroupNodes();
 	await initializeTabNodes();
@@ -82,11 +95,25 @@ document.addEventListener('DOMContentLoaded', async() => {
 					options.listView = message.data.listView;
 					html.groups.fitTabs();
 				}
+				if (message.data.hasOwnProperty('activeTabOutlineWidth')) {
+					options.activeTabOutlineWidth = message.data.activeTabOutlineWidth;
+					applyOutlineStyles();
+				}
+				if (message.data.hasOwnProperty('activeTabOutlineColor')) {
+					options.activeTabOutlineColor = message.data.activeTabOutlineColor;
+					applyOutlineStyles();
+				}
 				break;
 			}
 			default:
 				break;
 		}
+	});
+	// ----
+
+	// Listen for theme changes to reapply outline styles
+	window.addEventListener('themeApplied', () => {
+		applyOutlineStyles();
 	});
 	// ----
 
@@ -150,6 +177,36 @@ document.addEventListener('DOMContentLoaded', async() => {
 
 	new ResizeObserver(groupResize).observe(document.getElementById('groups'));
 });
+
+
+export function applyOutlineStyles() {
+	const style = `
+		.tab.active .container {
+			outline: ${options.activeTabOutlineWidth}px solid ${options.activeTabOutlineColor} !important;
+		}
+	`;
+
+	let stylesheet = new CSSStyleSheet();
+	stylesheet.insertRule(style);
+
+	// Find and replace existing outline stylesheet, or append new one
+	const existingSheets = Array.from(document.adoptedStyleSheets);
+	const outlineSheetIndex = existingSheets.findIndex(sheet => {
+		try {
+			return sheet.cssRules[0]?.selectorText === '.tab.active .container';
+		} catch(e) {
+			return false;
+		}
+	});
+
+	if (outlineSheetIndex >= 0) {
+		existingSheets[outlineSheetIndex] = stylesheet;
+	} else {
+		existingSheets.push(stylesheet);
+	}
+
+	document.adoptedStyleSheets = existingSheets;
+}
 
 
 async function initializeTabGroupNodes() {
