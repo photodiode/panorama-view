@@ -63,7 +63,16 @@ async function attached(tabId, attachInfo) {
 
 	const tabGroupId = await addon.tabs.getGroupId(tabId);
 
-	if (tabGroupId == undefined) {
+	// Check if the tab's group exists in the NEW window
+	// Firefox 148+ preserves session data when tabs move between windows (Bug 2002643 fix),
+	// so the tab may have a groupId from the old window that doesn't exist in the new window
+	let groupExistsInNewWindow = false;
+	if (tabGroupId != undefined && tabGroupId != -1) {
+		const groups = await addon.tabGroups.query({windowId: attachInfo.newWindowId});
+		groupExistsInNewWindow = groups.some(group => group.id == tabGroupId);
+	}
+
+	if (tabGroupId == undefined || !groupExistsInNewWindow) {
 
 		let activeGroup = undefined;
 
