@@ -22,7 +22,7 @@ export const addon = {
 function handleActions(message, sender, sendResponse) {
 
 	if (!message.action) return;
-	if (sender.id !== browser.runtime.id) return;
+	if (sender.id && sender.id !== browser.runtime.id) return;
 
 	let response;
 
