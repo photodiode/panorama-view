@@ -83,6 +83,9 @@
 	"optionAutomaticBackupIntervalValue": {
 		"message": "$1時間$2分"
 	},
+	"optionMaxBackups": {
+		"message": "自動バックアップの最大数"
+	},
 
 	"optionStatistics": {
 		"message": "情報"
