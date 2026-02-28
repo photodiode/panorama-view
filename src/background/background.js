@@ -61,6 +61,7 @@ async function init() {
 	await addon.initialize();
 
 	browser.commands.onCommand.addListener(handleCommands);
+	browser.runtime.onMessageExternal.addListener(handleCommands);
 
 	await setupWindows();
 	await salvageGrouplessTabs();
