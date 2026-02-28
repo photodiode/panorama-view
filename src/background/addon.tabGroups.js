@@ -100,7 +100,7 @@ export async function create(info = {}, currentWindowId) {
 		title:          info.title || browser.i18n.getMessage('defaultGroupName'),
 		windowId:       info.windowId,
 
-		lastAccessed: (new Date).getTime(), // temporary
+		lastAccessed: Date.now(), // temporary
 	};
 
 	let unlock = await groupLock.lock();
@@ -182,7 +182,7 @@ export async function remove(groupId) {
 	// check if tabs were removed and abort if not (beforeunload was called or something)
 	for (const tabId of tabsToRemove) {
 		try {
-			tab = await browser.tabs.get(tabId);
+			const tab = await browser.tabs.get(tabId);
 			return undefined;
 		} catch (error) {
 			// all good, tab was removed
@@ -228,7 +228,7 @@ export async function update(groupId, info = {}) {
 		group.rect = info.rect;
 	}
 
-	group.lastAccessed = (new Date).getTime();
+	group.lastAccessed = Date.now();
 
 	await saveGroups();
 

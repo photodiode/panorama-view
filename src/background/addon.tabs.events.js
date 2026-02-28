@@ -6,6 +6,10 @@ import * as core from './core.js';
 
 import * as backup from './backup.js';
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 export function initialize() {
 	browser.tabs.onCreated.addListener(created);
@@ -40,8 +44,9 @@ async function created(tab) {
 
 		if (!groupsExists) {
 			tab.groupId = undefined;
-			while (tab.groupId == undefined) {
+			for (let delay = 5; tab.groupId == undefined && delay <= 160; delay *= 2) {
 				tab.groupId = await addon.tabGroups.getActiveId(tab.windowId);
+				if (tab.groupId == undefined) await sleep(delay);
 			}
 		}
 	}
@@ -76,8 +81,9 @@ async function attached(tabId, attachInfo) {
 
 		let activeGroup = undefined;
 
-		while (activeGroup == undefined) {
+		for (let delay = 5; activeGroup == undefined && delay <= 160; delay *= 2) {
 			activeGroup = await addon.tabGroups.getActiveId(attachInfo.newWindowId);
+			if (activeGroup == undefined) await sleep(delay);
 		}
 		await addon.tabs.setGroupId(tabId, activeGroup);
 	}
@@ -105,12 +111,10 @@ async function updated(tabId, changeInfo, tab) {
 	}
 
 	if (tab.groupId == undefined) {
-		const start = (new Date).getTime();
-		while (tab.groupId == undefined) {
+		for (let delay = 5; tab.groupId == undefined && delay <= 80; delay *= 2) {
 			tab.groupId = await addon.tabs.getGroupId(tab.id);
-			if (((new Date).getTime() - start) > 50) break; // timeout
+			if (tab.groupId == undefined) await sleep(delay);
 		}
-
 	}
 
 	const sending = browser.runtime.sendMessage({event: 'browser.tabs.onUpdated', tabId: tabId, changeInfo: changeInfo, tab: tab});
@@ -134,14 +138,19 @@ async function activated(activeInfo) {
 
 			if (!groupsExists) {
 				tabGroupId = undefined;
-				while (tabGroupId == undefined) {
+				for (let delay = 5; tabGroupId == undefined && delay <= 160; delay *= 2) {
 					tabGroupId = await addon.tabGroups.getActiveId(activeInfo.windowId);
+					if (tabGroupId == undefined) await sleep(delay);
 				}
 			}
 			// ----
 
-			addon.tabGroups.setActiveId(tab.windowId, tabGroupId);
+			if (tabGroupId != undefined) {
+				addon.tabGroups.setActiveId(tab.windowId, tabGroupId);
+			}
 		}
-		core.toggleVisibleTabs(tab.windowId, tabGroupId);
+		if (tabGroupId != undefined) {
+			core.toggleVisibleTabs(tab.windowId, tabGroupId);
+		}
 	}
 }

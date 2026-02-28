@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 	document.addEventListener('visibilitychange', async() => {
 		if (document.hidden) {
 			browser.tabs.onUpdated.removeListener(captureThumbnail);
-			viewLastAccessed = (new Date).getTime();
+			viewLastAccessed = Date.now();
 		} else {
 			await captureThumbnails();
 			browser.tabs.onUpdated.addListener(captureThumbnail, {properties: ['url', 'status']});
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 	// tab events
 	browser.tabs.onCreated.addListener(events.tabCreated);
 	browser.tabs.onRemoved.addListener(events.tabRemoved);
-	browser.tabs.onUpdated.addListener(events.tabUpdated), {properties: ['favIconUrl', 'pinned', 'title', 'url', 'discarded', 'status']};
+	browser.tabs.onUpdated.addListener(events.tabUpdated, {properties: ['favIconUrl', 'pinned', 'title', 'url', 'discarded', 'status']});
 
 	browser.tabs.onActivated.addListener(events.tabActivated);
 
