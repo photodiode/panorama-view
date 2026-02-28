@@ -80,6 +80,10 @@ async function attached(tabId, attachInfo) {
 			activeGroup = await addon.tabGroups.getActiveId(attachInfo.newWindowId);
 		}
 		await addon.tabs.setGroupId(tabId, activeGroup);
+
+		if (!(panoramaViewTab && panoramaViewTab.active)) {
+			browser.tabs.show(tabId);
+		}
 	}
 }
 
@@ -137,6 +141,7 @@ async function activated(activeInfo) {
 				while (tabGroupId == undefined) {
 					tabGroupId = await addon.tabGroups.getActiveId(activeInfo.windowId);
 				}
+				await addon.tabs.setGroupId(activeInfo.tabId, tabGroupId);
 			}
 			// ----
 
