@@ -27,6 +27,8 @@ export async function create(appId) {
 	for (const window of windows) {
 
 		const groups = await browser.sessions.getWindowValue(window.id, 'groups');
+		if (!groups) continue;
+
 		groups.sort((a, b) => {
 			return a.lastAccessed - b.lastAccessed;
 		});
@@ -45,6 +47,7 @@ export async function create(appId) {
 		for (const group of groups) {
 
 			let rect = await addon.tabGroups.getGroupValue(group.id, 'rect', browser.runtime.id);
+			if (!rect) rect = {x: 0, y: 0, w: 0.5, h: 0.5};
 
 			let tabGroup = {
 				title: group.title,
