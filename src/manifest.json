@@ -73,13 +73,14 @@
 		"browser_style": true
 	},
 
+	"content_security_policy": "script-src 'self'; object-src 'self'",
+
 	"permissions": [
 		"<all_urls>",
 		"tabs",
 		"tabHide",
 		"storage",
 		"sessions",
-		"cookies",
 		"contextualIdentities",
 		"downloads",
 		"menus"

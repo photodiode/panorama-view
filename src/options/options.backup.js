@@ -69,7 +69,13 @@ async function loadBackup() {
 		const reader = new FileReader();
 
 		reader.onload = (json) => {
-			let backup = JSON.parse(json.target.result);
+			let backup;
+			try {
+				backup = JSON.parse(json.target.result);
+			} catch (e) {
+				alert(browser.i18n.getMessage('optionLoadError'));
+				return;
+			}
 
 			if ((backup.version && backup.version[0] == 'tabGroups' || backup.version && backup.version[0] == 'sessionrestore') && backup.version[1] == 1) {
 				// convert from old tab groups backup to version 1 (legacy)

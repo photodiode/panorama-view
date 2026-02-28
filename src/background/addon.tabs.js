@@ -1,6 +1,10 @@
 
 'use strict';
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export function setGroupId(tabId, groupId) {
 	return browser.sessions.setTabValue(tabId, 'groupId', groupId);
 }
@@ -11,9 +15,15 @@ export function getGroupId(tabId) {
 
 export async function getGroupIdTimeout(tabId, timeout) {
 	let groupId = undefined;
-	const start = (new Date).getTime();
-	while (groupId == undefined && (((new Date).getTime() - start) < timeout)) {
+	let elapsed = 0;
+	let delay = 5;
+	while (groupId == undefined && elapsed < timeout) {
 		groupId = await browser.sessions.getTabValue(tabId, 'groupId');
+		if (groupId == undefined) {
+			await sleep(delay);
+			elapsed += delay;
+			delay = Math.min(delay * 2, 50);
+		}
 	}
 	return groupId;
 }
