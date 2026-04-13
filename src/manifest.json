@@ -11,7 +11,7 @@
 		"64": "gfx/logo/logo-64.png",
 		"96": "gfx/logo/logo-96.png"
 	},
-	"applications": {
+	"browser_specific_settings": {
 		"gecko": {
 			"id": "{60e27487-c779-464c-8698-ad481b718d5f}",
 			"data_collection_permissions": {
