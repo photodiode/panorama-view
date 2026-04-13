@@ -13,7 +13,10 @@
 	},
 	"applications": {
 		"gecko": {
-			"id": "{60e27487-c779-464c-8698-ad481b718d5f}"
+			"id": "{60e27487-c779-464c-8698-ad481b718d5f}",
+			"data_collection_permissions": {
+				"required": ["none"]
+			}
 		}
 	},
 	"default_locale": "en",
