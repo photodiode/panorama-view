@@ -174,7 +174,7 @@ async function autoBackup() {
 	}
 
 	let backup = {
-		time: (new Date).getTime(),
+		time: Date.now(),
 		data: await create()
 	}
 

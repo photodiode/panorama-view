@@ -19,6 +19,12 @@ export function create(tab) {
 
 	const node = newElement('div', {href: '', class: 'tab', draggable: 'true', 'data-id': tab.id, title: '', tabindex: 0}, [container, context]);
 
+	if (browser.tabs.warmup) {
+		node.addEventListener('mouseenter', () => {
+			browser.tabs.warmup(tab.id).catch(() => {});
+		}, false);
+	}
+
 	node.addEventListener('click', (event) => {
 		event.preventDefault();
 		if (event.ctrlKey) {
@@ -90,7 +96,9 @@ export async function update(tabNode, tab) {
 			tabNode.querySelector('.context').title = contextInfo.name;
 		}
 
-		tabNode.title = tab.title + ((tab.url.substr(0, 5) != 'data:') ? ' - ' + decodeURI(tab.url) : '');
+		let displayUrl = tab.url;
+		try { displayUrl = decodeURI(tab.url); } catch (e) { /* malformed URI */ }
+		tabNode.title = tab.title + ((tab.url.substr(0, 5) != 'data:') ? ' - ' + displayUrl : '');
 
 		if (tab.discarded) {
 			tabNode.classList.add('inactive');
