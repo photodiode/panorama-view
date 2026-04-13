@@ -83,6 +83,9 @@
 	"optionAutomaticBackupIntervalValue": {
 		"message": "$1h $2min"
 	},
+	"optionMaxBackups": {
+		"message": "Maximum number of auto backups"
+	},
 
 	"optionStatistics": {
 		"message": "Statistics"

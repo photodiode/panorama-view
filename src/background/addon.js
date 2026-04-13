@@ -107,6 +107,14 @@ function handleActions(message, sender, sendResponse) {
 			response = backup.getBackups();
 			break;
 		}
+		case 'addon.backup.getMaxBackups': {
+			response = backup.getMaxBackups();
+			break;
+		}
+		case 'addon.backup.setMaxBackups': {
+			response = backup.setMaxBackups(message.count);
+			break;
+		}
 		// ----
 
 		default:

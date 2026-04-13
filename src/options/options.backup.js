@@ -99,7 +99,7 @@ async function loadBackup() {
 
 		const i = Number(selectBackup.value);
 
-		if (i < 0 || i > 3) {
+		if (i < 0 || i >= autoBackups.length) {
 			return;
 		}
 
@@ -283,6 +283,28 @@ export async function createUI() {
 			action: 'addon.backup.setInterval',
 			interval: autoBackup.value
 		});
+	});
+	// ----
+
+	// Max Backups
+	const maxBackupsInput = document.getElementById('maxBackups');
+
+	maxBackupsInput.value = await browser.runtime.sendMessage({
+		action: 'addon.backup.getMaxBackups'
+	});
+
+	maxBackupsInput.addEventListener('change', async function() {
+		let value = Math.max(1, Math.min(20, parseInt(this.value, 10) || 3));
+		this.value = value;
+		await browser.runtime.sendMessage({
+			action: 'addon.backup.setMaxBackups',
+			count: value
+		});
+
+		autoBackups = await browser.runtime.sendMessage({
+			action: 'addon.backup.getBackups'
+		});
+		fillBackupSelection(autoBackups);
 	});
 	// ----
 }

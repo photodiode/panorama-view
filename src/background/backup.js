@@ -168,6 +168,21 @@ export async function getBackups() {
 	return (await browser.storage.local.get('autoBackup')).autoBackup || [];
 }
 
+export async function setMaxBackups(count) {
+	count = Math.max(1, Math.min(20, parseInt(count, 10) || 3));
+	await browser.storage.local.set({autoBackupMaxCount: count});
+
+	let storage = await browser.storage.local.get('autoBackup');
+	if (storage.autoBackup && storage.autoBackup.length > count) {
+		storage.autoBackup.length = count;
+		await browser.storage.local.set(storage);
+	}
+}
+
+export async function getMaxBackups() {
+	return (await browser.storage.local.get('autoBackupMaxCount')).autoBackupMaxCount || 3;
+}
+
 async function autoBackup() {
 
 	let storage = await browser.storage.local.get('autoBackup');
@@ -183,7 +198,8 @@ async function autoBackup() {
 
 	storage.autoBackup.unshift(backup);
 
-	if (storage.autoBackup.length > 3) {
+	const maxBackups = await getMaxBackups();
+	while (storage.autoBackup.length > maxBackups) {
 		storage.autoBackup.pop();
 	}
 
