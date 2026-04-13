@@ -44,7 +44,10 @@ function sanitizeGroup(group) {
 
 export async function setActiveId(windowId, groupId) {
 	let unlock = await groupLock.lock();
-	if (!groups.find(group => group.id == groupId)) return undefined;
+	if (!groups.find(group => group.id == groupId)) {
+		await unlock();
+		return undefined;
+	}
 	await unlock();
 	return browser.sessions.setWindowValue(windowId, 'activeGroup', groupId);
 }
