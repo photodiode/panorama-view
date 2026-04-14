@@ -134,6 +134,61 @@ document.addEventListener('DOMContentLoaded', async() => {
 	});
 	// ----
 
+	// active tab outline customization
+	const outlineWidthInput = document.getElementById('activeTabOutlineWidth');
+	const outlineWidthOutput = document.getElementById('activeTabOutlineWidthValue');
+	const outlineColorInput = document.getElementById('activeTabOutlineColor');
+	const resetColorButton = document.getElementById('resetOutlineColor');
+
+	// Load stored values or defaults
+	const outlineWidth = storage.hasOwnProperty('activeTabOutlineWidth') ? storage.activeTabOutlineWidth : 2;
+	const outlineColor = storage.hasOwnProperty('activeTabOutlineColor') ? storage.activeTabOutlineColor : '#45a1ff';
+
+	outlineWidthInput.value = outlineWidth;
+	outlineWidthOutput.textContent = outlineWidth + 'px';
+	outlineColorInput.value = outlineColor;
+
+	// Width change handler
+	outlineWidthInput.addEventListener('input', async(e) => {
+		const value = parseInt(e.target.value);
+		outlineWidthOutput.textContent = value + 'px';
+		await browser.storage.local.set({activeTabOutlineWidth: value});
+		browser.runtime.sendMessage({
+			event: 'addon.options.onUpdated',
+			data: {activeTabOutlineWidth: value}
+		});
+	});
+
+	// Color change handler
+	outlineColorInput.addEventListener('input', async(e) => {
+		await browser.storage.local.set({activeTabOutlineColor: e.target.value});
+		browser.runtime.sendMessage({
+			event: 'addon.options.onUpdated',
+			data: {activeTabOutlineColor: e.target.value}
+		});
+	});
+
+	// Reset color button
+	resetColorButton.addEventListener('click', async() => {
+		const defaultWidth = 2;
+		const defaultColor = '#45a1ff';
+		outlineWidthInput.value = defaultWidth;
+		outlineWidthOutput.textContent = defaultWidth + 'px';
+		outlineColorInput.value = defaultColor;
+		await browser.storage.local.set({
+			activeTabOutlineWidth: defaultWidth,
+			activeTabOutlineColor: defaultColor
+		});
+		browser.runtime.sendMessage({
+			event: 'addon.options.onUpdated',
+			data: {
+				activeTabOutlineWidth: defaultWidth,
+				activeTabOutlineColor: defaultColor
+			}
+		});
+	});
+	// ----
+
 	backup.createUI();
 
 	browser.tabs.onUpdated.addListener(getStatistics);

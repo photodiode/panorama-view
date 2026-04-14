@@ -121,5 +121,8 @@ async function setAll(theme) {
 		let stylesheet = new CSSStyleSheet();
 		stylesheet.insertRule(style);
 		document.adoptedStyleSheets = [stylesheet];
+
+		// Dispatch event to notify other modules that theme has been applied
+		window.dispatchEvent(new CustomEvent('themeApplied'));
 	}
 }

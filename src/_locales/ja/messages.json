@@ -47,6 +47,19 @@
 		"message": "小さなタブの一覧表示"
 	},
 
+	"optionTabAppearance": {
+		"message": "Tab Appearance"
+	},
+	"optionActiveTabOutlineWidth": {
+		"message": "Active tab outline width"
+	},
+	"optionActiveTabOutlineColor": {
+		"message": "Active tab outline color"
+	},
+	"optionResetColor": {
+		"message": "Reset"
+	},
+
 	"optionBackup": {
 		"message": "バックアップ"
 	},
